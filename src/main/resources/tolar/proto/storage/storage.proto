@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package tolar.proto.storage;
+
+import "tolar/proto/transaction.proto";
+
+enum SentinelRank {
+    UNDECIDED = 0;
+    SENTINEL = 1;
+    WARDEN = 2;
+}
+
+message EventMetadata {
+    bytes event_hash = 1;
+
+    bool is_sentinel = 2;
+    SentinelRank rank = 3;
+    uint64 consensus_timestamp = 4;
+    uint64 round_received = 5;
+    uint64 round_created = 6;
+}
+
+message SnapshotElement {
+    bytes chain_id = 1;
+    bytes hash = 2;
+}
+
+message Snapshot {
+    repeated SnapshotElement elements = 1;
+    bytes id = 2;
+}
+
+message LastBlockChainState {
+    bytes id = 1;
+    uint64 last_block_index = 2;
+    uint64 last_round_received = 3;
+    bytes last_block_hash = 4;
+    repeated uint64 event_timestamps = 5;
+    repeated tx.SignedTransaction pending_block_transactions = 6;
+    repeated bytes last_block_validators = 7;
+    bytes last_events_proof_hash = 8;
+}
+
+message RecoverySnapshot {
+    Snapshot bottom_snapshot = 1;
+    Snapshot consensus_snapshot = 2;
+    uint64 lowest_sentinel_round = 3;
+    uint64 all_warden_round = 4;
+    LastBlockChainState last_blockchain_state = 5;
+}
+
+message BlockBody {
+    uint64 index = 1;
+    uint64 round_received = 2;
+    bytes previous_block_hash = 3;
+    repeated tx.ExecutedTransaction transactions = 4;
+    bytes events_proof_hash = 5;
+    uint64 timestamp = 6;
+}
+
+message Block {
+    BlockBody block_body = 1;
+    repeated bytes block_validators = 2;
+    string state_root_hash = 3;
+}
+
+message ValidBlock {
+    bytes hash = 1;
+    uint64 confirmation_timestamp = 2;
+}
+
+message EventRelationsLookupElement {
+    bytes chain = 1;
+    bytes hash = 2;
+}
+
+message EventRelations {
+    bytes event_hash = 1;
+    repeated EventRelationsLookupElement chain_lookup = 2;
+}
+
+message EventLastAncestors {
+    EventRelations relations = 1;
+}
+
+message EventFirstDescendants {
+    EventRelations relations = 1;
+}

@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package tolar.proto;
+
+import "tolar/proto/core.proto";
+
+service HashNet {
+    rpc Sync (SyncRequest) returns (SyncResponse);
+}
+
+message Peer {
+    string peer_id = 2;
+    string ip_address = 1;
+}
+
+message EventSnapshot {
+    string node_id = 1;
+    string last_event_hash = 2;
+}
+
+message SyncRequest {
+    string peer_id = 1;
+
+    repeated EventSnapshot event_snapshot = 2;
+
+    repeated Peer peers = 3;
+}
+
+message SyncResponse {
+    string peer_id = 1;
+
+    repeated SignedEvent events = 2;
+    bool is_paginated_diff = 3;
+
+    repeated Peer peers = 4;
+}
