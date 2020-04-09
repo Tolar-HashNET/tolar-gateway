@@ -8,8 +8,6 @@ import tolar.proto.Account.AddressBalance;
 
 import java.util.List;
 
-//TODO check: JSON RPC always includes response field with key "result",
-// in Tolar docs some responses are mapped to other keys e.g. "json_key_file", "address"...
 @JsonRpcService("/account")
 public interface AccountApi {
     @JsonRpcMethod("Create")

@@ -1,19 +1,30 @@
-package io.tolar.mock;
+package io.tolar.api;
 
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
-import io.tolar.api.AccountApi;
+import io.tolar.utils.ChannelUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tolar.proto.Account;
+import tolar.proto.Account.CreateRequest;
+import tolar.proto.AccountServiceGrpc;
 
 import java.util.List;
 
 @Service
 @AutoJsonRpcServiceImpl
-public class AccountApiMock implements AccountApi {
+public class AccountApiImpl implements AccountApi {
+    @Autowired
+    private ChannelUtils channelUtils;
+
     @Override
     public boolean create(String masterPassword) {
-        return false;
+        CreateRequest createRequest = CreateRequest.newBuilder().setMasterPassword(masterPassword).build();
+
+        return AccountServiceGrpc
+                .newBlockingStub(channelUtils.getChannel())
+                .create(createRequest)
+                .getResult();
     }
 
     @Override
