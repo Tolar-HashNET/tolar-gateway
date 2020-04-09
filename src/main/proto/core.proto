@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package tolar.proto;
 
-import "tolar/proto/common.proto";
-import "tolar/proto/transaction.proto";
+import "common.proto";
+import "transaction.proto";
 
 message Event {
     repeated tx.SignedTransaction transactions = 1;

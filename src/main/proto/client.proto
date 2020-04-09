@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package tolar.proto;
 
-import "tolar/proto/transaction.proto";
+import "transaction.proto";
 
 // TODO(ibrajer): remove this service when send to address is finished
 service TolarService {

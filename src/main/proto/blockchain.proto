@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package tolar.proto;
 
-import "tolar/proto/storage.proto";
-import "tolar/proto/transaction.proto";
+import "storage.proto";
+import "transaction.proto";
 
 service BlockchainService {
     rpc GetBlockCount(GetBlockCountRequest) returns (GetBlockCountResponse);

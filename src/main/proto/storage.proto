@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package tolar.proto.storage;
 
-import "tolar/proto/transaction.proto";
+import "transaction.proto";
 
 enum SentinelRank {
     UNDECIDED = 0;

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package tolar.proto;
 
-import "tolar/proto/core.proto";
+import "core.proto";
 
 service HashNet {
     rpc Sync (SyncRequest) returns (SyncResponse);

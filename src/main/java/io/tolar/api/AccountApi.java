@@ -4,7 +4,7 @@ import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.JsonRpcMethod;
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.googlecode.jsonrpc4j.JsonRpcService;
-import io.tolar.proto.Account.AddressBalance;
+import tolar.proto.Account.AddressBalance;
 
 import java.util.List;
 

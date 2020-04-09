@@ -3,8 +3,9 @@ package io.tolar.mock;
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import io.tolar.api.AccountApi;
-import io.tolar.proto.Account;
 import org.springframework.stereotype.Service;
+import tolar.proto.Account;
+import tolar.proto.AccountServiceGrpc;
 
 import java.util.List;
 
