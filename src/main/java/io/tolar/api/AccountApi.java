@@ -8,7 +8,7 @@ import tolar.proto.Account.AddressBalance;
 
 import java.util.List;
 
-@JsonRpcService("/account")
+@JsonRpcService("/Account")
 public interface AccountApi {
     @JsonRpcMethod("Create")
     boolean create(@JsonRpcParam(value = "master_password") String masterPassword);
