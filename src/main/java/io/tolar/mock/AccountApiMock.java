@@ -6,7 +6,6 @@ import io.tolar.api.AccountApi;
 import org.springframework.stereotype.Service;
 import tolar.proto.Account;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,7 +23,7 @@ public class AccountApiMock implements AccountApi {
 
     @Override
     public List<ByteString> listAddresses() {
-        return new ArrayList<>();
+        return null;
     }
 
     @Override
@@ -33,7 +32,7 @@ public class AccountApiMock implements AccountApi {
     }
 
     @Override
-    public ByteString createNewAddress(String name, String lockPassword, String hint) {
+    public ByteString createNewAddress(String name, String lockPassword, String lockHint) {
         return null;
     }
 
@@ -49,6 +48,36 @@ public class AccountApiMock implements AccountApi {
 
     @Override
     public List<Account.AddressBalance> listBalancePerAddress() {
+        return null;
+    }
+
+    @Override
+    public ByteString sendRawTransaction(ByteString senderAddress, ByteString receiverAddress, ByteString amount, String senderAddressPassword, ByteString gas, ByteString gasPrice, String data, ByteString nonce) {
+        return null;
+    }
+
+    @Override
+    public boolean changePassword(String oldMasterPassword, String newMasterPassword) {
+        return false;
+    }
+
+    @Override
+    public boolean changeAddressPassword(ByteString address, String oldPassword, String newPassword) {
+        return false;
+    }
+
+    @Override
+    public ByteString sendFundTransferTransaction(ByteString senderAddress, ByteString receiverAddress, ByteString amount, String senderAddressPassword, ByteString gas, ByteString gasPrice, ByteString nonce) {
+        return null;
+    }
+
+    @Override
+    public ByteString sendDeployContractTransaction(ByteString senderAddress, ByteString amount, String senderAddressPassword, ByteString gas, ByteString gasPrice, String data, ByteString nonce) {
+        return null;
+    }
+
+    @Override
+    public ByteString sendExecuteFunctionTransaction(ByteString senderAddress, ByteString receiverAddress, ByteString amount, String senderAddressPassword, ByteString gas, ByteString gasPrice, String data, ByteString nonce) {
         return null;
     }
 }

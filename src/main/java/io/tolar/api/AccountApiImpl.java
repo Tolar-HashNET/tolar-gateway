@@ -121,4 +121,123 @@ public class AccountApiImpl implements AccountApi {
                 .listBalancePerAddress(listBalancePerAddressRequest)
                 .getAddressesList();
     }
+
+    @Override
+    public ByteString sendRawTransaction(ByteString senderAddress, ByteString receiverAddress, ByteString amount,
+                                         String senderAddressPassword, ByteString gas, ByteString gasPrice,
+                                         String data, ByteString nonce) {
+        SendRawTransactionRequest sendRawTransactionRequest = SendRawTransactionRequest
+                .newBuilder()
+                .setSenderAddress(senderAddress)
+                .setReceiverAddress(receiverAddress)
+                .setAmount(amount)
+                .setSenderAddressPassword(senderAddressPassword)
+                .setGas(gas)
+                .setGasPrice(gasPrice)
+                .setData(data)
+                .setNonce(nonce)
+                .build();
+
+        return AccountServiceGrpc
+                .newBlockingStub(channelUtils.getChannel())
+                .sendRawTransaction(sendRawTransactionRequest)
+                .getTransactionHash();
+
+    }
+
+    @Override
+    public boolean changePassword(String oldMasterPassword, String newMasterPassword) {
+        ChangePasswordRequest changePasswordRequest = ChangePasswordRequest
+                .newBuilder()
+                .setOldMasterPassword(oldMasterPassword)
+                .setNewMasterPassword(newMasterPassword)
+                .build();
+
+        return AccountServiceGrpc
+                .newBlockingStub(channelUtils.getChannel())
+                .changePassword(changePasswordRequest)
+                .getResult();
+    }
+
+    @Override
+    public boolean changeAddressPassword(ByteString address, String oldPassword, String newPassword) {
+        ChangeAddressPasswordRequest changeAddressPasswordRequest = ChangeAddressPasswordRequest
+                .newBuilder()
+                .setAddress(address)
+                .setOldPassword(oldPassword)
+                .setNewPassword(newPassword)
+                .build();
+
+        return AccountServiceGrpc
+                .newBlockingStub(channelUtils.getChannel())
+                .changeAddressPassword(changeAddressPasswordRequest)
+                .getResult();
+    }
+
+    @Override
+    public ByteString sendFundTransferTransaction(ByteString senderAddress, ByteString receiverAddress,
+                                                  ByteString amount, String senderAddressPassword, ByteString gas,
+                                                  ByteString gasPrice, ByteString nonce) {
+        SendFundTransferTransactionRequest sendFundTransferTransactionRequest = SendFundTransferTransactionRequest
+                .newBuilder()
+                .setSenderAddress(senderAddress)
+                .setReceiverAddress(receiverAddress)
+                .setAmount(amount)
+                .setSenderAddressPassword(senderAddressPassword)
+                .setGas(gas)
+                .setGasPrice(gasPrice)
+                .setNonce(nonce)
+                .build();
+
+        return AccountServiceGrpc
+                .newBlockingStub(channelUtils.getChannel())
+                .sendFundTransferTransaction(sendFundTransferTransactionRequest)
+                .getTransactionHash();
+    }
+
+    @Override
+    public ByteString sendDeployContractTransaction(ByteString senderAddress, ByteString amount,
+                                                    String senderAddressPassword, ByteString gas,
+                                                    ByteString gasPrice, String data, ByteString nonce) {
+        SendDeployContractTransactionRequest sendDeployContractTransactionRequest =
+                SendDeployContractTransactionRequest
+                .newBuilder()
+                .setSenderAddress(senderAddress)
+                .setAmount(amount)
+                .setSenderAddressPassword(senderAddressPassword)
+                .setGas(gas)
+                .setGasPrice(gasPrice)
+                .setData(data)
+                .setNonce(nonce)
+                .build();
+
+        return AccountServiceGrpc
+                .newBlockingStub(channelUtils.getChannel())
+                .sendDeployContractTransaction(sendDeployContractTransactionRequest)
+                .getTransactionHash();
+    }
+
+    @Override
+    public ByteString sendExecuteFunctionTransaction(ByteString senderAddress, ByteString receiverAddress,
+                                                     ByteString amount, String senderAddressPassword,
+                                                     ByteString gas, ByteString gasPrice, String data,
+                                                     ByteString nonce) {
+        SendExecuteFunctionTransactionRequest sendExecuteFunctionTransactionRequest =
+                SendExecuteFunctionTransactionRequest
+                .newBuilder()
+                .setSenderAddress(senderAddress)
+                .setReceiverAddress(receiverAddress)
+                .setAmount(amount)
+                .setSenderAddressPassword(senderAddressPassword)
+                .setGas(gas)
+                .setGasPrice(gasPrice)
+                .setData(data)
+                .setNonce(nonce)
+                .build();
+
+        return AccountServiceGrpc
+                .newBlockingStub(channelUtils.getChannel())
+                .sendExecuteFunctionTransaction(sendExecuteFunctionTransactionRequest)
+                .getTransactionHash();
+    }
 }

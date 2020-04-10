@@ -38,4 +38,51 @@ public interface AccountApi {
 
     @JsonRpcMethod("ListBalancePerAddress")
     List<AddressBalance> listBalancePerAddress();
+
+    @JsonRpcMethod("SendRawTransaction")
+    ByteString sendRawTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
+                                  @JsonRpcParam(value = "receiver_address") ByteString receiverAddress,
+                                  @JsonRpcParam(value = "amount") ByteString amount,
+                                  @JsonRpcParam(value = "sender_address_password") String senderAddressPassword,
+                                  @JsonRpcParam(value = "gas") ByteString gas,
+                                  @JsonRpcParam(value = "gas_price") ByteString gasPrice,
+                                  @JsonRpcParam(value = "data") String data,
+                                  @JsonRpcParam(value = "nonce") ByteString nonce);
+
+    @JsonRpcMethod("ChangePassword")
+    boolean changePassword(@JsonRpcParam(value = "old_master_password") String oldMasterPassword,
+                           @JsonRpcParam(value = "new_master_password") String newMasterPassword);
+
+    @JsonRpcMethod("ChangeAddressPassword")
+    boolean changeAddressPassword(@JsonRpcParam(value = "address") ByteString address,
+                                  @JsonRpcParam(value = "old_password") String oldPassword,
+                                  @JsonRpcParam(value = "new_password") String newPassword);
+
+    @JsonRpcMethod("SendFundTransferTransaction")
+    ByteString sendFundTransferTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
+                                        @JsonRpcParam(value = "receiver_address") ByteString receiverAddress,
+                                        @JsonRpcParam(value = "amount") ByteString amount,
+                                        @JsonRpcParam(value = "sender_address_password") String senderAddressPassword,
+                                        @JsonRpcParam(value = "gas") ByteString gas,
+                                        @JsonRpcParam(value = "gas_price") ByteString gasPrice,
+                                        @JsonRpcParam(value = "nonce") ByteString nonce);
+
+    @JsonRpcMethod("SendDeployContractTransaction")
+    ByteString sendDeployContractTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
+                                             @JsonRpcParam(value = "amount") ByteString amount,
+                                             @JsonRpcParam(value = "sender_address_password") String senderAddressPassword,
+                                             @JsonRpcParam(value = "gas") ByteString gas,
+                                             @JsonRpcParam(value = "gas_price") ByteString gasPrice,
+                                             @JsonRpcParam(value = "data") String data,
+                                             @JsonRpcParam(value = "nonce") ByteString nonce);
+
+    @JsonRpcMethod("SendExecuteFunctionTransaction")
+    ByteString sendExecuteFunctionTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
+                                              @JsonRpcParam(value = "receiver_address") ByteString receiverAddress,
+                                              @JsonRpcParam(value = "amount") ByteString amount,
+                                              @JsonRpcParam(value = "sender_address_password") String senderAddressPassword,
+                                              @JsonRpcParam(value = "gas") ByteString gas,
+                                              @JsonRpcParam(value = "gas_price") ByteString gasPrice,
+                                              @JsonRpcParam(value = "data") String data,
+                                              @JsonRpcParam(value = "nonce") ByteString nonce);
 }
