@@ -6,6 +6,7 @@ import io.tolar.api.AccountApi;
 import org.springframework.stereotype.Service;
 import tolar.proto.Account;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,8 +23,8 @@ public class AccountApiMock implements AccountApi {
     }
 
     @Override
-    public byte[] listAddresses() {
-        return new byte[0];
+    public List<ByteString> listAddresses() {
+        return new ArrayList<>();
     }
 
     @Override

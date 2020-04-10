@@ -5,8 +5,7 @@ import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import io.tolar.utils.ChannelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tolar.proto.Account;
-import tolar.proto.Account.CreateRequest;
+import tolar.proto.Account.*;
 import tolar.proto.AccountServiceGrpc;
 
 import java.util.List;
@@ -19,7 +18,10 @@ public class AccountApiImpl implements AccountApi {
 
     @Override
     public boolean create(String masterPassword) {
-        CreateRequest createRequest = CreateRequest.newBuilder().setMasterPassword(masterPassword).build();
+        CreateRequest createRequest = CreateRequest
+                .newBuilder()
+                .setMasterPassword(masterPassword)
+                .build();
 
         return AccountServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
@@ -29,36 +31,94 @@ public class AccountApiImpl implements AccountApi {
 
     @Override
     public boolean open(String masterPassword) {
-        return false;
+        OpenRequest openRequest = OpenRequest
+                .newBuilder()
+                .setMasterPassword(masterPassword)
+                .build();
+
+        return AccountServiceGrpc
+                .newBlockingStub(channelUtils.getChannel())
+                .open(openRequest)
+                .getResult();
     }
 
     @Override
-    public byte[] listAddresses() {
-        return new byte[0];
+    public List<ByteString> listAddresses() {
+        ListAddressesRequest listAddressesRequest = ListAddressesRequest
+                .newBuilder()
+                .build();
+
+        return AccountServiceGrpc
+                .newBlockingStub(channelUtils.getChannel())
+                .listAddresses(listAddressesRequest)
+                .getAddressesList();
     }
 
     @Override
     public boolean verifyAddress(ByteString address) {
-        return false;
+        VerifyAddressRequest verifyAddressRequest = VerifyAddressRequest
+                .newBuilder()
+                .setAddress(address)
+                .build();
+
+        return AccountServiceGrpc
+                .newBlockingStub(channelUtils.getChannel())
+                .verifyAddress(verifyAddressRequest)
+                .getResult();
     }
 
     @Override
-    public ByteString createNewAddress(String name, String lockPassword, String hint) {
-        return null;
+    public ByteString createNewAddress(String name, String lockPassword, String lockHint) {
+        CreateNewAddressRequest createNewAddressRequest = CreateNewAddressRequest
+                .newBuilder()
+                .setName(name)
+                .setLockPassword(lockPassword)
+                .setLockHint(lockHint)
+                .build();
+
+        return AccountServiceGrpc
+                .newBlockingStub(channelUtils.getChannel())
+                .createNewAddress(createNewAddressRequest)
+                .getAddress();
     }
 
     @Override
     public String exportKeyFile(ByteString address) {
-        return null;
+        ExportKeyFileRequest exportKeyFileRequest = ExportKeyFileRequest
+                .newBuilder()
+                .setAddress(address)
+                .build();
+
+        return AccountServiceGrpc
+                .newBlockingStub(channelUtils.getChannel())
+                .exportKeyFile(exportKeyFileRequest)
+                .getJsonKeyFile();
     }
 
     @Override
     public boolean importKeyFile(String jsonKeyFile, String name, String lockPassword, String lockHint) {
-        return false;
+        ImportKeyFileRequest importKeyFileRequest = ImportKeyFileRequest
+                .newBuilder()
+                .setJsonKeyFile(jsonKeyFile)
+                .setLockPassword(lockPassword)
+                .setLockHint(lockHint)
+                .build();
+
+        return AccountServiceGrpc
+                .newBlockingStub(channelUtils.getChannel())
+                .importKeyFile(importKeyFileRequest)
+                .getResult();
     }
 
     @Override
-    public List<Account.AddressBalance> listBalancePerAddress() {
-        return null;
+    public List<AddressBalance> listBalancePerAddress() {
+        ListBalancePerAddressRequest listBalancePerAddressRequest = ListBalancePerAddressRequest
+                .newBuilder()
+                .build();
+
+        return AccountServiceGrpc
+                .newBlockingStub(channelUtils.getChannel())
+                .listBalancePerAddress(listBalancePerAddressRequest)
+                .getAddressesList();
     }
 }
