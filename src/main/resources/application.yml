@@ -1,2 +1,6 @@
 tolar-hashnet.url: "localhost"
 tolar-hashnet.port: 8524
+
+springdoc:
+  swagger-ui:
+    path: /swagger
