@@ -1,5 +1,5 @@
-tolar-hashnet.url: "localhost"
-tolar-hashnet.port: 8524
+tolar-hashnet.url: "127.0.0.1"
+tolar-hashnet.port: 9200
 
 springdoc:
   swagger-ui:

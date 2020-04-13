@@ -18,7 +18,7 @@ public class ChannelUtils {
     public Channel getChannel() {
         LOGGER.info(urlConfig.getUrl() + " " + urlConfig.getPort());
         return ManagedChannelBuilder.forAddress(urlConfig.getUrl(), urlConfig.getPort())
-                .useTransportSecurity()
+                .usePlaintext()
                 .build();
     }
 }
