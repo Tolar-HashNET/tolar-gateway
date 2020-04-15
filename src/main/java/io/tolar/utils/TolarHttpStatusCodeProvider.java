@@ -6,6 +6,7 @@ public class TolarHttpStatusCodeProvider implements HttpStatusCodeProvider {
     @Override
     public int getHttpStatusCode(int i) {
         switch (i) {
+            case 0: return 200;
             case 1:
                 return 499;
             case 2:
