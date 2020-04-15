@@ -12,6 +12,7 @@ public class TolarHttpStatusCodeProvider implements HttpStatusCodeProvider {
             case 2:
             case 13:
             case 15:
+            case -32001:
                 return 500;
             case 3:
             case 9:
