@@ -1,10 +1,12 @@
 package io.tolar.api;
 
 import com.google.protobuf.ByteString;
+import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import io.tolar.model.Block;
 import io.tolar.model.Transaction;
 import io.tolar.utils.ChannelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import tolar.proto.Blockchain.*;
 import tolar.proto.BlockchainServiceGrpc;
 import tolar.proto.Client.SendSignedTransactionRequest;
@@ -19,6 +21,8 @@ import tolar.proto.tx.TransactionOuterClass.SignedTransaction;
 
 import java.util.List;
 
+@Service
+@AutoJsonRpcServiceImpl
 public class ClientApiImpl implements ClientApi {
     @Autowired
     private ChannelUtils channelUtils;
