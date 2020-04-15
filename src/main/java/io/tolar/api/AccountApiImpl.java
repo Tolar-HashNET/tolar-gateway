@@ -59,7 +59,7 @@ public class AccountApiImpl implements AccountApi {
                 .getAddressesList();
 
         return addressesList.stream()
-                .map(t -> t.toStringUtf8())
+                .map(ByteString::toStringUtf8)
                 .collect(Collectors.toList());
     }
 
@@ -77,7 +77,7 @@ public class AccountApiImpl implements AccountApi {
     }
 
     @Override
-    public ByteString createNewAddress(String name, String lockPassword, String lockHint) {
+    public String createNewAddress(String name, String lockPassword, String lockHint) {
         CreateNewAddressRequest createNewAddressRequest = CreateNewAddressRequest
                 .newBuilder()
                 .setName(name)
@@ -88,7 +88,7 @@ public class AccountApiImpl implements AccountApi {
         return AccountServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
                 .createNewAddress(createNewAddressRequest)
-                .getAddress();
+                .getAddress().toStringUtf8();
     }
 
     @Override
