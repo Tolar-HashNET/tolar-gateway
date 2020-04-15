@@ -11,7 +11,6 @@ import tolar.proto.Account.*;
 import tolar.proto.AccountServiceGrpc;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AutoJsonRpcServiceImpl
@@ -48,19 +47,15 @@ public class AccountApiImpl implements AccountApi {
     }
 
     @Override
-    public List<String> listAddresses() {
+    public List<ByteString> listAddresses() {
         ListAddressesRequest listAddressesRequest = ListAddressesRequest
                 .newBuilder()
                 .build();
 
-        List<ByteString> addressesList = AccountServiceGrpc
+        return AccountServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
                 .listAddresses(listAddressesRequest)
                 .getAddressesList();
-
-        return addressesList.stream()
-                .map(ByteString::toStringUtf8)
-                .collect(Collectors.toList());
     }
 
     @Override

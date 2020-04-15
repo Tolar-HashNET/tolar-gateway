@@ -17,15 +17,15 @@ public interface AccountApi {
     boolean open(@JsonRpcParam(value = "master_password") String masterPassword);
 
     @JsonRpcMethod("ListAddresses")
-    List<String> listAddresses();
+    List<ByteString> listAddresses();
 
     @JsonRpcMethod("VerifyAddress")
     boolean verifyAddress(@JsonRpcParam(value = "address") ByteString address);
 
     @JsonRpcMethod("CreateNewAddress")
     String createNewAddress(@JsonRpcParam(value = "name") String name,
-                                @JsonRpcParam(value = "lock_password") String lockPassword,
-                                @JsonRpcParam(value = "lock_hint") String lockHint);
+                            @JsonRpcParam(value = "lock_password") String lockPassword,
+                            @JsonRpcParam(value = "lock_hint") String lockHint);
 
     @JsonRpcMethod("ExportKeyFile")
     String exportKeyFile(@JsonRpcParam(value = "address") ByteString address);

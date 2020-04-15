@@ -1,6 +1,11 @@
 package io.tolar.config;
 
+import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImplExporter;
+import io.tolar.utils.ByteStringDeserializer;
+import io.tolar.utils.ByteStringSerializer;
 import io.tolar.utils.TolarErrorResolver;
 import io.tolar.utils.TolarHttpStatusCodeProvider;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +27,14 @@ public class ApplicationConfig implements WebMvcConfigurer {
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addRedirectViewController("", "/swagger");
+    }
+
+    @Bean
+    public Module dynamoDemoEntityDeserializer() {
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(ByteString.class, new ByteStringDeserializer());
+        module.addSerializer(ByteString.class, new ByteStringSerializer());
+        return module;
     }
 
 }

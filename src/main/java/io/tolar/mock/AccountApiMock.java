@@ -22,7 +22,7 @@ public class AccountApiMock implements AccountApi {
     }
 
     @Override
-    public List<String> listAddresses() {
+    public List<ByteString> listAddresses() {
         return null;
     }
 
