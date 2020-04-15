@@ -2,7 +2,10 @@ package io.tolar.api;
 
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
+import io.tolar.response.ListAddressResponse;
 import io.tolar.utils.ChannelUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tolar.proto.Account.*;
@@ -13,6 +16,8 @@ import java.util.List;
 @Service
 @AutoJsonRpcServiceImpl
 public class AccountApiImpl implements AccountApi {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountApiImpl.class);
+
     @Autowired
     private ChannelUtils channelUtils;
 
@@ -43,15 +48,14 @@ public class AccountApiImpl implements AccountApi {
     }
 
     @Override
-    public List<ByteString> listAddresses() {
+    public ListAddressResponse listAddresses() {
         ListAddressesRequest listAddressesRequest = ListAddressesRequest
                 .newBuilder()
                 .build();
 
-        return AccountServiceGrpc
+        return new ListAddressResponse(AccountServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
-                .listAddresses(listAddressesRequest)
-                .getAddressesList();
+                .listAddresses(listAddressesRequest));
     }
 
     @Override
@@ -201,15 +205,15 @@ public class AccountApiImpl implements AccountApi {
                                                     ByteString gasPrice, String data, ByteString nonce) {
         SendDeployContractTransactionRequest sendDeployContractTransactionRequest =
                 SendDeployContractTransactionRequest
-                .newBuilder()
-                .setSenderAddress(senderAddress)
-                .setAmount(amount)
-                .setSenderAddressPassword(senderAddressPassword)
-                .setGas(gas)
-                .setGasPrice(gasPrice)
-                .setData(data)
-                .setNonce(nonce)
-                .build();
+                        .newBuilder()
+                        .setSenderAddress(senderAddress)
+                        .setAmount(amount)
+                        .setSenderAddressPassword(senderAddressPassword)
+                        .setGas(gas)
+                        .setGasPrice(gasPrice)
+                        .setData(data)
+                        .setNonce(nonce)
+                        .build();
 
         return AccountServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
@@ -224,16 +228,16 @@ public class AccountApiImpl implements AccountApi {
                                                      ByteString nonce) {
         SendExecuteFunctionTransactionRequest sendExecuteFunctionTransactionRequest =
                 SendExecuteFunctionTransactionRequest
-                .newBuilder()
-                .setSenderAddress(senderAddress)
-                .setReceiverAddress(receiverAddress)
-                .setAmount(amount)
-                .setSenderAddressPassword(senderAddressPassword)
-                .setGas(gas)
-                .setGasPrice(gasPrice)
-                .setData(data)
-                .setNonce(nonce)
-                .build();
+                        .newBuilder()
+                        .setSenderAddress(senderAddress)
+                        .setReceiverAddress(receiverAddress)
+                        .setAmount(amount)
+                        .setSenderAddressPassword(senderAddressPassword)
+                        .setGas(gas)
+                        .setGasPrice(gasPrice)
+                        .setData(data)
+                        .setNonce(nonce)
+                        .build();
 
         return AccountServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
