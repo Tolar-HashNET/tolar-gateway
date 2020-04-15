@@ -4,7 +4,6 @@ import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.JsonRpcMethod;
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.googlecode.jsonrpc4j.JsonRpcService;
-import io.tolar.response.ListAddressResponse;
 import tolar.proto.Account.AddressBalance;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public interface AccountApi {
     boolean open(@JsonRpcParam(value = "master_password") String masterPassword);
 
     @JsonRpcMethod("ListAddresses")
-    ListAddressResponse listAddresses();
+    List<String> listAddresses();
 
     @JsonRpcMethod("VerifyAddress")
     boolean verifyAddress(@JsonRpcParam(value = "address") ByteString address);

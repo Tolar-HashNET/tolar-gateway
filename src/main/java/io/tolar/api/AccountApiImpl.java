@@ -2,7 +2,6 @@ package io.tolar.api;
 
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
-import io.tolar.response.ListAddressResponse;
 import io.tolar.utils.ChannelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +11,7 @@ import tolar.proto.Account.*;
 import tolar.proto.AccountServiceGrpc;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AutoJsonRpcServiceImpl
@@ -48,14 +48,19 @@ public class AccountApiImpl implements AccountApi {
     }
 
     @Override
-    public ListAddressResponse listAddresses() {
+    public List<String> listAddresses() {
         ListAddressesRequest listAddressesRequest = ListAddressesRequest
                 .newBuilder()
                 .build();
 
-        return new ListAddressResponse(AccountServiceGrpc
+        List<ByteString> addressesList = AccountServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
-                .listAddresses(listAddressesRequest));
+                .listAddresses(listAddressesRequest)
+                .getAddressesList();
+
+        return addressesList.stream()
+                .map(t -> t.toStringUtf8())
+                .collect(Collectors.toList());
     }
 
     @Override

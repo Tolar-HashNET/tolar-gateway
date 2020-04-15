@@ -3,7 +3,6 @@ package io.tolar.mock;
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import io.tolar.api.AccountApi;
-import io.tolar.response.ListAddressResponse;
 import org.springframework.stereotype.Service;
 import tolar.proto.Account;
 
@@ -23,7 +22,7 @@ public class AccountApiMock implements AccountApi {
     }
 
     @Override
-    public ListAddressResponse listAddresses() {
+    public List<String> listAddresses() {
         return null;
     }
 
