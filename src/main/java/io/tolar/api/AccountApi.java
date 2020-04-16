@@ -23,9 +23,9 @@ public interface AccountApi {
     boolean verifyAddress(@JsonRpcParam(value = "address") ByteString address);
 
     @JsonRpcMethod("CreateNewAddress")
-    ByteString createNewAddress(@JsonRpcParam(value = "name") String name,
-                                @JsonRpcParam(value = "lock_password") String lockPassword,
-                                @JsonRpcParam(value = "lock_hint") String lockHint);
+    String createNewAddress(@JsonRpcParam(value = "name") String name,
+                            @JsonRpcParam(value = "lock_password") String lockPassword,
+                            @JsonRpcParam(value = "lock_hint") String lockHint);
 
     @JsonRpcMethod("ExportKeyFile")
     String exportKeyFile(@JsonRpcParam(value = "address") ByteString address);
@@ -60,12 +60,12 @@ public interface AccountApi {
 
     @JsonRpcMethod("SendFundTransferTransaction")
     ByteString sendFundTransferTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
-                                        @JsonRpcParam(value = "receiver_address") ByteString receiverAddress,
-                                        @JsonRpcParam(value = "amount") ByteString amount,
-                                        @JsonRpcParam(value = "sender_address_password") String senderAddressPassword,
-                                        @JsonRpcParam(value = "gas") ByteString gas,
-                                        @JsonRpcParam(value = "gas_price") ByteString gasPrice,
-                                        @JsonRpcParam(value = "nonce") ByteString nonce);
+                                           @JsonRpcParam(value = "receiver_address") ByteString receiverAddress,
+                                           @JsonRpcParam(value = "amount") ByteString amount,
+                                           @JsonRpcParam(value = "sender_address_password") String senderAddressPassword,
+                                           @JsonRpcParam(value = "gas") ByteString gas,
+                                           @JsonRpcParam(value = "gas_price") ByteString gasPrice,
+                                           @JsonRpcParam(value = "nonce") ByteString nonce);
 
     @JsonRpcMethod("SendDeployContractTransaction")
     ByteString sendDeployContractTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
