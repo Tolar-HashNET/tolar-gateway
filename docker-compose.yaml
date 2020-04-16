@@ -1,0 +1,24 @@
+version: "3.7"
+
+services:
+  gateway:
+    image: dreamfactoryhr/tolar-gateway
+    depends_on:
+      - thin_node
+    ports:
+      - 8080:8080
+    container_name: gateway
+    network_mode: host
+
+  thin_node:
+    image: thin_node
+    build:
+      context: thin_node
+    container_name: thin_node
+    network_mode: host
+
+networks:
+  grpc:
+    ipam:
+      config:
+        - subnet: 172.25.0.0/24
