@@ -3,34 +3,12 @@ version: "3.7"
 services:
   gateway:
     image: dreamfactoryhr/tolar-gateway
-    depends_on:
-      - thin_node
-    ports:
-      - 8080:8080
     container_name: gateway
-    ipc: container:thin_node
     network_mode: host
-    #networks:
-    #  grpc:
-    #    ipv4_address: 172.25.0.40
 
   thin_node:
     image: thin_node
     build:
       context: thin_node
     container_name: thin_node
-    #volumes:
-      # maybe temp?
-    #ports: only internally for gateway 9200
-    #  - 8545:8545
-    ipc: shareable
     network_mode: host
-    #networks:
-    #  grpc:
-    #    ipv4_address: 172.25.0.42
-
-networks:
-  grpc:
-    ipam:
-      config:
-        - subnet: 172.25.0.0/24
