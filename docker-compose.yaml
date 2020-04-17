@@ -2,17 +2,12 @@ version: "3.7"
 
 services:
   thin_node:
-    image: thin_node
+    image: tolar-node
     build:
       context: thin_node
-    container_name: thin_node
+    container_name: tolar-node
     network_mode: host
-    deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 2s
-        max_attempts: 3
-        window: 120s
+    restart: on-failure:5
     volumes:
     - keystore:/home/thin_node/.tolar/keystore/
 
