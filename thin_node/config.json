@@ -3,7 +3,8 @@
         "client_endpoint": {
             "ip_address": "127.0.0.1",
             "port": "9200"
-        }
+        },
+        "leveldb_dir": "/home/thin_node/.tolar/keystore/Thin_node/db"
     },
     "NetworkConfiguration": {
         "heartbeat_milliseconds": "1000",
@@ -147,5 +148,6 @@
                 "port": "9876"
             }
         }
-    ]
+    ],
+    "config_path": "/home/thin_node/.tolar/keystore/Thin_node"
 }

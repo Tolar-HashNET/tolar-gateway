@@ -1,5 +1,6 @@
 FROM ubuntu:18.04
 RUN mkdir -p /home/thin_node/.tolar/keystore/Thin_node/keys
+RUN mkdir -p /home/thin_node/.tolar/keystore/Thin_node/db
 WORKDIR /home/thin_node/
 COPY config.json .
 COPY tolar_daemon_linux .
