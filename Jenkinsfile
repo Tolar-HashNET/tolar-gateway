@@ -94,7 +94,7 @@ pipeline {
         }
 
         stage('Docker cleanup Staging') {
-            when anyOf { branch 'master'; branch 'tolar-node'}
+            when { anyOf { branch 'master'; branch 'tolar-node'} }
 
             steps {
                 sh 'ssh -C admin@172.31.7.104 "sudo docker system prune -f"'
