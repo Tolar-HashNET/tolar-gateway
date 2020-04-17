@@ -21,6 +21,8 @@ pipeline {
             when { branch 'master' }
 
             steps {
+                sh 'ssh -C admin@172.31.7.104 "echo kita"'
+
                 sh 'docker save dreamfactoryhr/tolar-gateway:latest ' +
                 ' | ssh -C admin@172.31.7.104 sudo docker load'
 
