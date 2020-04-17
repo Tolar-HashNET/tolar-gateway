@@ -1,14 +1,20 @@
 version: "3.7"
 
 services:
-  gateway:
-    image: dreamfactoryhr/tolar-gateway
-    container_name: gateway
-    network_mode: host
-
   thin_node:
     image: thin_node
     build:
       context: thin_node
     container_name: thin_node
     network_mode: host
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 2s
+        max_attempts: 3
+        window: 120s
+    volumes:
+    - keystore:/home/thin_node/.tolar/keystore/
+
+volumes:
+  keystore:

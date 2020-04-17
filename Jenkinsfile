@@ -11,6 +11,8 @@ pipeline {
 
     stages {
         stage('Build Gateway Image') {
+            when { not { branch 'tolar-node' } }
+
             steps {
                 sh 'mvn clean install dockerfile:build'
             }
@@ -46,75 +48,25 @@ pipeline {
             }
         }
 
-        stage('Deploy to Iskon') {
-            when { branch 'master' }
-
-            steps {
-                sh 'sudo vpnc iskon'
-
-                sh 'docker save dreamfactoryhr/callchain-hasher:latest ' +
-                ' | ssh -C vice.simunov@cch-collector-test.zg.iskon.hr sudo docker load'
-
-                sh 'ssh -C vice.simunov@cch-collector-test.zg.iskon.hr ' +
-                ' "sudo docker ps -f name=callchain-hasher -q ' +
-                ' | xargs --no-run-if-empty sudo docker container stop ' +
-                ' | xargs --no-run-if-empty sudo docker container rm" '
-
-                sh 'ssh vice.simunov@cch-collector-test.zg.iskon.hr sudo docker run -d ' +
-                ' -e "SPRING_PROFILES_ACTIVE=prod" -p 8091:8091 --name callchain-hasher ' +
-                ' --mount type=bind,source=/opt/cirpack/tickets/,target=/cdr/ ' +
-                ' --mount type=bind,source=/home/cch/.ssh,target=/.ssh/ ' +
-                ' dreamfactoryhr/callchain-hasher:latest'
-
-                script {
-                    def buildTime = currentBuild.durationString.replace(' and counting', '')
-
-                    slackMessage = "Deployed *CallChain Hasher* to *ISKON PRODUCTION* (" +
-                            "<${env.RUN_DISPLAY_URL}|Pipeline>" +
-                            ", <http://ch-web-test.zg.iskon.hr:8080|Blockchain Explorer>" +
-                            ") \n" +
-                            "Pipeline time: ${buildTime}"
-
-                    slackSend(channel: 'test-results', color: 'good', message: slackMessage,
-                            teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
-                }
-            }
-        }
-
         stage('Docker cleanup Jenkins') {
             steps {
                 sh 'docker system prune -f'
-                sh 'docker rmi dreamfactoryhr/callchain-hasher'
+                sh 'docker rmi dreamfactoryhr/tolar-gateway'
+                sh 'docker rmi tolar-node'
             }
         }
 
         stage('Docker cleanup Staging') {
-            when { branch 'develop' }
-
-            steps {
-                sh 'ssh -C admin@172.31.3.195 "sudo docker system prune -f"'
-            }
-        }
-
-        stage('Docker cleanup Iskon') {
             when { branch 'master' }
 
             steps {
-                sh 'ssh -C vice.simunov@cch-collector-test.zg.iskon.hr "sudo docker system prune -f"'
+                sh 'ssh -C admin@172.31.7.104 "sudo docker system prune -f"'
             }
         }
     }
 
 
     post {
-        always {
-            script {
-                if (env.BRANCH_NAME == 'master') {
-                    sh 'sudo vpnc-disconnect'
-                }
-            }
-        }
-
         success {
             script {
                 if (env.BRANCH_NAME == 'noMessageHack') {
