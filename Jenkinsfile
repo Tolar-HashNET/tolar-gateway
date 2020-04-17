@@ -55,13 +55,13 @@ pipeline {
                 sh 'docker-compose build'
                 sh 'docker save tolar-node:latest | ssh -C admin@172.31.7.104 sudo docker load'
                 sh 'scp docker-compose.yaml admin@172.31.7.104:/home/admin/tolar-gateway/docker-compose.yaml'
-                sh 'ssh -C admin@172.31.7.104 "cd cch; sudo docker-compose down"'
-                sh 'ssh -C admin@172.31.7.104 "cd cch; sudo docker-compose up -d"'
+                sh 'ssh -C admin@172.31.7.104 "cd tolar-gateway; sudo docker-compose down"'
+                sh 'ssh -C admin@172.31.7.104 "cd tolar-gateway; sudo docker-compose up -d"'
 
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
 
-                    slackMessage = "Deployed *Tolar Gateway* to *STAGING* (" +
+                    slackMessage = "Deployed *Tolar Node* to *STAGING* (" +
                             "<${env.RUN_DISPLAY_URL}|Pipeline>" +
                             ") \n" +
                             "Pipeline time: ${buildTime}"
