@@ -4,15 +4,12 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.google.common.primitives.Bytes;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import tolar.proto.Account.AddressBalance;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class AddressBalanceSerializer extends JsonSerializer<AddressBalance> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AddressBalanceSerializer.class);
     private static final int MIN_LENGTH_OF_DOUBLE = 8;
 
     @Override

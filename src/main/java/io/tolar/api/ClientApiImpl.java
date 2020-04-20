@@ -21,8 +21,7 @@ import tolar.proto.tx.TransactionOuterClass.SignedTransaction;
 
 import java.util.List;
 
-@Service
-@AutoJsonRpcServiceImpl
+
 public class ClientApiImpl implements ClientApi {
     @Autowired
     private ChannelUtils channelUtils;
