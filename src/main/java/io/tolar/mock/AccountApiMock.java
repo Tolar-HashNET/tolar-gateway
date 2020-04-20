@@ -32,7 +32,7 @@ public class AccountApiMock implements AccountApi {
     }
 
     @Override
-    public String createNewAddress(String name, String lockPassword, String lockHint) {
+    public ByteString createNewAddress(String name, String lockPassword, String lockHint) {
         return null;
     }
 

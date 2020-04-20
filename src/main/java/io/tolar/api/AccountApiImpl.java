@@ -72,7 +72,7 @@ public class AccountApiImpl implements AccountApi {
     }
 
     @Override
-    public String createNewAddress(String name, String lockPassword, String lockHint) {
+    public ByteString createNewAddress(String name, String lockPassword, String lockHint) {
         CreateNewAddressRequest createNewAddressRequest = CreateNewAddressRequest
                 .newBuilder()
                 .setName(name)
@@ -80,10 +80,12 @@ public class AccountApiImpl implements AccountApi {
                 .setLockHint(lockHint)
                 .build();
 
+
+
         return AccountServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
                 .createNewAddress(createNewAddressRequest)
-                .getAddress().toStringUtf8();
+                .getAddress();
     }
 
     @Override

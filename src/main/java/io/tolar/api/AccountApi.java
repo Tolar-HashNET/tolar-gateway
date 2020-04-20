@@ -23,9 +23,9 @@ public interface AccountApi {
     boolean verifyAddress(@JsonRpcParam(value = "address") ByteString address);
 
     @JsonRpcMethod("CreateNewAddress")
-    String createNewAddress(@JsonRpcParam(value = "name") String name,
-                            @JsonRpcParam(value = "lock_password") String lockPassword,
-                            @JsonRpcParam(value = "lock_hint") String lockHint);
+    ByteString createNewAddress(@JsonRpcParam(value = "name") String name,
+                                @JsonRpcParam(value = "lock_password") String lockPassword,
+                                @JsonRpcParam(value = "lock_hint") String lockHint);
 
     @JsonRpcMethod("ExportKeyFile")
     String exportKeyFile(@JsonRpcParam(value = "address") ByteString address);
