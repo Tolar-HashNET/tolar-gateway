@@ -13,8 +13,7 @@ import tolar.proto.tx.TransactionOuterClass;
 
 import java.util.List;
 
-@Service
-@AutoJsonRpcServiceImpl
+
 public class ClientApiMock implements ClientApi {
     private static final Logger LOGGER = LoggerFactory.getLogger(ClientApiMock.class);
 

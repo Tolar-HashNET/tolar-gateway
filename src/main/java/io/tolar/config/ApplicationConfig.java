@@ -32,11 +32,12 @@ public class ApplicationConfig implements WebMvcConfigurer {
     @Bean
     public Module entityDeserializerAndSerializer() {
         SimpleModule module = new SimpleModule();
+        module.addSerializer(ByteString.class, new ByteStringSerializer());
         module.addDeserializer(ByteString.class, new ByteStringDeserializer());
+
         module.addDeserializer(Common.SignatureData.class, new SignatureDataDeserializer());
         module.addDeserializer(TransactionOuterClass.Transaction.class, new TransactionDeserializer());
         module.addDeserializer(TransactionOuterClass.SignedTransaction.class, new SignedTransactionDeserializer());
-        module.addSerializer(ByteString.class, new ByteStringSerializer());
         module.addSerializer(AddressBalance.class, new AddressBalanceSerializer());
         return module;
     }

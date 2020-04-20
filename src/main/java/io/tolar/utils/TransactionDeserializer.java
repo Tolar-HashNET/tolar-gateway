@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.protobuf.ByteString;
@@ -18,10 +19,7 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
         TreeNode node = parser.getCodec().readTree(parser);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addSerializer(ByteString.class, new ByteStringSerializer());
-        module.addDeserializer(ByteString.class, new ByteStringDeserializer());
-        objectMapper.registerModule(module);
+        objectMapper.registerModule(createDeserializationModule());
 
         return TransactionOuterClass.Transaction
                 .newBuilder()
@@ -30,8 +28,15 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
                 .setValue(objectMapper.convertValue(node.get("amount"), ByteString.class))
                 .setGas(objectMapper.convertValue(node.get("gas"), ByteString.class))
                 .setGasPrice(objectMapper.convertValue(node.get("gas_price"), ByteString.class))
-                .setData(node.get("data").toString())
+                .setData(objectMapper.readValue(node.get("data").traverse(), String.class))
                 .setNonce(objectMapper.convertValue(node.get("nonce"), ByteString.class))
                 .build();
+    }
+
+    private Module createDeserializationModule() {
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(ByteString.class, new ByteStringSerializer());
+        module.addDeserializer(ByteString.class, new ByteStringDeserializer());
+        return module;
     }
 }

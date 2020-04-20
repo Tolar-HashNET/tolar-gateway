@@ -12,6 +12,5 @@ public class ByteStringDeserializer extends JsonDeserializer<ByteString> {
     public ByteString deserialize(JsonParser parser, DeserializationContext context)
             throws IOException {
         return ByteString.copyFromUtf8(parser.getValueAsString());
-
     }
 }

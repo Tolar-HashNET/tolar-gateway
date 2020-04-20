@@ -8,7 +8,6 @@ import com.google.protobuf.ByteString;
 import java.io.IOException;
 
 public class ByteStringSerializer extends JsonSerializer<ByteString> {
-
     @Override
     public void serialize(ByteString bytes, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeString(bytes.toStringUtf8());
