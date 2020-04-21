@@ -34,6 +34,8 @@ public class TolarHttpStatusCodeProvider implements HttpStatusCodeProvider {
                 return 501;
             case 14:
                 return 503;
+            case 16:
+                return 401;
         }
         return 0;
     }

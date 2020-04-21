@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import tolar.proto.Account.AddressBalance;
+import tolar.proto.Blockchain;
 import tolar.proto.Common;
 import tolar.proto.tx.TransactionOuterClass;
 
@@ -39,6 +40,14 @@ public class ApplicationConfig implements WebMvcConfigurer {
         module.addDeserializer(TransactionOuterClass.Transaction.class, new TransactionDeserializer());
         module.addDeserializer(TransactionOuterClass.SignedTransaction.class, new SignedTransactionDeserializer());
         module.addSerializer(AddressBalance.class, new AddressBalanceSerializer());
+        module.addSerializer(Blockchain.GetTransactionReceiptResponse.class,
+                new GetTransactionReceiptResponseSerializer());
+        module.addSerializer(Blockchain.TryCallTransactionResponse.class, new TryCallTransactionResponseSerializer());
+        module.addSerializer(Blockchain.GetBalanceResponse.class, new GetBalanceResponseSerializer());
+        module.addSerializer(Blockchain.GetTransactionListResponse.class, new GetTransactionListResponseSerializer());
+        module.addSerializer(Blockchain.GetTransactionResponse.class, new GetTransactionResponseSerializer());
+        module.addSerializer(Blockchain.GetBlockchainInfoResponse.class, new GetBlockchainInfoResponseSerializer());
+        module.addSerializer(Blockchain.GetBlockResponse.class, new GetBlockResponseSerializer());
         return module;
     }
 }

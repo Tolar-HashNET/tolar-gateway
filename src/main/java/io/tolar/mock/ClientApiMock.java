@@ -1,13 +1,9 @@
 package io.tolar.mock;
 
 import com.google.protobuf.ByteString;
-import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import io.tolar.api.ClientApi;
-import io.tolar.model.Block;
-import io.tolar.model.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 import tolar.proto.Blockchain;
 import tolar.proto.tx.TransactionOuterClass;
 
@@ -59,17 +55,17 @@ public class ClientApiMock implements ClientApi {
     }
 
     @Override
-    public Block getBlockByHash(ByteString blockHash) {
+    public Blockchain.GetBlockResponse getBlockByHash(ByteString blockHash) {
         return null;
     }
 
     @Override
-    public Block getBlockByIndex(long blockIndex) {
+    public Blockchain.GetBlockResponse getBlockByIndex(long blockIndex) {
         return null;
     }
 
     @Override
-    public Transaction getTransaction(ByteString transactionHash) {
+    public Blockchain.GetTransactionResponse getTransaction(ByteString transactionHash) {
         return null;
     }
 

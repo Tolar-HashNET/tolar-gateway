@@ -4,8 +4,6 @@ import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.JsonRpcMethod;
 import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.googlecode.jsonrpc4j.JsonRpcService;
-import io.tolar.model.Block;
-import io.tolar.model.Transaction;
 import tolar.proto.Blockchain.*;
 import tolar.proto.tx.TransactionOuterClass;
 import tolar.proto.tx.TransactionOuterClass.SignedTransaction;
@@ -33,13 +31,13 @@ public interface ClientApi {
     long getBlockCount();
 
     @JsonRpcMethod("GetBlockByHash")
-    Block getBlockByHash(@JsonRpcParam(value = "block_hash") ByteString blockHash);
+    GetBlockResponse getBlockByHash(@JsonRpcParam(value = "block_hash") ByteString blockHash);
 
     @JsonRpcMethod("GetBlockByIndex")
-    Block getBlockByIndex(@JsonRpcParam(value = "block_index") long blockIndex);
+    GetBlockResponse getBlockByIndex(@JsonRpcParam(value = "block_index") long blockIndex);
 
     @JsonRpcMethod("GetTransaction")
-    Transaction getTransaction(@JsonRpcParam(value = "transaction_hash") ByteString transactionHash);
+    GetTransactionResponse getTransaction(@JsonRpcParam(value = "transaction_hash") ByteString transactionHash);
 
     @JsonRpcMethod("GetBlockchainInfo")
     GetBlockchainInfoResponse getBlockchainInfo();

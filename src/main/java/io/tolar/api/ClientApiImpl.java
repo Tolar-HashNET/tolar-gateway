@@ -2,8 +2,6 @@ package io.tolar.api;
 
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
-import io.tolar.model.Block;
-import io.tolar.model.Transaction;
 import io.tolar.utils.ChannelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -101,45 +99,41 @@ public class ClientApiImpl implements ClientApi {
     }
 
     @Override
-    public Block getBlockByHash(ByteString blockHash) {
+    public GetBlockResponse getBlockByHash(ByteString blockHash) {
         GetBlockByHashRequest getBlockByHashRequest = GetBlockByHashRequest
                 .newBuilder()
                 .setBlockHash(blockHash)
                 .build();
 
-        GetBlockResponse blockByHash = BlockchainServiceGrpc
+        return BlockchainServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
                 .getBlockByHash(getBlockByHashRequest);
 
-        return new Block(blockByHash);
     }
 
     @Override
-    public Block getBlockByIndex(long blockIndex) {
+    public GetBlockResponse getBlockByIndex(long blockIndex) {
         GetBlockByIndexRequest getBlockByIndexRequest = GetBlockByIndexRequest
                 .newBuilder()
                 .setBlockIndex(blockIndex)
                 .build();
 
-        GetBlockResponse blockByIndex = BlockchainServiceGrpc
+        return BlockchainServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
                 .getBlockByIndex(getBlockByIndexRequest);
 
-        return new Block(blockByIndex);
     }
 
     @Override
-    public Transaction getTransaction(ByteString transactionHash) {
+    public GetTransactionResponse getTransaction(ByteString transactionHash) {
         GetTransactionRequest getTransactionRequest = GetTransactionRequest
                 .newBuilder()
                 .setTransactionHash(transactionHash)
                 .build();
 
-        GetTransactionResponse transaction = BlockchainServiceGrpc
+        return BlockchainServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
                 .getTransaction(getTransactionRequest);
-
-        return new Transaction(transaction);
     }
 
     @Override
