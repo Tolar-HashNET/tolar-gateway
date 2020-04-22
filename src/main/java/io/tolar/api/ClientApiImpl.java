@@ -152,6 +152,7 @@ public class ClientApiImpl implements ClientApi {
         GetTransactionListRequest getTransactionListRequest = GetTransactionListRequest
                 .newBuilder()
                 .addAllAddresses(addresses)
+                .setLimit(limit)
                 .setSkip(skip)
                 .build();
 
