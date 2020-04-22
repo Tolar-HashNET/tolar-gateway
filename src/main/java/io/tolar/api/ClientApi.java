@@ -48,7 +48,7 @@ public interface ClientApi {
                                                   @JsonRpcParam(value = "skip") long skip);
 
     @JsonRpcMethod("GetNonce")
-    ByteString getNonce(@JsonRpcParam(value = "skip") ByteString address);
+    ByteString getNonce(@JsonRpcParam(value = "address") ByteString address);
 
     @JsonRpcMethod("GetBalance")
     GetBalanceResponse getBalance(@JsonRpcParam(value = "address") ByteString address,
