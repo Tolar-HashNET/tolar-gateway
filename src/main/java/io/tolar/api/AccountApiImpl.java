@@ -2,7 +2,6 @@ package io.tolar.api;
 
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
-import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import tolar.proto.Account.*;
 import tolar.proto.AccountServiceGrpc;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -183,18 +181,18 @@ public class AccountApiImpl implements AccountApi {
 
     @Override
     public ByteString sendFundTransferTransaction(ByteString senderAddress, ByteString receiverAddress,
-                                                  BigInteger amount, String senderAddressPassword, BigInteger gas,
-                                                  BigInteger gasPrice, BigInteger nonce) {
+                                                  ByteString amount, String senderAddressPassword, ByteString gas,
+                                                  ByteString gasPrice, ByteString nonce) {
 
         SendFundTransferTransactionRequest sendFundTransferTransactionRequest = SendFundTransferTransactionRequest
                 .newBuilder()
                 .setSenderAddress(senderAddress)
                 .setReceiverAddress(receiverAddress)
-                .setAmount(BalanceConverter.toByteString(amount))
+                .setAmount(amount)
                 .setSenderAddressPassword(senderAddressPassword)
-                .setGas(BalanceConverter.toByteString(gas))
-                .setGasPrice(BalanceConverter.toByteString(gasPrice))
-                .setNonce(BalanceConverter.toByteString(nonce))
+                .setGas(gas)
+                .setGasPrice(gasPrice)
+                .setNonce(nonce)
                 .build();
 
         return AccountServiceGrpc

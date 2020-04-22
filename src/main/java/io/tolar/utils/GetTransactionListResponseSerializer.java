@@ -13,7 +13,7 @@ public class GetTransactionListResponseSerializer extends JsonSerializer<Blockch
                           JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
 
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeObjectField("addresses", getTransactionListResponse.getTransactionsList());
+        jsonGenerator.writeObjectField("transactions", getTransactionListResponse.getTransactionsList());
         jsonGenerator.writeEndObject();
     }
 }
