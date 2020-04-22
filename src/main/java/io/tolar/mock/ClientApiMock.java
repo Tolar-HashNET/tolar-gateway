@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import tolar.proto.Blockchain;
 import tolar.proto.tx.TransactionOuterClass;
 
+import java.math.BigInteger;
 import java.util.List;
 
 
@@ -80,7 +81,7 @@ public class ClientApiMock implements ClientApi {
     }
 
     @Override
-    public ByteString getNonce(ByteString address) {
+    public BigInteger getNonce(ByteString address) {
         return null;
     }
 

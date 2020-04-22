@@ -2,6 +2,7 @@ package io.tolar.api;
 
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
+import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import tolar.proto.TransactionServiceGrpc;
 import tolar.proto.tx.TransactionOuterClass;
 import tolar.proto.tx.TransactionOuterClass.SignedTransaction;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -162,16 +164,16 @@ public class ClientApiImpl implements ClientApi {
     }
 
     @Override
-    public ByteString getNonce(ByteString address) {
+    public BigInteger getNonce(ByteString address) {
         GetNonceRequest getNonceRequest = GetNonceRequest
                 .newBuilder()
                 .setAddress(address)
                 .build();
 
-        return BlockchainServiceGrpc
+        return BalanceConverter.convertBalance(BlockchainServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
                 .getNonce(getNonceRequest)
-                .getNonce();
+                .getNonce());
     }
 
     @Override

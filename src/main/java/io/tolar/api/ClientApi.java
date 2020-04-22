@@ -8,6 +8,7 @@ import tolar.proto.Blockchain.*;
 import tolar.proto.tx.TransactionOuterClass;
 import tolar.proto.tx.TransactionOuterClass.SignedTransaction;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @JsonRpcService("/Client")
@@ -48,7 +49,7 @@ public interface ClientApi {
                                                   @JsonRpcParam(value = "skip") long skip);
 
     @JsonRpcMethod("GetNonce")
-    ByteString getNonce(@JsonRpcParam(value = "address") ByteString address);
+    BigInteger getNonce(@JsonRpcParam(value = "address") ByteString address);
 
     @JsonRpcMethod("GetBalance")
     GetBalanceResponse getBalance(@JsonRpcParam(value = "address") ByteString address,
