@@ -3,6 +3,7 @@ package io.tolar.utils;
 import com.google.protobuf.ByteString;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 
 public class BalanceConverter {
 
@@ -11,6 +12,13 @@ public class BalanceConverter {
     }
 
     public static ByteString toByteString(BigInteger balance) {
-        return ByteString.copyFrom(balance.toByteArray());
+        return ByteString.copyFrom(convertToUnsignedBytes(balance.toByteArray()));
+    }
+
+    private static byte[] convertToUnsignedBytes(byte[] signedBytes) {
+        byte[] unsignedBytes = new byte[signedBytes.length];
+
+        Arrays.fill(unsignedBytes, (byte) (signedBytes[0] & 0xFF));
+        return unsignedBytes;
     }
 }
