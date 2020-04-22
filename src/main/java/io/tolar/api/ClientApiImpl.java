@@ -182,7 +182,7 @@ public class ClientApiImpl implements ClientApi {
                 .setAddress(address)
                 .build();
 
-        return BalanceConverter.convertBalance(BlockchainServiceGrpc
+        return BalanceConverter.toBigInteger(BlockchainServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
                 .getNonce(getNonceRequest)
                 .getNonce());

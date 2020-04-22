@@ -6,7 +6,11 @@ import java.math.BigInteger;
 
 public class BalanceConverter {
 
-    public static BigInteger convertBalance(ByteString balance) {
+    public static BigInteger toBigInteger(ByteString balance) {
         return new BigInteger(1, balance.toByteArray());
+    }
+
+    public static ByteString toByteString(BigInteger balance) {
+        return ByteString.copyFrom(balance.toByteArray());
     }
 }

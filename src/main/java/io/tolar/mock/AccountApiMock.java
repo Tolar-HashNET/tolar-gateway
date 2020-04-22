@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import io.tolar.api.AccountApi;
 import tolar.proto.Account;
 
+import java.math.BigInteger;
 import java.util.List;
 
 public class AccountApiMock implements AccountApi {
@@ -63,7 +64,7 @@ public class AccountApiMock implements AccountApi {
     }
 
     @Override
-    public ByteString sendFundTransferTransaction(ByteString senderAddress, ByteString receiverAddress, ByteString amount, String senderAddressPassword, ByteString gas, ByteString gasPrice, ByteString nonce) {
+    public ByteString sendFundTransferTransaction(ByteString senderAddress, ByteString receiverAddress, BigInteger amount, String senderAddressPassword, BigInteger gas, BigInteger gasPrice, BigInteger nonce) {
         return null;
     }
 
