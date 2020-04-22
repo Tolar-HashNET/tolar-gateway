@@ -151,12 +151,24 @@ public class ClientApiImpl implements ClientApi {
 
     @Override
     public GetTransactionListResponse getTransactionList(List<ByteString> addresses, long limit, long skip) {
-        GetTransactionListRequest getTransactionListRequest = GetTransactionListRequest
-                .newBuilder()
-                .addAllAddresses(addresses)
-                .setLimit(limit)
-                .setSkip(skip)
-                .build();
+        GetTransactionListRequest getTransactionListRequest;
+        //todo: see how to send empty addressess :O
+        if (addresses == null || addresses.isEmpty()) {
+            getTransactionListRequest = GetTransactionListRequest
+                    .newBuilder()
+                    .setLimit(limit)
+                    .setSkip(skip)
+                    .clearAddresses()
+                    .build();
+        } else {
+            getTransactionListRequest = GetTransactionListRequest
+                    .newBuilder()
+                    .addAllAddresses(addresses)
+                    .setLimit(limit)
+                    .setSkip(skip)
+                    .build();
+        }
+
 
         return BlockchainServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())

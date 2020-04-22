@@ -1,15 +1,11 @@
 package io.tolar.mock;
 
 import com.google.protobuf.ByteString;
-import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import io.tolar.api.AccountApi;
-import org.springframework.stereotype.Service;
 import tolar.proto.Account;
 
 import java.util.List;
 
-@Service
-@AutoJsonRpcServiceImpl
 public class AccountApiMock implements AccountApi {
     @Override
     public boolean create(String masterPassword) {
