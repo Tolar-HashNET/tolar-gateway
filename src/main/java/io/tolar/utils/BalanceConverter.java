@@ -7,6 +7,6 @@ import java.math.BigInteger;
 public class BalanceConverter {
 
     public static BigInteger convertBalance(ByteString balance) {
-        return new BigInteger(balance.toByteArray());
+        return new BigInteger(1, balance.toByteArray());
     }
 }
