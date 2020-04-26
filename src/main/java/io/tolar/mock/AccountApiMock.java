@@ -49,7 +49,9 @@ public class AccountApiMock implements AccountApi {
     }
 
     @Override
-    public ByteString sendRawTransaction(ByteString senderAddress, ByteString receiverAddress, ByteString amount, String senderAddressPassword, ByteString gas, ByteString gasPrice, String data, ByteString nonce) {
+    public ByteString sendRawTransaction(ByteString senderAddress, ByteString receiverAddress, BigInteger amount,
+                                         String senderAddressPassword, BigInteger gas, BigInteger gasPrice,
+                                         String data, BigInteger nonce) {
         return null;
     }
 
@@ -64,17 +66,23 @@ public class AccountApiMock implements AccountApi {
     }
 
     @Override
-    public ByteString sendFundTransferTransaction(ByteString senderAddress, ByteString receiverAddress, BigInteger amount, String senderAddressPassword, BigInteger gas, BigInteger gasPrice, BigInteger nonce) {
+    public ByteString sendFundTransferTransaction(ByteString senderAddress, ByteString receiverAddress,
+                                                  BigInteger amount, String senderAddressPassword, BigInteger gas,
+                                                  BigInteger gasPrice, BigInteger nonce) {
         return null;
     }
 
     @Override
-    public ByteString sendDeployContractTransaction(ByteString senderAddress, ByteString amount, String senderAddressPassword, ByteString gas, ByteString gasPrice, String data, ByteString nonce) {
+    public ByteString sendDeployContractTransaction(ByteString senderAddress, BigInteger amount,
+                                                    String senderAddressPassword, BigInteger gas, BigInteger gasPrice,
+                                                    String data, BigInteger nonce) {
         return null;
     }
 
     @Override
-    public ByteString sendExecuteFunctionTransaction(ByteString senderAddress, ByteString receiverAddress, ByteString amount, String senderAddressPassword, ByteString gas, ByteString gasPrice, String data, ByteString nonce) {
+    public ByteString sendExecuteFunctionTransaction(ByteString senderAddress, ByteString receiverAddress,
+                                                     BigInteger amount, String senderAddressPassword, BigInteger gas,
+                                                     BigInteger gasPrice, String data, BigInteger nonce) {
         return null;
     }
 }

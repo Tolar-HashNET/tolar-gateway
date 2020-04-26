@@ -43,12 +43,12 @@ public interface AccountApi {
     @JsonRpcMethod("SendRawTransaction")
     ByteString sendRawTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
                                   @JsonRpcParam(value = "receiver_address") ByteString receiverAddress,
-                                  @JsonRpcParam(value = "amount") ByteString amount,
+                                  @JsonRpcParam(value = "amount") BigInteger amount,
                                   @JsonRpcParam(value = "sender_address_password") String senderAddressPassword,
-                                  @JsonRpcParam(value = "gas") ByteString gas,
-                                  @JsonRpcParam(value = "gas_price") ByteString gasPrice,
+                                  @JsonRpcParam(value = "gas") BigInteger gas,
+                                  @JsonRpcParam(value = "gas_price") BigInteger gasPrice,
                                   @JsonRpcParam(value = "data") String data,
-                                  @JsonRpcParam(value = "nonce") ByteString nonce);
+                                  @JsonRpcParam(value = "nonce") BigInteger nonce);
 
     @JsonRpcMethod("ChangePassword")
     boolean changePassword(@JsonRpcParam(value = "old_master_password") String oldMasterPassword,
@@ -70,20 +70,20 @@ public interface AccountApi {
 
     @JsonRpcMethod("SendDeployContractTransaction")
     ByteString sendDeployContractTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
-                                             @JsonRpcParam(value = "amount") ByteString amount,
+                                             @JsonRpcParam(value = "amount") BigInteger amount,
                                              @JsonRpcParam(value = "sender_address_password") String senderAddressPassword,
-                                             @JsonRpcParam(value = "gas") ByteString gas,
-                                             @JsonRpcParam(value = "gas_price") ByteString gasPrice,
+                                             @JsonRpcParam(value = "gas") BigInteger gas,
+                                             @JsonRpcParam(value = "gas_price") BigInteger gasPrice,
                                              @JsonRpcParam(value = "data") String data,
-                                             @JsonRpcParam(value = "nonce") ByteString nonce);
+                                             @JsonRpcParam(value = "nonce") BigInteger nonce);
 
     @JsonRpcMethod("SendExecuteFunctionTransaction")
     ByteString sendExecuteFunctionTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
                                               @JsonRpcParam(value = "receiver_address") ByteString receiverAddress,
-                                              @JsonRpcParam(value = "amount") ByteString amount,
+                                              @JsonRpcParam(value = "amount") BigInteger amount,
                                               @JsonRpcParam(value = "sender_address_password") String senderAddressPassword,
-                                              @JsonRpcParam(value = "gas") ByteString gas,
-                                              @JsonRpcParam(value = "gas_price") ByteString gasPrice,
+                                              @JsonRpcParam(value = "gas") BigInteger gas,
+                                              @JsonRpcParam(value = "gas_price") BigInteger gasPrice,
                                               @JsonRpcParam(value = "data") String data,
-                                              @JsonRpcParam(value = "nonce") ByteString nonce);
+                                              @JsonRpcParam(value = "nonce") BigInteger nonce);
 }

@@ -126,19 +126,19 @@ public class AccountApiImpl implements AccountApi {
     }
 
     @Override
-    public ByteString sendRawTransaction(ByteString senderAddress, ByteString receiverAddress, ByteString amount,
-                                         String senderAddressPassword, ByteString gas, ByteString gasPrice,
-                                         String data, ByteString nonce) {
+    public ByteString sendRawTransaction(ByteString senderAddress, ByteString receiverAddress, BigInteger amount,
+                                         String senderAddressPassword, BigInteger gas, BigInteger gasPrice,
+                                         String data, BigInteger nonce) {
         SendRawTransactionRequest sendRawTransactionRequest = SendRawTransactionRequest
                 .newBuilder()
                 .setSenderAddress(senderAddress)
                 .setReceiverAddress(receiverAddress)
-                .setAmount(amount)
+                .setAmount(BalanceConverter.toByteString(amount))
                 .setSenderAddressPassword(senderAddressPassword)
-                .setGas(gas)
-                .setGasPrice(gasPrice)
+                .setGas(BalanceConverter.toByteString(gas))
+                .setGasPrice(BalanceConverter.toByteString(gasPrice))
                 .setData(data)
-                .setNonce(nonce)
+                .setNonce(BalanceConverter.toByteString(nonce))
                 .build();
 
         return AccountServiceGrpc
@@ -190,7 +190,7 @@ public class AccountApiImpl implements AccountApi {
                 .setSenderAddressPassword(senderAddressPassword)
                 .setGas(BalanceConverter.toByteString(gas))
                 .setGasPrice(BalanceConverter.toByteString(gasPrice))
-                .setNonce(ByteString.copyFrom(nonce.toByteArray()))
+                .setNonce(BalanceConverter.toByteString(nonce))
                 .build();
 
         return AccountServiceGrpc
@@ -200,19 +200,19 @@ public class AccountApiImpl implements AccountApi {
     }
 
     @Override
-    public ByteString sendDeployContractTransaction(ByteString senderAddress, ByteString amount,
-                                                    String senderAddressPassword, ByteString gas,
-                                                    ByteString gasPrice, String data, ByteString nonce) {
+    public ByteString sendDeployContractTransaction(ByteString senderAddress, BigInteger amount,
+                                                    String senderAddressPassword, BigInteger gas,
+                                                    BigInteger gasPrice, String data, BigInteger nonce) {
         SendDeployContractTransactionRequest sendDeployContractTransactionRequest =
                 SendDeployContractTransactionRequest
                         .newBuilder()
                         .setSenderAddress(senderAddress)
-                        .setAmount(amount)
+                        .setAmount(BalanceConverter.toByteString(amount))
                         .setSenderAddressPassword(senderAddressPassword)
-                        .setGas(gas)
-                        .setGasPrice(gasPrice)
+                        .setGas(BalanceConverter.toByteString(gas))
+                        .setGasPrice(BalanceConverter.toByteString(gasPrice))
                         .setData(data)
-                        .setNonce(nonce)
+                        .setNonce(BalanceConverter.toByteString(nonce))
                         .build();
 
         return AccountServiceGrpc
@@ -223,20 +223,20 @@ public class AccountApiImpl implements AccountApi {
 
     @Override
     public ByteString sendExecuteFunctionTransaction(ByteString senderAddress, ByteString receiverAddress,
-                                                     ByteString amount, String senderAddressPassword,
-                                                     ByteString gas, ByteString gasPrice, String data,
-                                                     ByteString nonce) {
+                                                     BigInteger amount, String senderAddressPassword,
+                                                     BigInteger gas, BigInteger gasPrice, String data,
+                                                     BigInteger nonce) {
         SendExecuteFunctionTransactionRequest sendExecuteFunctionTransactionRequest =
                 SendExecuteFunctionTransactionRequest
                         .newBuilder()
                         .setSenderAddress(senderAddress)
                         .setReceiverAddress(receiverAddress)
-                        .setAmount(amount)
+                        .setAmount(BalanceConverter.toByteString(amount))
                         .setSenderAddressPassword(senderAddressPassword)
-                        .setGas(gas)
-                        .setGasPrice(gasPrice)
+                        .setGas(BalanceConverter.toByteString(gas))
+                        .setGasPrice(BalanceConverter.toByteString(gasPrice))
                         .setData(data)
-                        .setNonce(nonce)
+                        .setNonce(BalanceConverter.toByteString(nonce))
                         .build();
 
         return AccountServiceGrpc
