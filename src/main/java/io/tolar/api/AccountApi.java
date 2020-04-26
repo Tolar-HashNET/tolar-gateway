@@ -6,6 +6,7 @@ import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.googlecode.jsonrpc4j.JsonRpcService;
 import tolar.proto.Account.AddressBalance;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @JsonRpcService("/Account")
@@ -61,11 +62,11 @@ public interface AccountApi {
     @JsonRpcMethod("SendFundTransferTransaction")
     ByteString sendFundTransferTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
                                            @JsonRpcParam(value = "receiver_address") ByteString receiverAddress,
-                                           @JsonRpcParam(value = "amount") ByteString amount,
+                                           @JsonRpcParam(value = "amount") BigInteger amount,
                                            @JsonRpcParam(value = "sender_address_password") String senderAddressPassword,
-                                           @JsonRpcParam(value = "gas") ByteString gas,
-                                           @JsonRpcParam(value = "gas_price") ByteString gasPrice,
-                                           @JsonRpcParam(value = "nonce") ByteString nonce);
+                                           @JsonRpcParam(value = "gas") BigInteger gas,
+                                           @JsonRpcParam(value = "gas_price") BigInteger gasPrice,
+                                           @JsonRpcParam(value = "nonce") BigInteger nonce);
 
     @JsonRpcMethod("SendDeployContractTransaction")
     ByteString sendDeployContractTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,

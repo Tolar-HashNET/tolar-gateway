@@ -2,6 +2,7 @@ package io.tolar.api;
 
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
+import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 import tolar.proto.Account.*;
 import tolar.proto.AccountServiceGrpc;
 
+import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -52,10 +55,13 @@ public class AccountApiImpl implements AccountApi {
                 .newBuilder()
                 .build();
 
-        return AccountServiceGrpc
+        List<ByteString> addressesList = AccountServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
                 .listAddresses(listAddressesRequest)
                 .getAddressesList();
+
+        LOGGER.info(Arrays.toString(addressesList.get(0).toByteArray()));
+        return addressesList;
     }
 
     @Override
@@ -181,18 +187,23 @@ public class AccountApiImpl implements AccountApi {
 
     @Override
     public ByteString sendFundTransferTransaction(ByteString senderAddress, ByteString receiverAddress,
-                                                  ByteString amount, String senderAddressPassword, ByteString gas,
-                                                  ByteString gasPrice, ByteString nonce) {
+                                                  BigInteger amount, String senderAddressPassword, BigInteger gas,
+                                                  BigInteger gasPrice, BigInteger nonce) {
+
+        LOGGER.info(Arrays.toString(amount.toByteArray()));
+        LOGGER.info(Arrays.toString(gas.toByteArray()));
+        LOGGER.info(Arrays.toString(gasPrice.toByteArray()));
+        LOGGER.info(Arrays.toString(nonce.toByteArray()));
 
         SendFundTransferTransactionRequest sendFundTransferTransactionRequest = SendFundTransferTransactionRequest
                 .newBuilder()
                 .setSenderAddress(senderAddress)
                 .setReceiverAddress(receiverAddress)
-                .setAmount(amount)
+                .setAmount(BalanceConverter.toByteString(amount))
                 .setSenderAddressPassword(senderAddressPassword)
-                .setGas(gas)
-                .setGasPrice(gasPrice)
-                .setNonce(nonce)
+                .setGas(BalanceConverter.toByteString(gas))
+                .setGasPrice(BalanceConverter.toByteString(gasPrice))
+                .setNonce(ByteString.copyFrom(nonce.toByteArray()))
                 .build();
 
         return AccountServiceGrpc

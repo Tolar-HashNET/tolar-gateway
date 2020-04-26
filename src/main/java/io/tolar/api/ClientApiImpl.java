@@ -4,6 +4,8 @@ import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tolar.proto.Blockchain.*;
@@ -19,11 +21,14 @@ import tolar.proto.tx.TransactionOuterClass;
 import tolar.proto.tx.TransactionOuterClass.SignedTransaction;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
 @AutoJsonRpcServiceImpl
 public class ClientApiImpl implements ClientApi {
+    private static Logger LOGGER = LoggerFactory.getLogger(ClientApiImpl.class);
+
     @Autowired
     private ChannelUtils channelUtils;
 
@@ -182,10 +187,13 @@ public class ClientApiImpl implements ClientApi {
                 .setAddress(address)
                 .build();
 
-        return BalanceConverter.toBigInteger(BlockchainServiceGrpc
+        ByteString nonce = BlockchainServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
                 .getNonce(getNonceRequest)
-                .getNonce());
+                .getNonce();
+
+        LOGGER.info(Arrays.toString(nonce.toByteArray()));
+        return BalanceConverter.toBigInteger(nonce);
     }
 
     @Override
