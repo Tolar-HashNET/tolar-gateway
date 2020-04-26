@@ -4,22 +4,17 @@ import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tolar.proto.Account.*;
 import tolar.proto.AccountServiceGrpc;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
 @AutoJsonRpcServiceImpl
 public class AccountApiImpl implements AccountApi {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AccountApiImpl.class);
-
     @Autowired
     private ChannelUtils channelUtils;
 
@@ -55,13 +50,10 @@ public class AccountApiImpl implements AccountApi {
                 .newBuilder()
                 .build();
 
-        List<ByteString> addressesList = AccountServiceGrpc
+        return AccountServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
                 .listAddresses(listAddressesRequest)
                 .getAddressesList();
-
-        LOGGER.info(Arrays.toString(addressesList.get(0).toByteArray()));
-        return addressesList;
     }
 
     @Override
@@ -189,11 +181,6 @@ public class AccountApiImpl implements AccountApi {
     public ByteString sendFundTransferTransaction(ByteString senderAddress, ByteString receiverAddress,
                                                   BigInteger amount, String senderAddressPassword, BigInteger gas,
                                                   BigInteger gasPrice, BigInteger nonce) {
-
-        LOGGER.info(Arrays.toString(amount.toByteArray()));
-        LOGGER.info(Arrays.toString(gas.toByteArray()));
-        LOGGER.info(Arrays.toString(gasPrice.toByteArray()));
-        LOGGER.info(Arrays.toString(nonce.toByteArray()));
 
         SendFundTransferTransactionRequest sendFundTransferTransactionRequest = SendFundTransferTransactionRequest
                 .newBuilder()
