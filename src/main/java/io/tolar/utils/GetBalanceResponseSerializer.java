@@ -13,7 +13,7 @@ public class GetBalanceResponseSerializer extends JsonSerializer<Blockchain.GetB
                           SerializerProvider serializerProvider) throws IOException {
 
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeObjectField("balance", getBalanceResponse.getBalance());
+        jsonGenerator.writeObjectField("balance", BalanceConverter.toBigInteger(getBalanceResponse.getBalance()));
         jsonGenerator.writeObjectField("block_index", getBalanceResponse.getBlockIndex());
         jsonGenerator.writeEndObject();
     }
