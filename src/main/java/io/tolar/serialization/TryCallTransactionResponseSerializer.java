@@ -1,4 +1,4 @@
-package io.tolar.utils;
+package io.tolar.serialization;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -7,13 +7,13 @@ import tolar.proto.Blockchain;
 
 import java.io.IOException;
 
-public class GetTransactionListResponseSerializer extends JsonSerializer<Blockchain.GetTransactionListResponse> {
+public class TryCallTransactionResponseSerializer extends JsonSerializer<Blockchain.TryCallTransactionResponse> {
     @Override
-    public void serialize(Blockchain.GetTransactionListResponse getTransactionListResponse,
+    public void serialize(Blockchain.TryCallTransactionResponse tryCallTransactionResponse,
                           JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeObjectField("transactions", getTransactionListResponse.getTransactionsList());
+        jsonGenerator.writeObjectField("output", tryCallTransactionResponse.getOutput());
+        jsonGenerator.writeObjectField("excepted", tryCallTransactionResponse.getExcepted());
         jsonGenerator.writeEndObject();
     }
 }

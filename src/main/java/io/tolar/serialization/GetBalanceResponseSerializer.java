@@ -1,8 +1,9 @@
-package io.tolar.utils;
+package io.tolar.serialization;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import io.tolar.utils.BalanceConverter;
 import tolar.proto.Blockchain;
 
 import java.io.IOException;

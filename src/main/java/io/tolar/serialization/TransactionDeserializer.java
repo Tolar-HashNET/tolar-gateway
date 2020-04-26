@@ -1,4 +1,4 @@
-package io.tolar.utils;
+package io.tolar.serialization;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.TreeNode;
@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.protobuf.ByteString;
+import io.tolar.serialization.ByteStringDeserializer;
+import io.tolar.serialization.ByteStringSerializer;
 import tolar.proto.tx.TransactionOuterClass;
 
 import java.io.IOException;
