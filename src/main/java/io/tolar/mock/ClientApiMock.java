@@ -96,7 +96,7 @@ public class ClientApiMock implements ClientApi {
     }
 
     @Override
-    public Blockchain.TryCallTransactionResponse tryCallTransaction(ByteString senderAddress, ByteString receiverAddress, ByteString amount, ByteString gas, ByteString gasPrice, String data, ByteString nonce) {
+    public Blockchain.TryCallTransactionResponse tryCallTransaction(ByteString senderAddress, ByteString receiverAddress, BigInteger amount, BigInteger gas, BigInteger gasPrice, String data, BigInteger nonce) {
         return null;
     }
 
