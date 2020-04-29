@@ -71,13 +71,22 @@ public class AccountApiImpl implements AccountApi {
 
     @Override
     public ByteString createNewAddress(String name, String lockPassword, String lockHint) {
-        CreateNewAddressRequest createNewAddressRequest = CreateNewAddressRequest
-                .newBuilder()
-                .setName(name)
-                .setLockPassword(lockPassword)
-                .setLockHint(lockHint)
-                .build();
+        CreateNewAddressRequest.Builder createNewAddressRequestBuilder = CreateNewAddressRequest
+                .newBuilder();
 
+        if (name != null) {
+            createNewAddressRequestBuilder.setName(name);
+        }
+
+        if (lockPassword != null) {
+            createNewAddressRequestBuilder.setLockPassword(lockPassword);
+        }
+
+        if (lockHint != null) {
+            createNewAddressRequestBuilder.setLockHint(lockHint);
+        }
+
+        CreateNewAddressRequest createNewAddressRequest = createNewAddressRequestBuilder.build();
 
         return AccountServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
@@ -100,16 +109,25 @@ public class AccountApiImpl implements AccountApi {
 
     @Override
     public boolean importKeyFile(String jsonKeyFile, String name, String lockPassword, String lockHint) {
-        ImportKeyFileRequest importKeyFileRequest = ImportKeyFileRequest
-                .newBuilder()
-                .setJsonKeyFile(jsonKeyFile)
-                .setLockPassword(lockPassword)
-                .setLockHint(lockHint)
-                .build();
+        ImportKeyFileRequest.Builder requestBuilder = ImportKeyFileRequest.newBuilder();
+        requestBuilder.setJsonKeyFile(jsonKeyFile);
 
+        if (name != null) {
+            requestBuilder.setName(name);
+        }
+
+        if (lockPassword != null) {
+            requestBuilder.setLockPassword(lockPassword);
+        }
+
+        if (lockHint != null) {
+            requestBuilder.setLockHint(lockHint);
+        }
+
+        ImportKeyFileRequest request = requestBuilder.build();
         return AccountServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
-                .importKeyFile(importKeyFileRequest)
+                .importKeyFile(request)
                 .getResult();
     }
 
