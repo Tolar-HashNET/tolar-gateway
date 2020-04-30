@@ -61,11 +61,11 @@ public interface ClientApi {
     @JsonRpcMethod("TryCallTransaction")
     TryCallTransactionResponse tryCallTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
                                                   @JsonRpcParam(value = "receiver_address") ByteString receiverAddress,
-                                                  @JsonRpcParam(value = "amount") ByteString amount,
-                                                  @JsonRpcParam(value = "gas") ByteString gas,
-                                                  @JsonRpcParam(value = "gas_price") ByteString gasPrice,
+                                                  @JsonRpcParam(value = "amount") BigInteger amount,
+                                                  @JsonRpcParam(value = "gas") BigInteger gas,
+                                                  @JsonRpcParam(value = "gas_price") BigInteger gasPrice,
                                                   @JsonRpcParam(value = "data") String data,
-                                                  @JsonRpcParam(value = "nonce") ByteString nonce);
+                                                  @JsonRpcParam(value = "nonce") BigInteger nonce);
 
     @JsonRpcMethod("GetTransactionReceipt")
     GetTransactionReceiptResponse getTransactionReceipt(@JsonRpcParam(value = "transaction_hash")

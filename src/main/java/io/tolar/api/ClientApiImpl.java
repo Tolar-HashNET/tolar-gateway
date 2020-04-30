@@ -152,13 +152,13 @@ public class ClientApiImpl implements ClientApi {
     @Override
     public GetTransactionListResponse getTransactionList(List<ByteString> addresses, long limit, long skip) {
         GetTransactionListRequest getTransactionListRequest;
-        //todo: see how to send empty addressess :O
+
+        //TODO: See how to send empty list of addresses
         if (addresses == null || addresses.isEmpty()) {
             getTransactionListRequest = GetTransactionListRequest
                     .newBuilder()
                     .setLimit(limit)
                     .setSkip(skip)
-                    .clearAddresses()
                     .build();
         } else {
             getTransactionListRequest = GetTransactionListRequest
@@ -217,17 +217,17 @@ public class ClientApiImpl implements ClientApi {
 
     @Override
     public TryCallTransactionResponse tryCallTransaction(ByteString senderAddress, ByteString receiverAddress,
-                                                         ByteString amount, ByteString gas, ByteString gasPrice,
-                                                         String data, ByteString nonce) {
+                                                         BigInteger amount, BigInteger gas, BigInteger gasPrice,
+                                                         String data, BigInteger nonce) {
         TransactionOuterClass.Transaction transaction = TransactionOuterClass.Transaction
                 .newBuilder()
                 .setSenderAddress(senderAddress)
                 .setReceiverAddress(receiverAddress)
-                .setValue(amount)
-                .setGas(gas)
-                .setGasPrice(gasPrice)
+                .setValue(BalanceConverter.toByteString(amount))
+                .setGas(BalanceConverter.toByteString(gas))
+                .setGasPrice(BalanceConverter.toByteString(gasPrice))
                 .setData(data)
-                .setNonce(nonce)
+                .setNonce(BalanceConverter.toByteString(nonce))
                 .build();
 
         return BlockchainServiceGrpc.newBlockingStub(channelUtils.getChannel())

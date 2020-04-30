@@ -8,11 +8,11 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.protobuf.ByteString;
-import io.tolar.serialization.ByteStringDeserializer;
-import io.tolar.serialization.ByteStringSerializer;
+import io.tolar.utils.BalanceConverter;
 import tolar.proto.tx.TransactionOuterClass;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 public class TransactionDeserializer extends JsonDeserializer<TransactionOuterClass.Transaction> {
     @Override
@@ -27,11 +27,11 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
                 .newBuilder()
                 .setSenderAddress(objectMapper.convertValue(node.get("sender_address"), ByteString.class))
                 .setReceiverAddress(objectMapper.convertValue(node.get("receiver_address"), ByteString.class))
-                .setValue(objectMapper.convertValue(node.get("amount"), ByteString.class))
-                .setGas(objectMapper.convertValue(node.get("gas"), ByteString.class))
-                .setGasPrice(objectMapper.convertValue(node.get("gas_price"), ByteString.class))
+                .setValue(BalanceConverter.toByteString(objectMapper.convertValue(node.get("amount"), BigInteger.class)))
+                .setGas(BalanceConverter.toByteString(objectMapper.convertValue(node.get("gas"), BigInteger.class)))
+                .setGasPrice(BalanceConverter.toByteString(objectMapper.convertValue(node.get("gas_price"), BigInteger.class)))
                 .setData(objectMapper.readValue(node.get("data").traverse(), String.class))
-                .setNonce(objectMapper.convertValue(node.get("nonce"), ByteString.class))
+                .setNonce(BalanceConverter.toByteString(objectMapper.convertValue(node.get("nonce"), BigInteger.class)))
                 .build();
     }
 
