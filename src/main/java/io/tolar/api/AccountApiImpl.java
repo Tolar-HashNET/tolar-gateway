@@ -20,6 +20,7 @@ public class AccountApiImpl implements AccountApi {
 
     @Override
     public boolean create(String masterPassword) {
+        //todo: check if password is optional?
         CreateRequest createRequest = CreateRequest
                 .newBuilder()
                 .setMasterPassword(masterPassword)
@@ -149,6 +150,7 @@ public class AccountApiImpl implements AccountApi {
     public ByteString sendRawTransaction(ByteString senderAddress, ByteString receiverAddress, BigInteger amount,
                                          String senderAddressPassword, BigInteger gas, BigInteger gasPrice,
                                          String data, BigInteger nonce) {
+        //todo: check if the data field is optional?
         SendRawTransactionRequest sendRawTransactionRequest = SendRawTransactionRequest
                 .newBuilder()
                 .setSenderAddress(senderAddress)
@@ -170,6 +172,7 @@ public class AccountApiImpl implements AccountApi {
 
     @Override
     public boolean changePassword(String oldMasterPassword, String newMasterPassword) {
+        //todo: check if the address has now password, is it an optional argument then?
         ChangePasswordRequest changePasswordRequest = ChangePasswordRequest
                 .newBuilder()
                 .setOldMasterPassword(oldMasterPassword)
@@ -184,6 +187,7 @@ public class AccountApiImpl implements AccountApi {
 
     @Override
     public boolean changeAddressPassword(ByteString address, String oldPassword, String newPassword) {
+        //todo: check if the address has now password, is it an optional argument then?
         ChangeAddressPasswordRequest changeAddressPasswordRequest = ChangeAddressPasswordRequest
                 .newBuilder()
                 .setAddress(address)
@@ -264,4 +268,5 @@ public class AccountApiImpl implements AccountApi {
                 .sendExecuteFunctionTransaction(sendExecuteFunctionTransactionRequest)
                 .getTransactionHash();
     }
+
 }
