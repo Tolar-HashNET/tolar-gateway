@@ -95,6 +95,23 @@ public class AccountApiImpl implements AccountApi {
     }
 
     @Override
+    public ByteString createNewAddress(String name) {
+        CreateNewAddressRequest.Builder createNewAddressRequestBuilder = CreateNewAddressRequest
+                .newBuilder();
+
+        if (name != null) {
+            createNewAddressRequestBuilder.setName(name);
+        }
+
+        CreateNewAddressRequest createNewAddressRequest = createNewAddressRequestBuilder.build();
+
+        return AccountServiceGrpc
+                .newBlockingStub(channelUtils.getChannel())
+                .createNewAddress(createNewAddressRequest)
+                .getAddress();
+    }
+
+    @Override
     public String exportKeyFile(ByteString address) {
         ExportKeyFileRequest exportKeyFileRequest = ExportKeyFileRequest
                 .newBuilder()

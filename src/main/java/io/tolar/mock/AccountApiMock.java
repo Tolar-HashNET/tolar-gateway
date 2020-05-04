@@ -34,6 +34,11 @@ public class AccountApiMock implements AccountApi {
     }
 
     @Override
+    public ByteString createNewAddress(String name) {
+        return null;
+    }
+
+    @Override
     public String exportKeyFile(ByteString address) {
         return null;
     }
