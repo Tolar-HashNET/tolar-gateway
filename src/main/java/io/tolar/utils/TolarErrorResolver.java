@@ -21,6 +21,9 @@ public class TolarErrorResolver implements ErrorResolver {
                     null);
         }
 
+        LOGGER.error("unhandled error on method: " + method.getName() + ", error: ", throwable);
+
         return JsonError.ERROR_NOT_HANDLED;
     }
+
 }
