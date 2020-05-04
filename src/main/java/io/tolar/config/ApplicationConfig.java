@@ -23,6 +23,7 @@ public class ApplicationConfig implements WebMvcConfigurer {
         AutoJsonRpcServiceImplExporter exporter = new AutoJsonRpcServiceImplExporter();
         exporter.setErrorResolver(new TolarErrorResolver());
         exporter.setHttpStatusCodeProvider(new TolarHttpStatusCodeProvider());
+        exporter.setAllowLessParams(true);
         return exporter;
     }
 

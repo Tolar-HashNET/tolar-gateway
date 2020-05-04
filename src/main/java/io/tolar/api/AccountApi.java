@@ -28,9 +28,6 @@ public interface AccountApi {
                                 @JsonRpcParam(value = "lock_password") String lockPassword,
                                 @JsonRpcParam(value = "lock_hint") String lockHint);
 
-    @JsonRpcMethod("CreateNewAddress")
-    ByteString createNewAddress(@JsonRpcParam(value = "name") String name);
-
     @JsonRpcMethod("ExportKeyFile")
     String exportKeyFile(@JsonRpcParam(value = "address") ByteString address);
 
