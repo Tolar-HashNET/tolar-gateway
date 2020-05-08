@@ -55,7 +55,9 @@ public class Web3JTests {
                 BigInteger.ZERO, //value
                 ""//data (empty for now)
         );
+
         //from (tolar address): 540dc971237be2361e04c1643d57b572709db15e449a870fef
+        //from ethereum: T (54) + 0dc971237be2361e04c1643d57b572709db15e44 + checksum (9a870fef)
         //to (tolar address): 5484c512b1cf3d45e7506a772b7358375acc571b2930d27deb
 
         //todo: need hash, signature (sign data), signed_id (maybe address? or private key?)
