@@ -27,11 +27,6 @@ public class ApplicationConfig implements WebMvcConfigurer {
         return exporter;
     }
 
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addRedirectViewController("", "/swagger");
-    }
-
     @Bean
     public Module entityDeserializerAndSerializer() {
         SimpleModule module = new SimpleModule();
