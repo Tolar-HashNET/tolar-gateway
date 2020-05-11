@@ -13,19 +13,19 @@ import java.util.List;
 
 @JsonRpcService("/")
 public interface ClientApi {
-    @JsonRpcMethod("SendSignedTransaction")
+    @JsonRpcMethod("transaction_sendSignedTransaction")
     ByteString sendSignedTransaction(@JsonRpcParam(value = "transaction") SignedTransaction signedTransaction);
 
-    @JsonRpcMethod("PeerCount")
+    @JsonRpcMethod("network_PeerCount")
     long peerCount();
 
-    @JsonRpcMethod("MasterNodeCount")
+    @JsonRpcMethod("network_masterNodeCount")
     long masterNodeCount();
 
-    @JsonRpcMethod("IsMasterNode")
+    @JsonRpcMethod("network_isMasterNode")
     boolean isMasterNode();
 
-    @JsonRpcMethod("MaxPeerCount")
+    @JsonRpcMethod("network_maxPeerCount")
     long maxPeerCount();
 
     @JsonRpcMethod("block_getBlockCount")
