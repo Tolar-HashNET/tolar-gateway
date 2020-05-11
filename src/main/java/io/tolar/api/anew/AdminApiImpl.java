@@ -1,19 +1,15 @@
 package io.tolar.api.anew;
 
 import com.google.protobuf.ByteString;
-import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import tolar.proto.Account.*;
 import tolar.proto.AccountServiceGrpc;
 
 import java.math.BigInteger;
 import java.util.List;
 
-@Service
-@AutoJsonRpcServiceImpl
 public class AdminApiImpl implements AdminApi {
     @Autowired
     private ChannelUtils channelUtils;

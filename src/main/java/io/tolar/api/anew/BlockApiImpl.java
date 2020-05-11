@@ -1,11 +1,9 @@
 package io.tolar.api.anew;
 
 import com.google.protobuf.ByteString;
-import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import tolar.proto.Blockchain.*;
 import tolar.proto.BlockchainServiceGrpc;
 import tolar.proto.tx.TransactionOuterClass;
@@ -13,8 +11,6 @@ import tolar.proto.tx.TransactionOuterClass;
 import java.math.BigInteger;
 import java.util.List;
 
-@Service
-@AutoJsonRpcServiceImpl
 public class BlockApiImpl implements BlockApi {
     @Autowired
     private ChannelUtils channelUtils;
