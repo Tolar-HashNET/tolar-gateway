@@ -4,12 +4,16 @@ import com.google.protobuf.ByteString;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import tolar.proto.Account.*;
 import tolar.proto.AccountServiceGrpc;
 
 import java.math.BigInteger;
 import java.util.List;
 
+@Component
+@Service
 public class AdminApiImpl implements AdminApi {
     @Autowired
     private ChannelUtils channelUtils;

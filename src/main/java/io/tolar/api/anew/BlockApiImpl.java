@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import tolar.proto.Blockchain.*;
 import tolar.proto.BlockchainServiceGrpc;
 import tolar.proto.tx.TransactionOuterClass;
@@ -11,6 +12,7 @@ import tolar.proto.tx.TransactionOuterClass;
 import java.math.BigInteger;
 import java.util.List;
 
+@Component
 public class BlockApiImpl implements BlockApi {
     @Autowired
     private ChannelUtils channelUtils;

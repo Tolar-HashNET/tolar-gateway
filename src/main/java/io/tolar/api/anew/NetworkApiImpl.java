@@ -2,9 +2,11 @@ package io.tolar.api.anew;
 
 import io.tolar.utils.ChannelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import tolar.proto.Network;
 import tolar.proto.NetworkServiceGrpc;
 
+@Component
 public class NetworkApiImpl implements NetworkApi {
     @Autowired
     private ChannelUtils channelUtils;
