@@ -5,10 +5,13 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImplExporter;
 import io.tolar.serialization.*;
-import io.tolar.utils.*;
+import io.tolar.utils.TolarErrorResolver;
+import io.tolar.utils.TolarHttpStatusCodeProvider;
+import io.tolar.utils.TolarServlet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import tolar.proto.Account.AddressBalance;
 import tolar.proto.Blockchain;
@@ -17,6 +20,8 @@ import tolar.proto.tx.TransactionOuterClass;
 
 @Configuration
 public class ApplicationConfig implements WebMvcConfigurer {
+    @Autowired
+    private TolarServlet tolarServlet;
 
     @Bean
     public static AutoJsonRpcServiceImplExporter autoJsonRpcServiceImplExporter() {
@@ -27,9 +32,12 @@ public class ApplicationConfig implements WebMvcConfigurer {
         return exporter;
     }
 
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addRedirectViewController("", "/swagger");
+    @Bean
+    public ServletRegistrationBean<TolarServlet> servletRegistrationBean() {
+        ServletRegistrationBean<TolarServlet> bean = new ServletRegistrationBean<>(
+                tolarServlet, "");
+        bean.setLoadOnStartup(1);
+        return bean;
     }
 
     @Bean
