@@ -8,6 +8,8 @@ import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.crypto.*;
+import org.web3j.protocol.admin.Admin;
+import org.web3j.utils.Numeric;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,8 +51,8 @@ public class Web3JTests {
         Credentials credentials = WalletUtils.loadCredentials("test2", file);
         RawTransaction rawTransaction = RawTransaction.createTransaction(
                 BigInteger.ONE, //nonce
-                BigInteger.valueOf(21000L), //gasPrice
-                BigInteger.ONE, //gasLimit
+                BigInteger.ONE, //gasPrice
+                BigInteger.valueOf(21000L), //gasLimit
                 "5484c512b1cf3d45e7506a772b7358375acc571b2930d27deb", //toAddress -> tolar address
                 BigInteger.ZERO, //value
                 ""//data (empty for now)
@@ -62,9 +64,9 @@ public class Web3JTests {
 
         //todo: need hash, signature (sign data), signed_id (maybe address? or private key?)
 
-
         //todo: convert signature data tu signature!
         byte[] encodedTransaction = TransactionEncoder.encode(rawTransaction);
+        String hexEncodedTx = Numeric.toHexString(encodedTransaction); //hash field
         Sign.SignatureData signatureData =
                 Sign.signMessage(encodedTransaction, credentials.getEcKeyPair());
         byte[] hashedMessage = Hash.sha3(encodedTransaction);
@@ -83,11 +85,17 @@ public class Web3JTests {
                 signatureData.getR().length + signatureData.getS().length,
                 signatureData.getV().length);
 
+        String possibleHexSignature = Numeric.toHexString(concatSignatureLikeWeb3js); //signature?
+        String signerId = credentials.getEcKeyPair().getPublicKey().toString(16);
+
         //web3.js uses concat (r, s, v) for signature, maybe this is the case?
 
         //if it doesnt work, remove the last byte! (recover id)
 
         byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
+        String expectedSignature = Numeric.toHexString(signedMessage);
+
+        assertTrue(true);
 
         //todo: try to send a regular transaction then to send the signed one!!
     }

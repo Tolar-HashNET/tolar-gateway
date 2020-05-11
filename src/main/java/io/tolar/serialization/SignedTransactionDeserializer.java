@@ -23,7 +23,7 @@ public class SignedTransactionDeserializer extends JsonDeserializer<SignedTransa
         objectMapper.registerModule(createDeserializationModule());
 
         TreeNode node = parser.readValueAsTree();
-        Transaction transaction = objectMapper.convertValue(node.get("transaction"), Transaction.class);
+        Transaction transaction = objectMapper.convertValue(node.get("body"), Transaction.class);
         SignatureData signatureData = objectMapper.convertValue(node.get("signature_data"), SignatureData.class);
 
         return SignedTransaction
