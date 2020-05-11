@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.jsonrpc4j.JsonRpcServer;
 import com.googlecode.jsonrpc4j.ProxyUtil;
 import io.tolar.api.anew.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.io.IOException;
 
 @Service
 public class TolarServlet extends HttpServlet {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TolarServlet.class);
     private JsonRpcServer jsonRpcServer;
 
     @Autowired
@@ -39,7 +42,7 @@ public class TolarServlet extends HttpServlet {
         try {
             jsonRpcServer.handle(request, response);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to handle request.", e);
         }
     }
 
@@ -49,7 +52,6 @@ public class TolarServlet extends HttpServlet {
                 new Object[]{adminApi, blockApi, networkApi, transactionApi},
                 new Class<?>[]{AdminApi.class, BlockApi.class, NetworkApi.class, TransactionApi.class},
                 true);
-
 
         jsonRpcServer = new JsonRpcServer(new ObjectMapper().registerModule(module), compositeService);
         jsonRpcServer.setErrorResolver(new TolarErrorResolver());
