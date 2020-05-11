@@ -3,13 +3,11 @@ package io.tolar.api.anew;
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.JsonRpcMethod;
 import com.googlecode.jsonrpc4j.JsonRpcParam;
-import com.googlecode.jsonrpc4j.JsonRpcService;
 import tolar.proto.Account.AddressBalance;
 
 import java.math.BigInteger;
 import java.util.List;
 
-@JsonRpcService("/tolar")
 public interface AdminApi {
     @JsonRpcMethod("admin_create")
     boolean create(@JsonRpcParam(value = "master_password") String masterPassword);

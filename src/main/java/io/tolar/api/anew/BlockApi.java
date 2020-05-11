@@ -10,7 +10,6 @@ import tolar.proto.tx.TransactionOuterClass;
 import java.math.BigInteger;
 import java.util.List;
 
-@JsonRpcService("/tolar")
 public interface BlockApi {
     @JsonRpcMethod("block_getBlockCount")
     long getBlockCount();
