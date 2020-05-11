@@ -45,7 +45,7 @@ public class TolarServlet extends HttpServlet {
 
     public void init(ServletConfig servletConfig) {
         Object compositeService = ProxyUtil.createCompositeServiceProxy(
-                ClassLoader.getSystemClassLoader(),
+                this.getClass().getClassLoader(),
                 new Object[]{adminApi, blockApi, networkApi, transactionApi},
                 new Class<?>[]{AdminApi.class, BlockApi.class, NetworkApi.class, TransactionApi.class},
                 true);
