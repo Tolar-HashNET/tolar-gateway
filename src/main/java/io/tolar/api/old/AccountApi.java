@@ -1,4 +1,4 @@
-package io.tolar.api;
+package io.tolar.api.old;
 
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.JsonRpcMethod;
@@ -9,38 +9,38 @@ import tolar.proto.Account.AddressBalance;
 import java.math.BigInteger;
 import java.util.List;
 
-@JsonRpcService("/")
+@JsonRpcService("/Account")
 public interface AccountApi {
-    @JsonRpcMethod("admin_create")
+    @JsonRpcMethod("Create")
     boolean create(@JsonRpcParam(value = "master_password") String masterPassword);
 
-    @JsonRpcMethod("admin_open")
+    @JsonRpcMethod("Open")
     boolean open(@JsonRpcParam(value = "master_password") String masterPassword);
 
-    @JsonRpcMethod("admin_listAddresses")
+    @JsonRpcMethod("ListAddresses")
     List<ByteString> listAddresses();
 
-    @JsonRpcMethod("admin_verifyAddress")
+    @JsonRpcMethod("VerifyAddress")
     boolean verifyAddress(@JsonRpcParam(value = "address") ByteString address);
 
-    @JsonRpcMethod("admin_createNewAddress")
+    @JsonRpcMethod("CreateNewAddress")
     ByteString createNewAddress(@JsonRpcParam(value = "name") String name,
                                 @JsonRpcParam(value = "lock_password") String lockPassword,
                                 @JsonRpcParam(value = "lock_hint") String lockHint);
 
-    @JsonRpcMethod("admin_exportKeyFile")
+    @JsonRpcMethod("ExportKeyFile")
     String exportKeyFile(@JsonRpcParam(value = "address") ByteString address);
 
-    @JsonRpcMethod("admin_importKeyFile")
+    @JsonRpcMethod("ImportKeyFile")
     boolean importKeyFile(@JsonRpcParam(value = "json_key_file") String jsonKeyFile,
                           @JsonRpcParam(value = "name") String name,
                           @JsonRpcParam(value = "lock_password") String lockPassword,
                           @JsonRpcParam(value = "lock_hint") String lockHint);
 
-    @JsonRpcMethod("admin_listBalancePerAddress")
+    @JsonRpcMethod("ListBalancePerAddress")
     List<AddressBalance> listBalancePerAddress();
 
-    @JsonRpcMethod("admin_sendRawTransaction")
+    @JsonRpcMethod("SendRawTransaction")
     ByteString sendRawTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
                                   @JsonRpcParam(value = "receiver_address") ByteString receiverAddress,
                                   @JsonRpcParam(value = "amount") BigInteger amount,
@@ -50,16 +50,16 @@ public interface AccountApi {
                                   @JsonRpcParam(value = "data") String data,
                                   @JsonRpcParam(value = "nonce") BigInteger nonce);
 
-    @JsonRpcMethod("admin_changePassword")
+    @JsonRpcMethod("ChangePassword")
     boolean changePassword(@JsonRpcParam(value = "old_master_password") String oldMasterPassword,
                            @JsonRpcParam(value = "new_master_password") String newMasterPassword);
 
-    @JsonRpcMethod("admin_changeAddressPassword")
+    @JsonRpcMethod("ChangeAddressPassword")
     boolean changeAddressPassword(@JsonRpcParam(value = "address") ByteString address,
                                   @JsonRpcParam(value = "old_password") String oldPassword,
                                   @JsonRpcParam(value = "new_password") String newPassword);
 
-    @JsonRpcMethod("admin_sendFundTransferTransaction")
+    @JsonRpcMethod("SendFundTransferTransaction")
     ByteString sendFundTransferTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
                                            @JsonRpcParam(value = "receiver_address") ByteString receiverAddress,
                                            @JsonRpcParam(value = "amount") BigInteger amount,
@@ -68,7 +68,7 @@ public interface AccountApi {
                                            @JsonRpcParam(value = "gas_price") BigInteger gasPrice,
                                            @JsonRpcParam(value = "nonce") BigInteger nonce);
 
-    @JsonRpcMethod("admin_sendDeployContractTransaction")
+    @JsonRpcMethod("SendDeployContractTransaction")
     ByteString sendDeployContractTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
                                              @JsonRpcParam(value = "amount") BigInteger amount,
                                              @JsonRpcParam(value = "sender_address_password") String senderAddressPassword,
@@ -77,7 +77,7 @@ public interface AccountApi {
                                              @JsonRpcParam(value = "data") String data,
                                              @JsonRpcParam(value = "nonce") BigInteger nonce);
 
-    @JsonRpcMethod("admin_sendExecuteFunctionTransaction")
+    @JsonRpcMethod("SendExecuteFunctionTransaction")
     ByteString sendExecuteFunctionTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
                                               @JsonRpcParam(value = "receiver_address") ByteString receiverAddress,
                                               @JsonRpcParam(value = "amount") BigInteger amount,

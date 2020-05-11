@@ -1,4 +1,4 @@
-package io.tolar.api;
+package io.tolar.api.old;
 
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
@@ -7,16 +7,8 @@ import io.tolar.utils.ChannelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tolar.proto.Blockchain.*;
-import tolar.proto.BlockchainServiceGrpc;
-import tolar.proto.Client.SendSignedTransactionRequest;
-import tolar.proto.Network.IsMasterNodeRequest;
-import tolar.proto.Network.MasterNodeCountRequest;
-import tolar.proto.Network.MaxPeerCountRequest;
-import tolar.proto.Network.PeerCountRequest;
-import tolar.proto.NetworkServiceGrpc;
-import tolar.proto.TransactionServiceGrpc;
+import tolar.proto.*;
 import tolar.proto.tx.TransactionOuterClass;
-import tolar.proto.tx.TransactionOuterClass.SignedTransaction;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -28,8 +20,8 @@ public class ClientApiImpl implements ClientApi {
     private ChannelUtils channelUtils;
 
     @Override
-    public ByteString sendSignedTransaction(SignedTransaction signedTransaction) {
-        SendSignedTransactionRequest sendSignedTransactionRequest = SendSignedTransactionRequest
+    public ByteString sendSignedTransaction(TransactionOuterClass.SignedTransaction signedTransaction) {
+        Client.SendSignedTransactionRequest sendSignedTransactionRequest = Client.SendSignedTransactionRequest
                 .newBuilder()
                 .setSignedTransaction(signedTransaction)
                 .build();
@@ -42,7 +34,7 @@ public class ClientApiImpl implements ClientApi {
 
     @Override
     public long peerCount() {
-        PeerCountRequest peerCountRequest = PeerCountRequest
+        Network.PeerCountRequest peerCountRequest = Network.PeerCountRequest
                 .newBuilder()
                 .build();
 
@@ -54,7 +46,7 @@ public class ClientApiImpl implements ClientApi {
 
     @Override
     public long masterNodeCount() {
-        MasterNodeCountRequest masterNodeCountRequest = MasterNodeCountRequest
+        Network.MasterNodeCountRequest masterNodeCountRequest = Network.MasterNodeCountRequest
                 .newBuilder()
                 .build();
 
@@ -66,7 +58,7 @@ public class ClientApiImpl implements ClientApi {
 
     @Override
     public boolean isMasterNode() {
-        IsMasterNodeRequest isMasterNodeRequest = IsMasterNodeRequest
+        Network.IsMasterNodeRequest isMasterNodeRequest = Network.IsMasterNodeRequest
                 .newBuilder()
                 .build();
 
@@ -78,7 +70,7 @@ public class ClientApiImpl implements ClientApi {
 
     @Override
     public long maxPeerCount() {
-        MaxPeerCountRequest maxPeerCountRequest = MaxPeerCountRequest
+        Network.MaxPeerCountRequest maxPeerCountRequest = Network.MaxPeerCountRequest
                 .newBuilder()
                 .build();
 
@@ -110,7 +102,6 @@ public class ClientApiImpl implements ClientApi {
         return BlockchainServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
                 .getBlockByHash(getBlockByHashRequest);
-
     }
 
     @Override
