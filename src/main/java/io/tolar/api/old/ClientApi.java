@@ -1,4 +1,4 @@
-package io.tolar.api;
+package io.tolar.api.old;
 
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.JsonRpcMethod;
@@ -6,7 +6,6 @@ import com.googlecode.jsonrpc4j.JsonRpcParam;
 import com.googlecode.jsonrpc4j.JsonRpcService;
 import tolar.proto.Blockchain.*;
 import tolar.proto.tx.TransactionOuterClass;
-import tolar.proto.tx.TransactionOuterClass.SignedTransaction;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.List;
 @JsonRpcService("/Client")
 public interface ClientApi {
     @JsonRpcMethod("SendSignedTransaction")
-    ByteString sendSignedTransaction(@JsonRpcParam(value = "transaction") SignedTransaction signedTransaction);
+    ByteString sendSignedTransaction(@JsonRpcParam(value = "transaction") TransactionOuterClass.SignedTransaction signedTransaction);
 
     @JsonRpcMethod("PeerCount")
     long peerCount();

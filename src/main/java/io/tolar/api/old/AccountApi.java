@@ -1,4 +1,4 @@
-package io.tolar.api;
+package io.tolar.api.old;
 
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.JsonRpcMethod;
