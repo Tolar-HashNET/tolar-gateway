@@ -11,7 +11,7 @@ import tolar.proto.tx.TransactionOuterClass.SignedTransaction;
 import java.math.BigInteger;
 import java.util.List;
 
-@JsonRpcService("/Client")
+@JsonRpcService("/")
 public interface ClientApi {
     @JsonRpcMethod("SendSignedTransaction")
     ByteString sendSignedTransaction(@JsonRpcParam(value = "transaction") SignedTransaction signedTransaction);
@@ -28,37 +28,37 @@ public interface ClientApi {
     @JsonRpcMethod("MaxPeerCount")
     long maxPeerCount();
 
-    @JsonRpcMethod("GetBlockCount")
+    @JsonRpcMethod("block_getBlockCount")
     long getBlockCount();
 
-    @JsonRpcMethod("GetBlockByHash")
+    @JsonRpcMethod("block_getBlockByHash")
     GetBlockResponse getBlockByHash(@JsonRpcParam(value = "block_hash") ByteString blockHash);
 
-    @JsonRpcMethod("GetBlockByIndex")
+    @JsonRpcMethod("block_getBlockByIndex")
     GetBlockResponse getBlockByIndex(@JsonRpcParam(value = "block_index") long blockIndex);
 
-    @JsonRpcMethod("GetTransaction")
+    @JsonRpcMethod("block_getTransaction")
     GetTransactionResponse getTransaction(@JsonRpcParam(value = "transaction_hash") ByteString transactionHash);
 
-    @JsonRpcMethod("GetBlockchainInfo")
+    @JsonRpcMethod("block_getBlockchainInfo")
     GetBlockchainInfoResponse getBlockchainInfo();
 
-    @JsonRpcMethod("GetTransactionList")
+    @JsonRpcMethod("block_getTransactionList")
     GetTransactionListResponse getTransactionList(@JsonRpcParam(value = "addresses") List<ByteString> addresses,
                                                   @JsonRpcParam(value = "limit") long limit,
                                                   @JsonRpcParam(value = "skip") long skip);
 
-    @JsonRpcMethod("GetNonce")
+    @JsonRpcMethod("block_getNonce")
     BigInteger getNonce(@JsonRpcParam(value = "address") ByteString address);
 
-    @JsonRpcMethod("GetBalance")
+    @JsonRpcMethod("block_getBalance")
     GetBalanceResponse getBalance(@JsonRpcParam(value = "address") ByteString address,
                                   @JsonRpcParam(value = "block_index") long blockIndex);
 
-    @JsonRpcMethod("GetLatestBalance")
+    @JsonRpcMethod("block_getLatestBalance")
     GetBalanceResponse getLatestBalance(@JsonRpcParam(value = "address") ByteString address);
 
-    @JsonRpcMethod("TryCallTransaction")
+    @JsonRpcMethod("block_tryCallTransaction")
     TryCallTransactionResponse tryCallTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
                                                   @JsonRpcParam(value = "receiver_address") ByteString receiverAddress,
                                                   @JsonRpcParam(value = "amount") BigInteger amount,
@@ -67,10 +67,10 @@ public interface ClientApi {
                                                   @JsonRpcParam(value = "data") String data,
                                                   @JsonRpcParam(value = "nonce") BigInteger nonce);
 
-    @JsonRpcMethod("GetTransactionReceipt")
+    @JsonRpcMethod("block_getTransactionReceipt")
     GetTransactionReceiptResponse getTransactionReceipt(@JsonRpcParam(value = "transaction_hash")
                                                                 ByteString transactionHash);
 
-    @JsonRpcMethod("GetGasEstimate")
+    @JsonRpcMethod("block_getGasEstimate")
     long getGasEstimate(@JsonRpcParam(value = "object") TransactionOuterClass.Transaction transaction);
 }
