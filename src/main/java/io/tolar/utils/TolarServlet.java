@@ -23,10 +23,10 @@ public class TolarServlet extends HttpServlet {
     private JsonRpcServer jsonRpcServer;
 
     @Autowired
-    private AdminApiImpl adminApi;
+    private AccountApiImpl adminApi;
 
     @Autowired
-    private BlockApiImpl blockApi;
+    private TolarApiImpl blockApi;
 
     @Autowired
     private NetworkApiImpl networkApi;
@@ -50,7 +50,7 @@ public class TolarServlet extends HttpServlet {
         Object compositeService = ProxyUtil.createCompositeServiceProxy(
                 this.getClass().getClassLoader(),
                 new Object[]{adminApi, blockApi, networkApi, transactionApi},
-                new Class<?>[]{AdminApi.class, BlockApi.class, NetworkApi.class, TransactionApi.class},
+                new Class<?>[]{AccountApi.class, TolarApi.class, NetworkApi.class, TransactionApi.class},
                 true);
 
         jsonRpcServer = new JsonRpcServer(new ObjectMapper().registerModule(module), compositeService);
