@@ -1,4 +1,4 @@
-package io.tolar.api.anew;
+package io.tolar.api;
 
 import com.googlecode.jsonrpc4j.JsonRpcMethod;
 

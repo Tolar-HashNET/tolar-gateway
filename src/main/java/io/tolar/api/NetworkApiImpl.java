@@ -1,4 +1,4 @@
-package io.tolar.api.anew;
+package io.tolar.api;
 
 import io.tolar.utils.ChannelUtils;
 import org.springframework.beans.factory.annotation.Autowired;

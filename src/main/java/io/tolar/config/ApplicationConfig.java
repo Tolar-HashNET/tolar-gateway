@@ -24,15 +24,6 @@ public class ApplicationConfig implements WebMvcConfigurer {
     private TolarServlet tolarServlet;
 
     @Bean
-    public static AutoJsonRpcServiceImplExporter autoJsonRpcServiceImplExporter() {
-        AutoJsonRpcServiceImplExporter exporter = new AutoJsonRpcServiceImplExporter();
-        exporter.setErrorResolver(new TolarErrorResolver());
-        exporter.setHttpStatusCodeProvider(new TolarHttpStatusCodeProvider());
-        exporter.setAllowLessParams(true);
-        return exporter;
-    }
-
-    @Bean
     public ServletRegistrationBean<TolarServlet> servletRegistrationBean() {
         ServletRegistrationBean<TolarServlet> bean = new ServletRegistrationBean<>(
                 tolarServlet, "");

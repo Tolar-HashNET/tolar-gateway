@@ -1,84 +1,22 @@
-package io.tolar.api.old;
+package io.tolar.api;
 
 import com.google.protobuf.ByteString;
-import com.googlecode.jsonrpc4j.spring.AutoJsonRpcServiceImpl;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import tolar.proto.Blockchain.*;
-import tolar.proto.*;
+import tolar.proto.BlockchainServiceGrpc;
 import tolar.proto.tx.TransactionOuterClass;
 
 import java.math.BigInteger;
 import java.util.List;
 
-@Service
-@AutoJsonRpcServiceImpl
-public class ClientApiImpl implements ClientApi {
+@Component
+public class TolarApiImpl implements TolarApi {
     @Autowired
     private ChannelUtils channelUtils;
 
-    @Override
-    public ByteString sendSignedTransaction(TransactionOuterClass.SignedTransaction signedTransaction) {
-        Client.SendSignedTransactionRequest sendSignedTransactionRequest = Client.SendSignedTransactionRequest
-                .newBuilder()
-                .setSignedTransaction(signedTransaction)
-                .build();
-
-        return TransactionServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .sendSignedTransaction(sendSignedTransactionRequest)
-                .getTransactionHash();
-    }
-
-    @Override
-    public long peerCount() {
-        Network.PeerCountRequest peerCountRequest = Network.PeerCountRequest
-                .newBuilder()
-                .build();
-
-        return NetworkServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .peerCount(peerCountRequest)
-                .getCount();
-    }
-
-    @Override
-    public long masterNodeCount() {
-        Network.MasterNodeCountRequest masterNodeCountRequest = Network.MasterNodeCountRequest
-                .newBuilder()
-                .build();
-
-        return NetworkServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .masterNodeCount(masterNodeCountRequest)
-                .getCount();
-    }
-
-    @Override
-    public boolean isMasterNode() {
-        Network.IsMasterNodeRequest isMasterNodeRequest = Network.IsMasterNodeRequest
-                .newBuilder()
-                .build();
-
-        return NetworkServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .isMasterNode(isMasterNodeRequest)
-                .getIsMaster();
-    }
-
-    @Override
-    public long maxPeerCount() {
-        Network.MaxPeerCountRequest maxPeerCountRequest = Network.MaxPeerCountRequest
-                .newBuilder()
-                .build();
-
-        return NetworkServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .maxPeerCount(maxPeerCountRequest)
-                .getCount();
-    }
 
     @Override
     public long getBlockCount() {

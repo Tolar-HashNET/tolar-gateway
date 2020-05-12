@@ -1,4 +1,4 @@
-package io.tolar.api.anew;
+package io.tolar.api;
 
 import com.google.protobuf.ByteString;
 import io.tolar.utils.ChannelUtils;

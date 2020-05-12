@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.jsonrpc4j.JsonRpcServer;
 import com.googlecode.jsonrpc4j.ProxyUtil;
-import io.tolar.api.anew.*;
 import io.tolar.utils.TolarErrorResolver;
 import io.tolar.utils.TolarHttpStatusCodeProvider;
 import org.slf4j.Logger;
