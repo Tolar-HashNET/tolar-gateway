@@ -6,6 +6,6 @@ import com.googlecode.jsonrpc4j.JsonRpcParam;
 import tolar.proto.tx.TransactionOuterClass;
 
 public interface TransactionApi {
-    @JsonRpcMethod("transaction_sendSignedTransaction")
+    @JsonRpcMethod("tx_sendSignedTransaction")
     ByteString sendSignedTransaction(@JsonRpcParam(value = "transaction") TransactionOuterClass.SignedTransaction signedTransaction);
 }
