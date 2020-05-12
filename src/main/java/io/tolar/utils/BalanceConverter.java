@@ -3,7 +3,6 @@ package io.tolar.utils;
 import com.google.protobuf.ByteString;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 
 public class BalanceConverter {
 

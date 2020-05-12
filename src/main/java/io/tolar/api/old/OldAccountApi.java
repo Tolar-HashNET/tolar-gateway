@@ -10,7 +10,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 @JsonRpcService("/Account")
-public interface AccountApi {
+public interface OldAccountApi {
     @JsonRpcMethod("Create")
     boolean create(@JsonRpcParam(value = "master_password") String masterPassword);
 

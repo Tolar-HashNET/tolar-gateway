@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @AutoJsonRpcServiceImpl
-public class AccountApiImpl implements AccountApi {
+public class OldAccountApiImpl implements OldAccountApi {
     @Autowired
     private ChannelUtils channelUtils;
 

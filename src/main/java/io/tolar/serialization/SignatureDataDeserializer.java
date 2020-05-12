@@ -7,8 +7,6 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.protobuf.ByteString;
-import io.tolar.serialization.ByteStringDeserializer;
-import io.tolar.serialization.ByteStringSerializer;
 import tolar.proto.Common;
 
 import java.io.IOException;
