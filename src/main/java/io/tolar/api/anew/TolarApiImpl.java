@@ -13,7 +13,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 @Component
-public class BlockApiImpl implements BlockApi {
+public class TolarApiImpl implements TolarApi {
     @Autowired
     private ChannelUtils channelUtils;
 

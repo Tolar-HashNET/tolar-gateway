@@ -3,15 +3,15 @@ package io.tolar.api.anew;
 import com.googlecode.jsonrpc4j.JsonRpcMethod;
 
 public interface NetworkApi {
-    @JsonRpcMethod("network_peerCount")
+    @JsonRpcMethod("net_peerCount")
     long peerCount();
 
-    @JsonRpcMethod("network_masterNodeCount")
+    @JsonRpcMethod("net_masterNodeCount")
     long masterNodeCount();
 
-    @JsonRpcMethod("network_isMasterNode")
+    @JsonRpcMethod("net_isMasterNode")
     boolean isMasterNode();
 
-    @JsonRpcMethod("network_maxPeerCount")
+    @JsonRpcMethod("net_maxPeerCount")
     long maxPeerCount();
 }

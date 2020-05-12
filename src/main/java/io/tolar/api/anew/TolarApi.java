@@ -3,45 +3,44 @@ package io.tolar.api.anew;
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.JsonRpcMethod;
 import com.googlecode.jsonrpc4j.JsonRpcParam;
-import com.googlecode.jsonrpc4j.JsonRpcService;
 import tolar.proto.Blockchain.*;
 import tolar.proto.tx.TransactionOuterClass;
 
 import java.math.BigInteger;
 import java.util.List;
 
-public interface BlockApi {
-    @JsonRpcMethod("block_getBlockCount")
+public interface TolarApi {
+    @JsonRpcMethod("tol_getBlockCount")
     long getBlockCount();
 
-    @JsonRpcMethod("block_getBlockByHash")
+    @JsonRpcMethod("tol_getBlockByHash")
     GetBlockResponse getBlockByHash(@JsonRpcParam(value = "block_hash") ByteString blockHash);
 
-    @JsonRpcMethod("block_getBlockByIndex")
+    @JsonRpcMethod("tol_getBlockByIndex")
     GetBlockResponse getBlockByIndex(@JsonRpcParam(value = "block_index") long blockIndex);
 
-    @JsonRpcMethod("block_getTransaction")
+    @JsonRpcMethod("tol_getTransaction")
     GetTransactionResponse getTransaction(@JsonRpcParam(value = "transaction_hash") ByteString transactionHash);
 
-    @JsonRpcMethod("block_getBlockchainInfo")
+    @JsonRpcMethod("tol_getBlockchainInfo")
     GetBlockchainInfoResponse getBlockchainInfo();
 
-    @JsonRpcMethod("block_getTransactionList")
+    @JsonRpcMethod("tol_getTransactionList")
     GetTransactionListResponse getTransactionList(@JsonRpcParam(value = "addresses") List<ByteString> addresses,
                                                   @JsonRpcParam(value = "limit") long limit,
                                                   @JsonRpcParam(value = "skip") long skip);
 
-    @JsonRpcMethod("block_getNonce")
+    @JsonRpcMethod("tol_getNonce")
     BigInteger getNonce(@JsonRpcParam(value = "address") ByteString address);
 
-    @JsonRpcMethod("block_getBalance")
+    @JsonRpcMethod("tol_getBalance")
     GetBalanceResponse getBalance(@JsonRpcParam(value = "address") ByteString address,
                                   @JsonRpcParam(value = "block_index") long blockIndex);
 
-    @JsonRpcMethod("block_getLatestBalance")
+    @JsonRpcMethod("tol_getLatestBalance")
     GetBalanceResponse getLatestBalance(@JsonRpcParam(value = "address") ByteString address);
 
-    @JsonRpcMethod("block_tryCallTransaction")
+    @JsonRpcMethod("tol_tryCallTransaction")
     TryCallTransactionResponse tryCallTransaction(@JsonRpcParam(value = "sender_address") ByteString senderAddress,
                                                   @JsonRpcParam(value = "receiver_address") ByteString receiverAddress,
                                                   @JsonRpcParam(value = "amount") BigInteger amount,
@@ -50,10 +49,10 @@ public interface BlockApi {
                                                   @JsonRpcParam(value = "data") String data,
                                                   @JsonRpcParam(value = "nonce") BigInteger nonce);
 
-    @JsonRpcMethod("block_getTransactionReceipt")
+    @JsonRpcMethod("tol_getTransactionReceipt")
     GetTransactionReceiptResponse getTransactionReceipt(@JsonRpcParam(value = "transaction_hash")
                                                                 ByteString transactionHash);
 
-    @JsonRpcMethod("block_getGasEstimate")
+    @JsonRpcMethod("tol_getGasEstimate")
     long getGasEstimate(@JsonRpcParam(value = "object") TransactionOuterClass.Transaction transaction);
 }

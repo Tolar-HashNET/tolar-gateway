@@ -12,7 +12,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 @Component
-public class AdminApiImpl implements AdminApi {
+public class AccountApiImpl implements AccountApi {
     @Autowired
     private ChannelUtils channelUtils;
 
