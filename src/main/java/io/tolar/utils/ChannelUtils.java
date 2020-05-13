@@ -12,7 +12,8 @@ public class ChannelUtils {
     private UrlConfig urlConfig;
 
     public Channel getChannel() {
-        return ManagedChannelBuilder.forAddress(urlConfig.getUrl(), urlConfig.getPort())
+        return ManagedChannelBuilder
+                .forAddress(urlConfig.getUrl(), urlConfig.getPort())
                 .usePlaintext()
                 .build();
     }

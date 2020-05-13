@@ -119,11 +119,10 @@ public class Web3JTests {
                 .setData("")
                 .setNonce(BalanceConverter.toByteString(BigInteger.ZERO))
                 .build();
-        ByteString correctByteString = transaction.toByteString();
-        String correctProtoString = correctByteString.toStringUtf8();
-        byte[] hashed = Hash.sha3(correctByteString.toByteArray());
+
+        byte[] hashed = Hash.sha3(transaction.toByteString().toByteArray());
         String hexHash = Numeric.toHexStringNoPrefix(hashed);
-        String hexString = Numeric.toHexStringNoPrefix(correctByteString.toByteArray());
+        String hexString = Numeric.toHexStringNoPrefix(transaction.toByteString().toByteArray());
 
         Sign.SignatureData signatureData =
                 Sign.signMessage(hashed, credentials.getEcKeyPair(), false);
@@ -143,7 +142,9 @@ public class Web3JTests {
                 signatureData.getV().length);
 
         String shouldBeSignature = Numeric.toHexStringNoPrefix(concatSignatureLikeWeb3js);
-        String shouldBeSingerId = credentials.getEcKeyPair().getPublicKey().toString(16);
+        String privKey = credentials.getEcKeyPair().getPrivateKey().toString(16);
+        String pubKey = credentials.getEcKeyPair().getPublicKey().toString(16);
+        assertTrue(true);
     }
 
     @Test
