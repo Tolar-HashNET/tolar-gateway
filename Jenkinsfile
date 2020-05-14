@@ -101,10 +101,12 @@ pipeline {
             steps {
                 sh 'docker system prune -f'
 
-                if (env.BRANCH_NAME == 'tolar-node') {
-                    sh 'docker rmi tolar-node'
-                } else {
-                    sh 'docker rmi dreamfactoryhr/tolar-gateway'
+                script {
+                    if (env.BRANCH_NAME == 'tolar-node') {
+                        sh 'docker rmi tolar-node'
+                    } else {
+                        sh 'docker rmi dreamfactoryhr/tolar-gateway'
+                    }
                 }
 
                 sh 'ssh -C admin@172.31.7.104 "sudo docker system prune -f"'
