@@ -104,6 +104,8 @@ pipeline {
                 script {
                     if (env.BRANCH_NAME == 'tolar-node') {
                         sh 'docker rmi tolar-node'
+                    } else if (env.BRANCH_NAME == 'develop') {
+                        sh 'docker rmi dreamfactoryhr/tolar-gateway:staging'
                     } else {
                         sh 'docker rmi dreamfactoryhr/tolar-gateway'
                     }
