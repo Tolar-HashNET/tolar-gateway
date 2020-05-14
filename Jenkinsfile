@@ -30,33 +30,10 @@ pipeline {
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
 
-                    slackMessage = "Deployed *Tolar Gateway* connected to *MainNet* (" +
+                    slackMessage = "Deployed *Tolar Gateway* connected to *MAIN NETWORK* (" +
                             "<${env.RUN_DISPLAY_URL}|Pipeline>" +
                             ") \n" +
-                            "Pipeline time: ${buildTime}"
-
-                    slackSend(channel: 'test-results', color: 'good', message: slackMessage,
-                            teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
-                }
-            }
-        }
-
-        stage('Deploy Node MainNet') {
-            when { branch 'tolar-node' }
-
-            steps {
-                sh 'docker-compose build'
-                sh 'docker save tolar-node:latest | ssh -C admin@172.31.7.104 sudo docker load'
-                sh 'scp docker-compose.yaml admin@172.31.7.104:/home/admin/tolar-gateway/docker-compose.yaml'
-                sh 'ssh -C admin@172.31.7.104 "cd tolar-gateway; sudo docker-compose down"'
-                sh 'ssh -C admin@172.31.7.104 "cd tolar-gateway; sudo docker-compose up -d"'
-
-                script {
-                    def buildTime = currentBuild.durationString.replace(' and counting', '')
-
-                    slackMessage = "Deployed *Tolar Node* connected to *MainNet* (" +
-                            "<${env.RUN_DISPLAY_URL}|Pipeline>" +
-                            ") \n" +
+                            "JSON-RPC available at: tolar.dream-factory.hr\n" +
                             "Pipeline time: ${buildTime}"
 
                     slackSend(channel: 'test-results', color: 'good', message: slackMessage,
@@ -86,7 +63,32 @@ pipeline {
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
 
-                    slackMessage = "Deployed *Tolar Gateway* connected to *Staging Network* (" +
+                    slackMessage = "Deployed *Tolar Gateway* connected to *STAGING NETWORK* (" +
+                            "<${env.RUN_DISPLAY_URL}|Pipeline>" +
+                            ") \n" +
+                            "JSON-RPC available at: tolar-staging.dream-factory.hr\n" +
+                            "Pipeline time: ${buildTime}"
+
+                    slackSend(channel: 'test-results', color: 'good', message: slackMessage,
+                            teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
+                }
+            }
+        }
+
+        stage('Deploy Node MainNet') {
+            when { branch 'tolar-node' }
+
+            steps {
+                sh 'docker-compose build'
+                sh 'docker save tolar-node:latest | ssh -C admin@172.31.7.104 sudo docker load'
+                sh 'scp docker-compose.yaml admin@172.31.7.104:/home/admin/tolar-gateway/docker-compose.yaml'
+                sh 'ssh -C admin@172.31.7.104 "cd tolar-gateway; sudo docker-compose down"'
+                sh 'ssh -C admin@172.31.7.104 "cd tolar-gateway; sudo docker-compose up -d"'
+
+                script {
+                    def buildTime = currentBuild.durationString.replace(' and counting', '')
+
+                    slackMessage = "Deployed *Tolar Node* connected to *MainNet* (" +
                             "<${env.RUN_DISPLAY_URL}|Pipeline>" +
                             ") \n" +
                             "Pipeline time: ${buildTime}"
