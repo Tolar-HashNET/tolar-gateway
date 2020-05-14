@@ -9,7 +9,7 @@ pipeline {
     }
 
     stages {
-        stage('Deploy Gateway for MainNet') {
+        stage('Deploy Gateway MainNet') {
             when { branch 'master' }
 
             steps {
@@ -41,7 +41,7 @@ pipeline {
             }
         }
 
-        stage('Deploy Node for MainNet') {
+        stage('Deploy Node MainNet') {
             when { branch 'tolar-node' }
 
             steps {
@@ -65,7 +65,7 @@ pipeline {
             }
         }
 
-        stage('Deploy Gateway for StagingNet') {
+        stage('Deploy Gateway Staging') {
             when { branch 'develop' }
 
             steps {
@@ -97,30 +97,16 @@ pipeline {
             }
         }
 
-        stage('Docker cleanup Jenkins') {
+        stage('Docker Cleanup') {
             steps {
                 sh 'docker system prune -f'
-            }
-        }
 
-        stage('Docker cleanup Jenkins Gateway') {
-            when { not { branch 'tolar-node' } }
+                if (env.BRANCH_NAME == 'tolar-node') {
+                    sh 'docker rmi tolar-node'
+                } else {
+                    sh 'docker rmi dreamfactoryhr/tolar-gateway'
+                }
 
-            steps {
-                sh 'docker rmi dreamfactoryhr/tolar-gateway'
-            }
-        }
-
-        stage('Docker cleanup Jenkins Node') {
-            when { branch 'tolar-node' }
-
-            steps {
-                sh 'docker rmi tolar-node'
-            }
-        }
-
-        stage('Docker cleanup Remote') {
-            steps {
                 sh 'ssh -C admin@172.31.7.104 "sudo docker system prune -f"'
             }
         }
@@ -147,4 +133,5 @@ pipeline {
             }
         }
     }
+
 }
