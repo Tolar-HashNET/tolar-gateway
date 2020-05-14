@@ -30,7 +30,7 @@ pipeline {
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
 
-                    slackMessage = "Deployed *Tolar Gateway* connected to *Tolar MainNet* (" +
+                    slackMessage = "Deployed *Tolar Gateway* connected to *MainNet* (" +
                             "<${env.RUN_DISPLAY_URL}|Pipeline>" +
                             ") \n" +
                             "Pipeline time: ${buildTime}"
@@ -54,7 +54,7 @@ pipeline {
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
 
-                    slackMessage = "Deployed *Tolar Node* connected to *Tolar MainNet* (" +
+                    slackMessage = "Deployed *Tolar Node* connected to *MainNet* (" +
                             "<${env.RUN_DISPLAY_URL}|Pipeline>" +
                             ") \n" +
                             "Pipeline time: ${buildTime}"
@@ -86,7 +86,7 @@ pipeline {
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
 
-                    slackMessage = "Deployed *Tolar Gateway* connected to *Tolar Staging* (" +
+                    slackMessage = "Deployed *Tolar Gateway* connected to *Staging Network* (" +
                             "<${env.RUN_DISPLAY_URL}|Pipeline>" +
                             ") \n" +
                             "Pipeline time: ${buildTime}"
