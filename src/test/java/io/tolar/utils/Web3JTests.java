@@ -10,10 +10,10 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.crypto.*;
 import org.web3j.utils.Numeric;
+import tolar.proto.Common;
 import tolar.proto.tx.TransactionOuterClass;
 
 import java.io.File;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Collections;
 
@@ -199,7 +199,7 @@ public class Web3JTests {
                 .setGas(BalanceConverter.toByteString(BigInteger.valueOf(21463)))
                 .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
                 .setData("kitula")
-                .setNonce(BalanceConverter.toByteString(BigInteger.ZERO))
+                .setNonce(BalanceConverter.toByteString(BigInteger.ZERO))//check nonce if needed
                 .build();
 
         byte[] hashed = Hash.sha3(transaction.toByteString().toByteArray());
@@ -234,6 +234,18 @@ public class Web3JTests {
         String privKey = credentials.getEcKeyPair().getPrivateKey().toString(16);
         //sender_id in signedTx
         String pubKey = credentials.getEcKeyPair().getPublicKey().toString(16);
+
+        Common.SignatureData signatureTx = Common.SignatureData.newBuilder()
+                .setHash(ByteString.copyFromUtf8(hexHash))
+                .setSignature(ByteString.copyFromUtf8(signatureField))
+                .setSignerId(ByteString.copyFromUtf8(pubKey))
+                .build();
+
+        TransactionOuterClass.SignedTransaction signedTransaction =
+                TransactionOuterClass.SignedTransaction.newBuilder()
+                .setBody(transaction)
+                .setSigData(signatureTx)
+                .build();
         assertTrue(true);
     }
 
