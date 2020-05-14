@@ -46,11 +46,33 @@ public class Web3JTests {
     }
 
     @Test
+    public void createTolarAddress() throws Exception {
+        File file = new File("/Users/frane/.tolar/keystore/Thin_node/keys/d334ca47-9ca2-1ab2-7d1f-800ab3953911.json");
+
+        assertTrue(file.exists());
+        Credentials credentials = WalletUtils.loadCredentials("test2", file);
+
+        String prefix = "T";
+        String prefixHex = Numeric.toHexStringNoPrefix(prefix.getBytes());
+        String address = credentials.getAddress();
+        String addressHash = Hash.sha3(address);
+        String hashOfHash = Hash.sha3(addressHash);
+
+        String tolarAddress = prefixHex +
+                Numeric.cleanHexPrefix(address) +
+                hashOfHash.substring(hashOfHash.length() - 8);
+
+        assertEquals("540dc971237be2361e04c1643d57b572709db15e449a870fef",
+                tolarAddress);
+    }
+
+    @Test
     public void signMessage() throws IOException, CipherException {
         File file = new File("/Users/frane/.tolar/keystore/Thin_node/keys/d334ca47-9ca2-1ab2-7d1f-800ab3953911.json");
 
         assertTrue(file.exists());
         Credentials credentials = WalletUtils.loadCredentials("test2", file);
+
         TransactionOuterClass.Transaction transaction = TransactionOuterClass.Transaction
                 .newBuilder()
                 .setSenderAddress(ByteString.copyFromUtf8(
