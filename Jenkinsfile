@@ -17,26 +17,26 @@ pipeline {
             }
         }
 
-        stage('Deploy Gateway to Staging') {
+        stage('Deploy Gateway for MainNet') {
             when { branch 'master' }
 
             steps {
                 sh 'docker save dreamfactoryhr/tolar-gateway:latest ' +
                 ' | ssh -C admin@172.31.7.104 sudo docker load'
 
-                sh 'ssh -C admin@172.31.7.104 "sudo docker ps -f name=tolar-gateway -q ' +
+                sh 'ssh -C admin@172.31.7.104 "sudo docker ps -f name=tolar-gateway-main -q ' +
                 ' | xargs --no-run-if-empty sudo docker container stop ' +
                 ' | xargs --no-run-if-empty sudo docker container rm"'
 
                 sh 'ssh admin@172.31.7.104 sudo docker run -d ' +
-                ' -e "SPRING_PROFILES_ACTIVE=dev"  --network=host ' +
-                ' --name tolar-gateway --user 1001:1001 ' +
+                ' -e "SPRING_PROFILES_ACTIVE=prod"  --network=host ' +
+                ' --name tolar-gateway-main --user 1001:1001 ' +
                 ' dreamfactoryhr/tolar-gateway:latest '
 
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
 
-                    slackMessage = "Deployed *Tolar Gateway* to *STAGING* (" +
+                    slackMessage = "Deployed *Tolar Gateway* connected to *Tolar MainNet* (" +
                             "<${env.RUN_DISPLAY_URL}|Pipeline>" +
                             ") \n" +
                             "Pipeline time: ${buildTime}"
@@ -47,7 +47,7 @@ pipeline {
             }
         }
 
-        stage('Deploy Node to Staging') {
+        stage('Deploy Node for MainNet') {
             when { branch 'tolar-node' }
 
             steps {
@@ -60,7 +60,7 @@ pipeline {
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
 
-                    slackMessage = "Deployed *Tolar Node* to *STAGING* (" +
+                    slackMessage = "Deployed *Tolar Node* connected to *Tolar MainNet* (" +
                             "<${env.RUN_DISPLAY_URL}|Pipeline>" +
                             ") \n" +
                             "Pipeline time: ${buildTime}"
@@ -70,6 +70,36 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy Gateway for StagingNet') {
+                    when { branch 'develop' }
+
+                    steps {
+                        sh 'docker save dreamfactoryhr/tolar-gateway:latest ' +
+                        ' | ssh -C admin@172.31.7.104 sudo docker load'
+
+                        sh 'ssh -C admin@172.31.7.104 "sudo docker ps -f name=tolar-gateway-staging -q ' +
+                        ' | xargs --no-run-if-empty sudo docker container stop ' +
+                        ' | xargs --no-run-if-empty sudo docker container rm"'
+
+                        sh 'ssh admin@172.31.7.104 sudo docker run -d ' +
+                        ' -e "SPRING_PROFILES_ACTIVE=staging"  --network=host ' +
+                        ' --name tolar-gateway-staging --user 1001:1001 ' +
+                        ' dreamfactoryhr/tolar-gateway:latest '
+
+                        script {
+                            def buildTime = currentBuild.durationString.replace(' and counting', '')
+
+                            slackMessage = "Deployed *Tolar Gateway* connected to *Tolar Staging* (" +
+                                    "<${env.RUN_DISPLAY_URL}|Pipeline>" +
+                                    ") \n" +
+                                    "Pipeline time: ${buildTime}"
+
+                            slackSend(channel: 'test-results', color: 'good', message: slackMessage,
+                                    teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
+                        }
+                    }
+                }
 
         stage('Docker cleanup Jenkins') {
             steps {
@@ -93,9 +123,7 @@ pipeline {
             }
         }
 
-        stage('Docker cleanup Staging') {
-            when { anyOf { branch 'master'; branch 'tolar-node'} }
-
+        stage('Docker cleanup Remote') {
             steps {
                 sh 'ssh -C admin@172.31.7.104 "sudo docker system prune -f"'
             }
