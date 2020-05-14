@@ -12,6 +12,25 @@
         <protobuf.version>3.11.4</protobuf.version>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>prod</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <docker.tag>latest</docker.tag>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>staging</id>
+            <properties>
+                <docker.tag>staging</docker.tag>
+            </properties>
+        </profile>
+    </profiles>
+
     <groupId>io.tolar</groupId>
     <artifactId>tolar-gateway</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -174,6 +193,7 @@
                 <version>1.3.6</version>
                 <configuration>
                     <repository>${docker.image.prefix}/${project.artifactId}</repository>
+                    <tag>${docker.tag}</tag>
                     <buildArgs>
                         <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
                     </buildArgs>

@@ -9,18 +9,12 @@ pipeline {
     }
 
     stages {
-        stage('Build Gateway Image') {
-            when { not { branch 'tolar-node' } }
-
-            steps {
-                sh 'mvn clean install dockerfile:build'
-            }
-        }
-
         stage('Deploy Gateway for MainNet') {
             when { branch 'master' }
 
             steps {
+                sh 'mvn clean install dockerfile:build'
+
                 sh 'docker save dreamfactoryhr/tolar-gateway:latest ' +
                 ' | ssh -C admin@172.31.7.104 sudo docker load'
 
@@ -72,34 +66,36 @@ pipeline {
         }
 
         stage('Deploy Gateway for StagingNet') {
-                    when { branch 'develop' }
+            when { branch 'develop' }
 
-                    steps {
-                        sh 'docker save dreamfactoryhr/tolar-gateway:latest ' +
-                        ' | ssh -C admin@172.31.7.104 sudo docker load'
+            steps {
+                sh 'mvn clean install dockerfile:build -Pstaging -DprofileIdEnabled=true'
 
-                        sh 'ssh -C admin@172.31.7.104 "sudo docker ps -f name=tolar-gateway-staging -q ' +
-                        ' | xargs --no-run-if-empty sudo docker container stop ' +
-                        ' | xargs --no-run-if-empty sudo docker container rm"'
+                sh 'docker save dreamfactoryhr/tolar-gateway:staging ' +
+                ' | ssh -C admin@172.31.7.104 sudo docker load'
 
-                        sh 'ssh admin@172.31.7.104 sudo docker run -d ' +
-                        ' -e "SPRING_PROFILES_ACTIVE=staging"  --network=host ' +
-                        ' --name tolar-gateway-staging --user 1001:1001 ' +
-                        ' dreamfactoryhr/tolar-gateway:latest '
+                sh 'ssh -C admin@172.31.7.104 "sudo docker ps -f name=tolar-gateway-staging -q ' +
+                ' | xargs --no-run-if-empty sudo docker container stop ' +
+                ' | xargs --no-run-if-empty sudo docker container rm"'
 
-                        script {
-                            def buildTime = currentBuild.durationString.replace(' and counting', '')
+                sh 'ssh admin@172.31.7.104 sudo docker run -d ' +
+                ' -e "SPRING_PROFILES_ACTIVE=staging"  --network=host ' +
+                ' --name tolar-gateway-staging --user 1001:1001 ' +
+                ' dreamfactoryhr/tolar-gateway:staging '
 
-                            slackMessage = "Deployed *Tolar Gateway* connected to *Tolar Staging* (" +
-                                    "<${env.RUN_DISPLAY_URL}|Pipeline>" +
-                                    ") \n" +
-                                    "Pipeline time: ${buildTime}"
+                script {
+                    def buildTime = currentBuild.durationString.replace(' and counting', '')
 
-                            slackSend(channel: 'test-results', color: 'good', message: slackMessage,
-                                    teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
-                        }
-                    }
+                    slackMessage = "Deployed *Tolar Gateway* connected to *Tolar Staging* (" +
+                            "<${env.RUN_DISPLAY_URL}|Pipeline>" +
+                            ") \n" +
+                            "Pipeline time: ${buildTime}"
+
+                    slackSend(channel: 'test-results', color: 'good', message: slackMessage,
+                            teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
                 }
+            }
+        }
 
         stage('Docker cleanup Jenkins') {
             steps {
