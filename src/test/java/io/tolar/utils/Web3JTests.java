@@ -64,6 +64,13 @@ public class Web3JTests {
 
         assertEquals("540dc971237be2361e04c1643d57b572709db15e449a870fef",
                 tolarAddress);
+
+        String zeroAddress = "0000000000000000000000000000000000000000";
+        String tolarZero = prefixHex + zeroAddress +
+                Hash.sha3(Hash.sha3(zeroAddress)).substring(hashOfHash.length() - 8);
+
+        assertEquals("54000000000000000000000000000000000000000023199e2b",
+                tolarZero);
     }
 
     @Test
