@@ -33,7 +33,8 @@ pipeline {
                     slackMessage = "Deployed *Tolar Gateway* connected to *MAIN NETWORK* (" +
                             "<${env.RUN_DISPLAY_URL}|Pipeline>" +
                             ") \n" +
-                            "JSON-RPC available at: tolar.dream-factory.hr\n" +
+                            "JSON-RPC available at: " +
+                            "<https://tolar.dream-factory.hr|tolar.dream-factory.hr>\n" +
                             "Pipeline time: ${buildTime}"
 
                     slackSend(channel: 'test-results', color: 'good', message: slackMessage,
@@ -66,7 +67,8 @@ pipeline {
                     slackMessage = "Deployed *Tolar Gateway* connected to *STAGING NETWORK* (" +
                             "<${env.RUN_DISPLAY_URL}|Pipeline>" +
                             ") \n" +
-                            "JSON-RPC available at: tolar-staging.dream-factory.hr\n" +
+                            "JSON-RPC available at: " +
+                            "<https://tolar-staging.dream-factory.hr|tolar-staging.dream-factory.hr>\n" +
                             "Pipeline time: ${buildTime}"
 
                     slackSend(channel: 'test-results', color: 'good', message: slackMessage,
