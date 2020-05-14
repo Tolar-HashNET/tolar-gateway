@@ -102,10 +102,11 @@ public class Web3JTests {
 
     @Test
     public void createProperSignedTx() throws Exception {
-        File file = new File("/Users/frane/.tolar/keystore/Thin_node/keys/da13bcb1-fb8d-3cbc-9ab0-07d9304366df.json");
+        //File file = new File("/Users/frane/.tolar/keystore/Thin_node/keys/da13bcb1-fb8d-3cbc-9ab0-07d9304366df.json");
+        File file = new File("/Users/frane/.tolar/keystore/Thin_node/keys/630c1867-9a42-eb26-6488-8dfcbeafd0c9.json");
 
         assertTrue(file.exists());
-        Credentials credentials = WalletUtils.loadCredentials("test3", file);
+        Credentials credentials = WalletUtils.loadCredentials("supersifra", file);
 
         TransactionOuterClass.Transaction transaction = TransactionOuterClass.Transaction
                 .newBuilder()
@@ -130,6 +131,9 @@ public class Web3JTests {
         byte[] concatSignatureLikeWeb3js = new byte[signatureData.getR().length +
                 signatureData.getS().length +
                 signatureData.getV().length];
+
+        //this reduces the recId of a signature to be same as tolar (prone to changes)
+        signatureData.getV()[0] = (byte) ((int) signatureData.getV()[0] - 27);
 
         System.arraycopy(signatureData.getR(), 0, concatSignatureLikeWeb3js,
                 0,

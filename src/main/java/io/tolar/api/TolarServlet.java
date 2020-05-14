@@ -52,7 +52,7 @@ public class TolarServlet extends HttpServlet {
                 this.getClass().getClassLoader(),
                 new Object[]{adminApi, blockApi, networkApi, transactionApi},
                 new Class<?>[]{AccountApi.class, TolarApi.class, NetworkApi.class, TransactionApi.class},
-                true);
+                false);
 
         jsonRpcServer = new JsonRpcServer(new ObjectMapper().registerModule(module), compositeService);
         jsonRpcServer.setErrorResolver(new TolarErrorResolver());
