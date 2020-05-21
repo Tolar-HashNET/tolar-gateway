@@ -13,7 +13,7 @@ public class AddressBalanceSerializer extends JsonSerializer<AddressBalance> {
     public void serialize(AddressBalance addressBalance, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeObjectField("address", addressBalance.getAddress());
-        jsonGenerator.writeObjectField("name", addressBalance.getAddressName());
+        jsonGenerator.writeObjectField("address_name", addressBalance.getAddressName());
         jsonGenerator.writeObjectField("balance", BalanceConverter.toBigInteger(addressBalance.getBalance()));
         jsonGenerator.writeEndObject();
     }
