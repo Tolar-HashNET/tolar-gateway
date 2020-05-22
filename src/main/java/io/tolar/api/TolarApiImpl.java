@@ -185,6 +185,6 @@ public class TolarApiImpl implements TolarApi {
 
     @Override
     public ByteString getTransactionProtobuf(TransactionOuterClass.Transaction transaction) {
-        return transaction.getDataBytes();
+        return transaction.toByteString();
     }
 }
