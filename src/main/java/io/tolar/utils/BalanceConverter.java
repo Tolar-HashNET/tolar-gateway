@@ -11,6 +11,9 @@ public class BalanceConverter {
     }
 
     public static ByteString toByteString(BigInteger balance) {
+        if (balance == null) {
+            return null;
+        }
         return ByteString.copyFrom(balance.toByteArray());
     }
 }
