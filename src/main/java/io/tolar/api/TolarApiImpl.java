@@ -182,4 +182,9 @@ public class TolarApiImpl implements TolarApi {
                 .getGasEstimate(transaction)
                 .getGasEstimate();
     }
+
+    @Override
+    public ByteString getTransactionProtobuf(TransactionOuterClass.Transaction transaction) {
+        return transaction.getDataBytes();
+    }
 }
