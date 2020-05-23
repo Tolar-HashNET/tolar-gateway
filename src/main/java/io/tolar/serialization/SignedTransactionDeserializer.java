@@ -1,7 +1,11 @@
 package io.tolar.serialization;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.core.TreeNode;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import tolar.proto.Common.SignatureData;
 import tolar.proto.tx.TransactionOuterClass;
@@ -15,12 +19,13 @@ public class SignedTransactionDeserializer extends JsonDeserializer<SignedTransa
     @Override
     public SignedTransaction deserialize(JsonParser parser, DeserializationContext context)
             throws IOException {
+
+        TreeNode node = parser.getCodec().readTree(parser);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(createDeserializationModule());
-        String valueAsString = parser.getValueAsString();
-        JsonNode otherNode = objectMapper.readTree(valueAsString);
-        Transaction transaction = objectMapper.convertValue(otherNode.get("body"), Transaction.class);
-        SignatureData signatureData = objectMapper.convertValue(otherNode.get("sig_data"), SignatureData.class);
+
+        Transaction transaction = objectMapper.convertValue(node.get("body"), Transaction.class);
+        SignatureData signatureData = objectMapper.convertValue(node.get("sig_data"), SignatureData.class);
 
         return SignedTransaction
                 .newBuilder()
