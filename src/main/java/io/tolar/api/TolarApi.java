@@ -57,5 +57,5 @@ public interface TolarApi {
     long getGasEstimate(@JsonRpcParam(value = "object") TransactionOuterClass.Transaction transaction);
 
     @JsonRpcMethod("tol_getTransactionProtobuf")
-    ByteString getTransactionProtobuf(@JsonRpcParam(value="transaction") TransactionOuterClass.Transaction transaction);
+    String getTransactionProtobuf(@JsonRpcParam(value="transaction") TransactionOuterClass.Transaction transaction);
 }
