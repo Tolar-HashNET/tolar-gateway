@@ -1,13 +1,8 @@
 package io.tolar.utils;
 
 import com.google.protobuf.ByteString;
-import org.bouncycastle.util.encoders.Hex;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.web3j.abi.FunctionEncoder;
-import org.web3j.abi.TypeReference;
-import org.web3j.abi.datatypes.Function;
-import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.crypto.*;
 import org.web3j.utils.Numeric;
 import tolar.proto.Common;
@@ -15,7 +10,6 @@ import tolar.proto.tx.TransactionOuterClass;
 
 import java.io.File;
 import java.math.BigInteger;
-import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -25,18 +19,6 @@ public class Web3JTests {
 
     @Test
     public void extractPrivateKey() throws Exception {
-        String test = "Hello world!";
-        String hextTets = Hex.toHexString(test.getBytes());
-        String sha3 = Hash.sha3(hextTets);
-
-        Function function = new Function("greet",
-                Collections.emptyList(),
-                Collections.singletonList(new TypeReference<Utf8String>() {
-                })
-        );
-
-        String encodedFunction = FunctionEncoder.encode(function);
-
         File file = new File("/Users/frane/.tolar/keystore/Thin_node/keys/d334ca47-9ca2-1ab2-7d1f-800ab3953911.json");
 
         assertTrue(file.exists());
@@ -202,14 +184,92 @@ public class Web3JTests {
                 .setNonce(BalanceConverter.toByteString(BigInteger.ZERO))//check nonce if needed
                 .build();
 
-        byte[] hashed = Hash.sha3(transaction.toByteString().toByteArray());
-        //the hash field in signedTx
-        String hexHash = Numeric.toHexStringNoPrefix(hashed);
-        //used for verification
-        String hexString = Numeric.toHexStringNoPrefix(transaction.toByteString().toByteArray());
+        String hexHash = createTxHash(transaction);
+        String signature = createSignature(transaction, credentials);
+        String signerId = createSignerId(credentials);
+
+        Common.SignatureData signatureTx = Common.SignatureData.newBuilder()
+                .setHash(ByteString.copyFromUtf8(hexHash))
+                .setSignature(ByteString.copyFromUtf8(signature))
+                .setSignerId(ByteString.copyFromUtf8(signerId))
+                .build();
+
+        TransactionOuterClass.SignedTransaction signedTransaction =
+                TransactionOuterClass.SignedTransaction.newBuilder()
+                .setBody(transaction)
+                .setSigData(signatureTx)
+                .build();
+        assertTrue(true);
+    }
+
+    @Test
+    public void deployContact() throws Exception {
+        String deployData = "608060405234801561001057600080fd5b5060408051808201909152600c8082527f48656c6c6" +
+                "f20776f726c642100000000000000000000000000000000000000006020909201918252610055916000916100" +
+                "5b565b506100f6565b828054600181600116156101000203166002900490600052602060002090601f0160209" +
+                "00481019282601f1061009c57805160ff19168380011785556100c9565b828001600101855582156100c95791" +
+                "82015b828111156100c95782518255916020019190600101906100ae565b506100d59291506100d9565b50905" +
+                "65b6100f391905b808211156100d557600081556001016100df565b90565b6102a7806101056000396000f300" +
+                "60806040526004361061004b5763ffffffff7c010000000000000000000000000000000000000000000000000" +
+                "00000006000350416639698086b8114610050578063cfae3217146100ab575b600080fd5b34801561005c5760" +
+                "0080fd5b506040805160206004803580820135601f81018490048402850184019095528484526100a99436949" +
+                "293602493928401919081908401838280828437509497506101359650505050505050565b005b3480156100b7" +
+                "57600080fd5b506100c061014c565b60408051602080825283518183015283519192839290830191850190808" +
+                "38360005b838110156100fa5781810151838201526020016100e2565b50505050905090810190601f16801561" +
+                "01275780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b805" +
+                "16101489060009060208401906101e3565b5050565b60008054604080516020601f6002600019610100600188" +
+                "1615020190951694909404938401819004810282018101909252828152606093909290918301828280156101d" +
+                "85780601f106101ad576101008083540402835291602001916101d8565b820191906000526020600020905b81" +
+                "54815290600101906020018083116101bb57829003601f168201915b505050505090505b90565b82805460018" +
+                "1600116156101000203166002900490600052602060002090601f016020900481019282601f10610224578051" +
+                "60ff1916838001178555610251565b82800160010185558215610251579182015b82811115610251578251825" +
+                "591602001919060010190610236565b5061025d929150610261565b5090565b6101e091905b8082111561025d" +
+                "57600081556001016102675600a165627a7a72305820add192b2a76849720e9c4b9bce9b99169437d07653e6b" +
+                "0abbca3bc2c32aa4bcd0029";
+
+        File file = new File("/Users/frane/.tolar/keystore/Thin_node/keys/d334ca47-9ca2-1ab2-7d1f-800ab3953911.json");
+
+        assertTrue(file.exists());
+        Credentials credentials = WalletUtils.loadCredentials("test2", file);
+
+        String sender = createTolarAddress(credentials);
+        String zeroAddress = "54000000000000000000000000000000000000000023199e2b";
+        int gasLimit = 4700000;
+
+        TransactionOuterClass.Transaction transaction = TransactionOuterClass.Transaction
+                .newBuilder()
+                .setSenderAddress(ByteString.copyFromUtf8(sender))
+                .setReceiverAddress(ByteString.copyFromUtf8(zeroAddress))
+                .setValue(BalanceConverter.toByteString(BigInteger.ZERO))
+                .setGas(BalanceConverter.toByteString(BigInteger.valueOf(gasLimit)))
+                .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
+                .setData(deployData)
+                .setNonce(BalanceConverter.toByteString(BigInteger.valueOf(2)))//check nonce if needed
+                .build();
+    }
+
+    private String createTolarAddress(Credentials credentials) {
+        String prefix = "T";
+        String prefixHex = Numeric.toHexStringNoPrefix(prefix.getBytes());
+        String address = credentials.getAddress();
+        String addressHash = Hash.sha3(address);
+        String hashOfHash = Hash.sha3(addressHash);
+
+        return prefixHex +
+                Numeric.cleanHexPrefix(address) +
+                hashOfHash.substring(hashOfHash.length() - 8);
+    }
+
+    private String createTxHash(TransactionOuterClass.Transaction tx) {
+        byte[] hashed = Hash.sha3(tx.toByteString().toByteArray());
+        return Numeric.toHexStringNoPrefix(hashed);
+    }
+
+    private String createSignature(TransactionOuterClass.Transaction tx, Credentials creds) {
+        byte[] hashed = Hash.sha3(tx.toByteString().toByteArray());
 
         Sign.SignatureData signatureData =
-                Sign.signMessage(hashed, credentials.getEcKeyPair(), false);
+                Sign.signMessage(hashed, creds.getEcKeyPair(), false);
 
         byte[] concatSignatureLikeWeb3js = new byte[signatureData.getR().length +
                 signatureData.getS().length +
@@ -228,25 +288,11 @@ public class Web3JTests {
                 signatureData.getR().length + signatureData.getS().length,
                 signatureData.getV().length);
 
-        //signature in signedTx
-        String signatureField = Numeric.toHexStringNoPrefix(concatSignatureLikeWeb3js);
-        //for verification
-        String privKey = credentials.getEcKeyPair().getPrivateKey().toString(16);
-        //sender_id in signedTx
-        String pubKey = credentials.getEcKeyPair().getPublicKey().toString(16);
+        return Numeric.toHexStringNoPrefix(concatSignatureLikeWeb3js);
+    }
 
-        Common.SignatureData signatureTx = Common.SignatureData.newBuilder()
-                .setHash(ByteString.copyFromUtf8(hexHash))
-                .setSignature(ByteString.copyFromUtf8(signatureField))
-                .setSignerId(ByteString.copyFromUtf8(pubKey))
-                .build();
-
-        TransactionOuterClass.SignedTransaction signedTransaction =
-                TransactionOuterClass.SignedTransaction.newBuilder()
-                .setBody(transaction)
-                .setSigData(signatureTx)
-                .build();
-        assertTrue(true);
+    private String createSignerId(Credentials credentials) {
+        return credentials.getEcKeyPair().getPublicKey().toString(16);
     }
 
 }
