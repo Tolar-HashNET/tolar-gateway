@@ -3,6 +3,7 @@ package io.tolar.api;
 import com.google.protobuf.ByteString;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
+import org.bouncycastle.util.encoders.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tolar.proto.Blockchain.*;
@@ -181,5 +182,10 @@ public class TolarApiImpl implements TolarApi {
                 .newBlockingStub(channelUtils.getChannel())
                 .getGasEstimate(transaction)
                 .getGasEstimate();
+    }
+
+    @Override
+    public String getTransactionProtobuf(TransactionOuterClass.Transaction transaction) {
+        return Base64.toBase64String(transaction.toByteString().toByteArray());
     }
 }
