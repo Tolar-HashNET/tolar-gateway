@@ -13,7 +13,7 @@ pipeline {
             when { branch 'master' }
 
             steps {
-                sh 'mvn clean install dockerfile:build'
+                sh 'mvn clean spring-boot:build-image'
 
                 sh 'docker save dreamfactoryhr/tolar-gateway:latest ' +
                 ' | ssh -C admin@172.31.7.104 sudo docker load'
@@ -47,7 +47,7 @@ pipeline {
             when { branch 'develop' }
 
             steps {
-                sh 'mvn clean install dockerfile:build -Pstaging -DprofileIdEnabled=true'
+                sh 'mvn clean spring-boot:build-image -Pstaging -DprofileIdEnabled=true'
 
                 sh 'docker save dreamfactoryhr/tolar-gateway:staging ' +
                 ' | ssh -C admin@172.31.7.104 sudo docker load'
