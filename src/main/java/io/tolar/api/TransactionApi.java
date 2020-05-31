@@ -8,4 +8,8 @@ import tolar.proto.tx.TransactionOuterClass;
 public interface TransactionApi {
     @JsonRpcMethod("tx_sendSignedTransaction")
     ByteString sendSignedTransaction(@JsonRpcParam(value = "transaction") TransactionOuterClass.SignedTransaction signedTransaction);
+
+    @JsonRpcMethod("util_getHashBytes")
+    byte[] getHashBytes(@JsonRpcParam(value = "transaction") TransactionOuterClass.Transaction transaction);
+
 }

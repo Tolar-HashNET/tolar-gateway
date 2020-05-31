@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import io.tolar.utils.ChannelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.web3j.crypto.Hash;
 import tolar.proto.Client;
 import tolar.proto.TransactionServiceGrpc;
 import tolar.proto.tx.TransactionOuterClass;
@@ -26,7 +27,9 @@ public class TransactionApiImpl implements TransactionApi {
                 .getTransactionHash();
     }
 
-
-
+    @Override
+    public byte[] getHashBytes(TransactionOuterClass.Transaction transaction) {
+        return Hash.sha3(transaction.toByteString().toByteArray());
+    }
 
 }
