@@ -12,4 +12,7 @@ public interface TransactionApi {
     @JsonRpcMethod("util_getHashBytes")
     byte[] getHashBytes(@JsonRpcParam(value = "transaction") TransactionOuterClass.Transaction transaction);
 
+    @JsonRpcMethod("util_getHashHex")
+    String getHashHex(@JsonRpcParam(value = "transaction") TransactionOuterClass.Transaction transaction);
+
 }

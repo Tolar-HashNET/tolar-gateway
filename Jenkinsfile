@@ -37,7 +37,7 @@ pipeline {
                             "<https://tolar.dream-factory.hr|tolar.dream-factory.hr>\n" +
                             "Pipeline time: ${buildTime}"
 
-                    slackSend(channel: 'test-results', color: 'good', message: slackMessage,
+                    slackSend(channel: 'deployments', color: 'good', message: slackMessage,
                             teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
                 }
             }
@@ -71,7 +71,7 @@ pipeline {
                             "<https://tolar-staging.dream-factory.hr|tolar-staging.dream-factory.hr>\n" +
                             "Pipeline time: ${buildTime}"
 
-                    slackSend(channel: 'test-results', color: 'good', message: slackMessage,
+                    slackSend(channel: 'deployments', color: 'good', message: slackMessage,
                             teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
                 }
             }
@@ -95,7 +95,7 @@ pipeline {
                             ") \n" +
                             "Pipeline time: ${buildTime}"
 
-                    slackSend(channel: 'test-results', color: 'good', message: slackMessage,
+                    slackSend(channel: 'deployments', color: 'good', message: slackMessage,
                             teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
                 }
             }
@@ -124,7 +124,7 @@ pipeline {
         success {
             script {
                 if (env.BRANCH_NAME == 'noMessageHack') {
-                    slackSend(channel: 'test-results', color: 'good',
+                    slackSend(channel: 'deployments', color: 'good',
                             message: "Success \'${env.JOB_NAME} [${env.BUILD_NUMBER}]\'" +
                                     " (<${env.RUN_DISPLAY_URL}|Pipeline>)",
                             teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
@@ -134,7 +134,7 @@ pipeline {
 
         failure {
             script {
-                slackSend(channel: 'test-results', color: 'danger',
+                slackSend(channel: 'deployments', color: 'danger',
                         message: "FAILED \'${env.JOB_NAME} [${env.BUILD_NUMBER}]\'" +
                                 " (<${env.RUN_DISPLAY_URL}|Pipeline>)",
                         teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)

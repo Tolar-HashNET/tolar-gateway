@@ -10,6 +10,7 @@ import tolar.proto.tx.TransactionOuterClass;
 
 import java.io.File;
 import java.math.BigInteger;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -199,6 +200,47 @@ public class Web3JTests {
                 .setBody(transaction)
                 .setSigData(signatureTx)
                 .build();
+        assertTrue(true);
+    }
+
+    @Test
+    public void createSignedTxFromCreatedAccountTest() throws Exception {
+        Credentials credentials = Credentials
+                .create("d7ce009203c5d16d6b5daafa1efb1167a9e4558e88dff0bc14ebd65f3f0fc116");
+
+        String tolarAddress = createTolarAddress(credentials);
+
+        TransactionOuterClass.Transaction transaction = TransactionOuterClass.Transaction
+                .newBuilder()
+                .setSenderAddress(ByteString.copyFromUtf8(
+                        "547ec363f4d32b1fb3c67b8bf91aacf689943e6e87ae4ae600"))
+                .setReceiverAddress(ByteString.copyFromUtf8(
+                        "5456a09d5c06e23ec6a71a7db606549ec4bde1788c71a9552b"))
+                .setValue(BalanceConverter.toByteString(BigInteger.ZERO))
+                .setGas(BalanceConverter.toByteString(BigInteger.valueOf(21463)))
+                .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
+                .setData("")
+                .setNonce(BalanceConverter.toByteString(BigInteger.ZERO))//check nonce if needed
+                .build();
+
+        byte[] hashed = Hash.sha3(transaction.toByteString().toByteArray());
+        System.out.println(Arrays.toString(hashed));
+        String test = new String(hashed);
+        String hexHash = createTxHash(transaction);
+        String signature = createSignature(transaction, credentials);
+        String signerId = createSignerId(credentials);
+
+        Common.SignatureData signatureTx = Common.SignatureData.newBuilder()
+                .setHash(ByteString.copyFromUtf8(hexHash))
+                .setSignature(ByteString.copyFromUtf8(signature))
+                .setSignerId(ByteString.copyFromUtf8(signerId))
+                .build();
+
+        TransactionOuterClass.SignedTransaction signedTransaction =
+                TransactionOuterClass.SignedTransaction.newBuilder()
+                        .setBody(transaction)
+                        .setSigData(signatureTx)
+                        .build();
         assertTrue(true);
     }
 
