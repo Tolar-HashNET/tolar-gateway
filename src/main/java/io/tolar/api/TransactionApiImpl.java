@@ -29,11 +29,6 @@ public class TransactionApiImpl implements TransactionApi {
     }
 
     @Override
-    public byte[] getHashBytes(TransactionOuterClass.Transaction transaction) {
-        return Hash.sha3(transaction.toByteString().toByteArray());
-    }
-
-    @Override
     public String getHashHex(TransactionOuterClass.Transaction transaction) {
         byte[] bytes = Hash.sha3(transaction.toByteString().toByteArray());
         return Numeric.toHexStringNoPrefix(bytes);
