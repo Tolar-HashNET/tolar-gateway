@@ -9,9 +9,6 @@ public interface TransactionApi {
     @JsonRpcMethod("tx_sendSignedTransaction")
     ByteString sendSignedTransaction(@JsonRpcParam(value = "transaction") TransactionOuterClass.SignedTransaction signedTransaction);
 
-    @JsonRpcMethod("util_getHashBytes")
-    byte[] getHashBytes(@JsonRpcParam(value = "transaction") TransactionOuterClass.Transaction transaction);
-
     @JsonRpcMethod("util_getHashHex")
     String getHashHex(@JsonRpcParam(value = "transaction") TransactionOuterClass.Transaction transaction);
 
