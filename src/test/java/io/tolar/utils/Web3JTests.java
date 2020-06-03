@@ -227,6 +227,7 @@ public class Web3JTests {
         System.out.println(Arrays.toString(hashed));
         String test = new String(hashed);
         String hexHash = createTxHash(transaction);
+        byte[] bytes = Numeric.hexStringToByteArray(hexHash);
         String signature = createSignature(transaction, credentials);
         String signerId = createSignerId(credentials);
 
@@ -313,9 +314,17 @@ public class Web3JTests {
         Sign.SignatureData signatureData =
                 Sign.signMessage(hashed, creds.getEcKeyPair(), false);
 
+        Sign.SignatureData withPrefix = Sign.signPrefixedMessage(hashed, creds.getEcKeyPair());
+
         byte[] concatSignatureLikeWeb3js = new byte[signatureData.getR().length +
                 signatureData.getS().length +
                 signatureData.getV().length];
+
+        String rHex = Numeric.toHexStringNoPrefix(signatureData.getR());
+        String sHex = Numeric.toHexStringNoPrefix(signatureData.getS());
+
+        String rHexPrefix = Numeric.toHexStringNoPrefix(withPrefix.getR());
+        String sHexPrefix = Numeric.toHexStringNoPrefix(withPrefix.getS());
 
         //this reduces the recId of a signature to be same as tolar (prone to changes)
         signatureData.getV()[0] = (byte) ((int) signatureData.getV()[0] - 27);

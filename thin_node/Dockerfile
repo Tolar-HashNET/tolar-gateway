@@ -1,7 +1,7 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.10
 RUN mkdir -p /home/thin_node/.tolar/keystore/Thin_node/keys
 RUN mkdir -p /home/thin_node/.tolar/keystore/Thin_node/db
 WORKDIR /home/thin_node/
 COPY config.json .
-COPY tolar_daemon_linux .
-CMD ["./tolar_daemon_linux", "--config_path=/home/thin_node/config.json"]
+COPY thin_node_bin .
+CMD ["./thin_node_bin", "--config_path=/home/thin_node/config.json"]
