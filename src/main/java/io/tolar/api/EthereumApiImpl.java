@@ -41,4 +41,10 @@ public class EthereumApiImpl implements EthereumApi {
 
         throw new StatusRuntimeException(Status.INVALID_ARGUMENT);
     }
+
+    @Override
+    public String ethBlockNumber() {
+        BigInteger blockNumber = BigInteger.valueOf(tolarApi.getBlockCount());
+        return Numeric.encodeQuantity(blockNumber);
+    }
 }
