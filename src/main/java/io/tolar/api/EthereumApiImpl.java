@@ -72,4 +72,14 @@ public class EthereumApiImpl implements EthereumApi {
         Blockchain.GetBlockResponse block = tolarApi.getBlockByIndex(blockIndex);
         return new EthBlock(block);
     }
+
+    @Override
+    public int netVersion() {
+        return 69;
+    }
+
+    @Override
+    public BigInteger ethGetTransactionCount(String address, String tag) {
+        return BigInteger.valueOf(10);
+    }
 }
