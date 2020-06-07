@@ -46,7 +46,7 @@ public class EthereumApiImpl implements EthereumApi {
 
     @Override
     public String ethBlockNumber() {
-        BigInteger blockNumber = BigInteger.valueOf(tolarApi.getBlockCount()).min(BigInteger.ONE);
+        BigInteger blockNumber = BigInteger.valueOf(tolarApi.getBlockCount()).subtract(BigInteger.ONE);
         return Numeric.encodeQuantity(blockNumber);
     }
 
