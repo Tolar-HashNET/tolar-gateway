@@ -31,14 +31,6 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
         TreeNode sender_address = node.get("sender_address");
         LOGGER.info("senderTx: {}", sender_address);
 
-        String data = objectMapper.convertValue(node.get("data"), String.class);
-
-        LOGGER.info("data: {}", data);
-
-        String data1 = objectMapper.readValue(node.get("data").traverse(), String.class);
-
-        LOGGER.info("data1: {}", data1);
-
         TransactionOuterClass.Transaction result = TransactionOuterClass.Transaction
                 .newBuilder()
                 .setSenderAddress(objectMapper.convertValue(node.get("sender_address"), ByteString.class))
@@ -46,7 +38,7 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
                 .setValue(BalanceConverter.toByteString(objectMapper.convertValue(node.get("amount"), BigInteger.class)))
                 .setGas(BalanceConverter.toByteString(objectMapper.convertValue(node.get("gas"), BigInteger.class)))
                 .setGasPrice(BalanceConverter.toByteString(objectMapper.convertValue(node.get("gas_price"), BigInteger.class)))
-                .setData(data)
+                .setData(objectMapper.readValue(node.get("data").traverse(), String.class))
                 .setNonce(BalanceConverter.toByteString(objectMapper.convertValue(node.get("nonce"), BigInteger.class)))
                 .build();
 
