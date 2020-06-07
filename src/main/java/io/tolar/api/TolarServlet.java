@@ -35,6 +35,9 @@ public class TolarServlet extends HttpServlet {
     @Autowired
     private TransactionApiImpl transactionApi;
 
+    @Autowired
+    private EthereumApiImpl ethereumApi;
+
     @Qualifier("entityDeserializerAndSerializer")
     @Autowired
     private Module module;
@@ -50,8 +53,8 @@ public class TolarServlet extends HttpServlet {
     public void init(ServletConfig servletConfig) {
         Object compositeService = ProxyUtil.createCompositeServiceProxy(
                 this.getClass().getClassLoader(),
-                new Object[]{adminApi, blockApi, networkApi, transactionApi},
-                new Class<?>[]{AccountApi.class, TolarApi.class, NetworkApi.class, TransactionApi.class},
+                new Object[]{adminApi, blockApi, networkApi, transactionApi, ethereumApi},
+                new Class<?>[]{AccountApi.class, TolarApi.class, NetworkApi.class, TransactionApi.class, EthereumApi.class},
                 false);
 
         jsonRpcServer = new JsonRpcServer(new ObjectMapper().registerModule(module), compositeService);
