@@ -28,7 +28,7 @@ public class EthereumApiImpl implements EthereumApi {
             BigInteger balance = BalanceConverter.toBigInteger(tolarApi.getBalance(tolarAddress, blockIndex).getBalance());
             return Numeric.encodeQuantity(balance);
         } catch (NumberFormatException e) {
-            if (tag.equals("latest")) {
+            if (tag.equals("latest") || tag.equals("pending")) {
                 BigInteger balance = BalanceConverter.toBigInteger(tolarApi.getLatestBalance(tolarAddress).getBalance());
                 return Numeric.encodeQuantity(balance);
             }
