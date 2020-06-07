@@ -3,10 +3,12 @@ package io.tolar.api;
 import com.google.protobuf.ByteString;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import io.tolar.responses.EthBlock;
 import io.tolar.utils.AddressConverter;
 import io.tolar.utils.BalanceConverter;
 import org.springframework.stereotype.Component;
 import org.web3j.utils.Numeric;
+import tolar.proto.Blockchain;
 
 import java.math.BigInteger;
 
@@ -46,5 +48,28 @@ public class EthereumApiImpl implements EthereumApi {
     public String ethBlockNumber() {
         BigInteger blockNumber = BigInteger.valueOf(tolarApi.getBlockCount());
         return Numeric.encodeQuantity(blockNumber);
+    }
+
+    @Override
+    public EthBlock ethGetBlockByNumber(String tag, boolean isFullTransaction) {
+        long blockIndex = -1;
+        try {
+            blockIndex = Numeric.decodeQuantity(tag).longValue();
+        } catch (NumberFormatException e) {
+            if (tag.equals("latest") || tag.equals("pending")) {
+                blockIndex = Numeric.decodeQuantity(ethBlockNumber()).longValue();
+            }
+
+            if (tag.equals("earliest")) {
+                blockIndex = 0;
+            }
+        }
+
+        if (blockIndex == -1) {
+            throw new StatusRuntimeException(Status.INVALID_ARGUMENT);
+        }
+
+        Blockchain.GetBlockResponse block = tolarApi.getBlockByIndex(blockIndex);
+        return new EthBlock(block);
     }
 }
