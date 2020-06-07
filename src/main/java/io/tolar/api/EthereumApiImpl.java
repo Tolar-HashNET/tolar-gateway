@@ -24,7 +24,7 @@ public class EthereumApiImpl implements EthereumApi {
         ByteString tolarAddress = ByteString.copyFromUtf8(AddressConverter.toTolarAddress(address));
 
         try {
-            long blockIndex = Long.parseLong(tag);
+            long blockIndex = Numeric.decodeQuantity(tag).longValue();
             BigInteger balance = BalanceConverter.toBigInteger(tolarApi.getBalance(tolarAddress, blockIndex).getBalance());
             return Numeric.encodeQuantity(balance);
         } catch (NumberFormatException e) {
