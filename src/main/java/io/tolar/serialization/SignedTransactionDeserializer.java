@@ -34,6 +34,7 @@ public class SignedTransactionDeserializer extends JsonDeserializer<SignedTransa
         SignatureData signatureData = objectMapper.convertValue(node.get("sig_data"), SignatureData.class);
 
         LOGGER.info("body: {}", transaction);
+        LOGGER.info("sigData: {}", signatureData);
 
         return SignedTransaction
                 .newBuilder()
