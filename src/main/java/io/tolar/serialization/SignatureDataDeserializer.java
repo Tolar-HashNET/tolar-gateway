@@ -7,11 +7,15 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.protobuf.ByteString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tolar.proto.Common;
 
 import java.io.IOException;
 
 public class SignatureDataDeserializer extends JsonDeserializer<Common.SignatureData> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SignatureDataDeserializer.class);
+
     @Override
     public Common.SignatureData deserialize(JsonParser parser, DeserializationContext context)
             throws IOException {
@@ -22,6 +26,7 @@ public class SignatureDataDeserializer extends JsonDeserializer<Common.Signature
         objectMapper.registerModule(module);
 
         TreeNode node = parser.getCodec().readTree(parser);
+        LOGGER.info("sigData: {}", node);
 
         return Common.SignatureData.newBuilder()
                 .setHash(objectMapper.convertValue(node.get("hash"), ByteString.class))
