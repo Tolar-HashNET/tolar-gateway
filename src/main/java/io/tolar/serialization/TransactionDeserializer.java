@@ -9,29 +9,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.protobuf.ByteString;
 import io.tolar.utils.BalanceConverter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import tolar.proto.tx.TransactionOuterClass;
 
 import java.io.IOException;
 import java.math.BigInteger;
 
 public class TransactionDeserializer extends JsonDeserializer<TransactionOuterClass.Transaction> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionDeserializer.class);
 
     @Override
     public TransactionOuterClass.Transaction deserialize(JsonParser parser, DeserializationContext context)
             throws IOException {
         TreeNode node = parser.getCodec().readTree(parser);
 
-        LOGGER.info("tx: {}", node);
-
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(createDeserializationModule());
-        TreeNode sender_address = node.get("sender_address");
-        LOGGER.info("senderTx: {}", sender_address);
 
-        TransactionOuterClass.Transaction result = TransactionOuterClass.Transaction
+        return TransactionOuterClass.Transaction
                 .newBuilder()
                 .setSenderAddress(objectMapper.convertValue(node.get("sender_address"), ByteString.class))
                 .setReceiverAddress(objectMapper.convertValue(node.get("receiver_address"), ByteString.class))
@@ -41,10 +34,6 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
                 .setData(objectMapper.readValue(node.get("data").traverse(), String.class))
                 .setNonce(BalanceConverter.toByteString(objectMapper.convertValue(node.get("nonce"), BigInteger.class)))
                 .build();
-
-        LOGGER.info("result: {}", result);
-
-        return result;
     }
 
     private Module createDeserializationModule() {
