@@ -9,16 +9,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.protobuf.ByteString;
 import io.tolar.utils.BalanceConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tolar.proto.tx.TransactionOuterClass;
 
 import java.io.IOException;
 import java.math.BigInteger;
 
 public class TransactionDeserializer extends JsonDeserializer<TransactionOuterClass.Transaction> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionDeserializer.class);
+
     @Override
     public TransactionOuterClass.Transaction deserialize(JsonParser parser, DeserializationContext context)
             throws IOException {
         TreeNode node = parser.getCodec().readTree(parser);
+
+        LOGGER.info("tx: {}", node);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(createDeserializationModule());
