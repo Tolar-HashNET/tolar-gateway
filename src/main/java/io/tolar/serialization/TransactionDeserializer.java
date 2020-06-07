@@ -28,6 +28,8 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(createDeserializationModule());
+        TreeNode sender_address = node.get("sender_address");
+        LOGGER.info("senderTx: {}", sender_address);
 
         return TransactionOuterClass.Transaction
                 .newBuilder()
