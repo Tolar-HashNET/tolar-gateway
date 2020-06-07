@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tolar.proto.Common.SignatureData;
 import tolar.proto.tx.TransactionOuterClass;
 import tolar.proto.tx.TransactionOuterClass.SignedTransaction;
@@ -15,6 +17,7 @@ import tolar.proto.tx.TransactionOuterClass.Transaction;
 import java.io.IOException;
 
 public class SignedTransactionDeserializer extends JsonDeserializer<SignedTransaction> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SignedTransactionDeserializer.class);
 
     @Override
     public SignedTransaction deserialize(JsonParser parser, DeserializationContext context)
@@ -23,6 +26,8 @@ public class SignedTransactionDeserializer extends JsonDeserializer<SignedTransa
         TreeNode node = parser.getCodec().readTree(parser);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(createDeserializationModule());
+
+        LOGGER.info("signedTx: {}", node);
 
         Transaction transaction = objectMapper.convertValue(node.get("body"), Transaction.class);
         SignatureData signatureData = objectMapper.convertValue(node.get("sig_data"), SignatureData.class);
