@@ -114,10 +114,11 @@ public class Web3JTests {
 
     @Test
     public void createProperSignedTx() throws Exception {
-        File file = new File("/Users/frane/.tolar/keystore/Thin_node/keys/630c1867-9a42-eb26-6488-8dfcbeafd0c9.json");
+        File file = new File("/Users/frane/Documents/Tolar/keys/630c1867-9a42-eb26-6488-8dfcbeafd0c9.json");
 
         assertTrue(file.exists());
         Credentials credentials = WalletUtils.loadCredentials("supersifra", file);
+        String tolarAddress = createTolarAddress(credentials);
 
         TransactionOuterClass.Transaction transaction = TransactionOuterClass.Transaction
                 .newBuilder()
@@ -228,6 +229,50 @@ public class Web3JTests {
         String test = new String(hashed);
         String hexHash = createTxHash(transaction);
         byte[] bytes = Numeric.hexStringToByteArray(hexHash);
+        String signature = createSignature(transaction, credentials);
+        String signerId = createSignerId(credentials);
+
+        Common.SignatureData signatureTx = Common.SignatureData.newBuilder()
+                .setHash(ByteString.copyFromUtf8(hexHash))
+                .setSignature(ByteString.copyFromUtf8(signature))
+                .setSignerId(ByteString.copyFromUtf8(signerId))
+                .build();
+
+        TransactionOuterClass.SignedTransaction signedTransaction =
+                TransactionOuterClass.SignedTransaction.newBuilder()
+                        .setBody(transaction)
+                        .setSigData(signatureTx)
+                        .build();
+        assertTrue(true);
+    }
+
+    @Test
+    public void createSignedTxFromCreatedAccountTest_deb() throws Exception {
+        File file = new File("/Users/frane/Documents/Tolar/keys/d90f9e3d-9b1c-cd85-99b7-5161379c97b1.json");
+
+        assertTrue(file.exists());
+        Credentials credentials = WalletUtils.loadCredentials("supersifra", file);
+        String tolarAddress = createTolarAddress(credentials);
+        assertEquals("5484c512b1cf3d45e7506a772b7358375acc571b2930d27deb", tolarAddress);
+
+        TransactionOuterClass.Transaction transaction = TransactionOuterClass.Transaction
+                .newBuilder()
+                .setSenderAddress(ByteString.copyFromUtf8(
+                        "5484c512b1cf3d45e7506a772b7358375acc571b2930d27deb"))
+                .setReceiverAddress(ByteString.copyFromUtf8(
+                        "5472de4346f7a78fd5e719a00ab03c0aba3e1c5b6113273bde"))
+                .setValue(BalanceConverter.toByteString(BigInteger.valueOf(10)))
+                .setGas(BalanceConverter.toByteString(BigInteger.valueOf(24000)))
+                .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
+                .setData("datata")
+                .setNonce(BalanceConverter.toByteString(BigInteger.valueOf(9)))//check nonce if needed
+                .build();
+
+        String privKey = credentials.getEcKeyPair().getPrivateKey().toString(16);
+
+        byte[] hashed = Hash.sha3(transaction.toByteString().toByteArray());
+        System.out.println(Arrays.toString(hashed));
+        String hexHash = createTxHash(transaction);
         String signature = createSignature(transaction, credentials);
         String signerId = createSignerId(credentials);
 
