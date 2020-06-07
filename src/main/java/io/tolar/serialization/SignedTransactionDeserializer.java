@@ -29,7 +29,8 @@ public class SignedTransactionDeserializer extends JsonDeserializer<SignedTransa
 
         LOGGER.info("signedTx: {}", node);
 
-        Transaction transaction = objectMapper.convertValue(node.get("body"), Transaction.class);
+        TransactionOuterClass.Transaction transaction = objectMapper
+                .convertValue(node.get("body"), TransactionOuterClass.Transaction.class);
         SignatureData signatureData = objectMapper.convertValue(node.get("sig_data"), SignatureData.class);
 
         LOGGER.info("body: {}", transaction);
