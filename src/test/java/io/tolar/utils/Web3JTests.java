@@ -378,11 +378,9 @@ public class Web3JTests {
         signatureData.getV()[0] = (byte) ((int) signatureData.getV()[0] - 27);
 
         System.arraycopy(signatureData.getR(), 0, concatSignatureLikeWeb3js,
-                0,
-                signatureData.getR().length);
+                0, signatureData.getR().length);
         System.arraycopy(signatureData.getS(), 0, concatSignatureLikeWeb3js,
-                signatureData.getR().length,
-                signatureData.getS().length);
+                signatureData.getR().length, signatureData.getS().length);
         System.arraycopy(signatureData.getV(), 0, concatSignatureLikeWeb3js,
                 signatureData.getR().length + signatureData.getS().length,
                 signatureData.getV().length);
