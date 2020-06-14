@@ -3,6 +3,7 @@ package io.tolar.utils;
 import com.google.protobuf.ByteString;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 
 public class BalanceConverter {
 
@@ -14,6 +15,11 @@ public class BalanceConverter {
         if (balance == null) {
             return null;
         }
-        return ByteString.copyFrom(balance.toByteArray());
+        byte[] balanceBytes = balance.toByteArray();
+
+        if (balanceBytes[0] == 0) {
+            balanceBytes = Arrays.copyOfRange(balanceBytes, 1, balanceBytes.length);
+        }
+        return ByteString.copyFrom(balanceBytes);
     }
 }
