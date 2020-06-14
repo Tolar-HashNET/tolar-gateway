@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import tolar.proto.Account.AddressBalance;
 import tolar.proto.Blockchain;
@@ -27,12 +26,6 @@ public class ApplicationConfig implements WebMvcConfigurer {
                 tolarServlet, "");
         bean.setLoadOnStartup(1);
         return bean;
-    }
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*");
     }
 
     @Bean
