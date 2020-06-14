@@ -17,9 +17,10 @@ public class BalanceConverter {
         }
         byte[] balanceBytes = balance.toByteArray();
 
-        if (balanceBytes[0] == 0) {
+        if (balanceBytes[0] == 0 && balanceBytes.length > 1) {
             balanceBytes = Arrays.copyOfRange(balanceBytes, 1, balanceBytes.length);
         }
+
         return ByteString.copyFrom(balanceBytes);
     }
 }
