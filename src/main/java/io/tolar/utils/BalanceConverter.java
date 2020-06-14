@@ -29,7 +29,7 @@ public class BalanceConverter {
     private static int countLeadingZeroes(byte[] bytes) {
         int result = 0;
 
-        while (bytes[result] == 0) {
+        while (bytes[result] == 0 && result + 1 < bytes.length) {
             result++;
         }
 
