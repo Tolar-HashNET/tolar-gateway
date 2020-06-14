@@ -24,7 +24,7 @@ public class TolarErrorResolver implements ErrorResolver {
         String errorMsg = "unhandled error on method: " + method.getName() + ", error: ";
 
         LOGGER.error(errorMsg, throwable);
-        return new JsonError(-32000,
+        return new JsonError(-32001,
                 errorMsg + throwable.getMessage(),
                 null);
     }
