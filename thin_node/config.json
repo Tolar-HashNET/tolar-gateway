@@ -1,7 +1,7 @@
 {
     "ThinNodeConfig": {
         "client_endpoint": {
-            "ip_address": "0.0.0.0/0",
+            "ip_address": "0.0.0.0",
             "port": "9200"
         }
     },
