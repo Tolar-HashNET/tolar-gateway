@@ -19,36 +19,33 @@ import tolar.proto.tx.TransactionOuterClass;
 import java.math.BigInteger;
 import java.util.Arrays;
 
-@Ignore("manual")
 public class TolarApiImplTest extends TestCase {
 
     @Test
     public void testGetTransaction() {
         TolarConfig config = new TolarConfig();
-        config.setHost("116.203.236.134");
+        config.setHost("172.31.7.104");
         config.setPort(9200);
         TolarApiImpl tolarApi = new TolarApiImpl(new ChannelUtils(config));
 
         //Blockchain.GetTransactionResponse transaction = tolarApi.getTransaction(ByteString.EMPTY);
-        Blockchain.GetTransactionResponse where = tolarApi.getTransaction(ByteString.copyFromUtf8(
-                "4a67850a409d231226121365ebb47fc6557ec42551f5a359309d989b1a7f9999"));
+        Blockchain.GetTransactionReceiptResponse where = tolarApi.getTransactionReceipt(ByteString.copyFromUtf8(
+                "086c823167ab33addc73518d932656e271bd31e34bca2b39bd63d456fb4ce7b1"));
 
         Assert.assertNull(where);
     }
 
-    public void sendTransactionCheckStatus() {
+    @Test
+    public void testTransactionCheckStatus() {
 
         TolarConfig config = new TolarConfig();
-        config.setHost("116.203.236.134");
+        config.setHost("172.31.7.104");
         config.setPort(9200);
         TolarApiImpl tolarApi = new TolarApiImpl(new ChannelUtils(config));
         TransactionApi api = new TransactionApiImpl(new ChannelUtils(config));
 
-        //Blockchain.GetTransactionResponse transaction = tolarApi.getTransaction(ByteString.EMPTY);
-        Blockchain.GetTransactionResponse where = tolarApi.getTransaction(ByteString.copyFromUtf8(
-                "4a67850a409d231226121365ebb47fc6557ec42551f5a359309d989b1a7f9999"));
         Credentials credentials = Credentials.create(
-                "78e36e1756542e69eed2fe60b5a4a788e20f519bfac38d428275e868f9d84baa");
+                "8bfa59c42886aa4d62376ddc41eacc84b2a8308f4e16c162cca9ca8b4d35c2b");
         TransactionOuterClass.Transaction transaction = TransactionOuterClass.Transaction
                 .newBuilder()
                 .setSenderAddress(ByteString.copyFromUtf8(
@@ -59,7 +56,7 @@ public class TolarApiImplTest extends TestCase {
                 .setGas(BalanceConverter.toByteString(BigInteger.valueOf(240000)))
                 .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
                 .setData("test")
-                .setNonce(BalanceConverter.toByteString(BigInteger.valueOf(59)))
+                .setNonce(BalanceConverter.toByteString(BigInteger.valueOf(129)))
                 .build();
 
         String privKey = credentials.getEcKeyPair().getPrivateKey().toString(16);
@@ -84,9 +81,10 @@ public class TolarApiImplTest extends TestCase {
 
         ByteString bytes = api.sendSignedTransaction(signedTransaction);
         // jesi siguran. ne.
-        Blockchain.GetTransactionResponse transaction1 = tolarApi.getTransaction(bytes);
 
-        assertNotNull(transaction1);
+        Blockchain.GetTransactionReceiptResponse transactionReceipt = tolarApi.getTransactionReceipt(bytes);
+
+        assertNotNull(transactionReceipt);
     }
 
     private String createTolarAddress(Credentials credentials) {
