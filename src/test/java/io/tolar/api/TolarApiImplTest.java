@@ -27,7 +27,7 @@ public class TolarApiImplTest extends TestCase {
         TolarConfig config = new TolarConfig();
         config.setHost("172.31.7.104");
         config.setPort(9200);
-        TolarApiImpl tolarApi = new TolarApiImpl(new ChannelUtils(config));
+        TolarApiImpl tolarApi = new TolarApiImpl(new ChannelUtils(config), txCache);
 
         //Blockchain.GetTransactionResponse transaction = tolarApi.getTransaction(ByteString.EMPTY);
         Blockchain.GetTransactionReceiptResponse where = tolarApi.getTransactionReceipt(ByteString.copyFromUtf8(
@@ -42,8 +42,8 @@ public class TolarApiImplTest extends TestCase {
         TolarConfig config = new TolarConfig();
         config.setHost("172.31.7.104");
         config.setPort(9200);
-        TolarApiImpl tolarApi = new TolarApiImpl(new ChannelUtils(config));
-        TransactionApi api = new TransactionApiImpl(new ChannelUtils(config));
+        TolarApiImpl tolarApi = new TolarApiImpl(new ChannelUtils(config), txCache);
+        TransactionApi api = new TransactionApiImpl(new ChannelUtils(config), txCache);
 
         Credentials credentials = Credentials.create(
                 "8bfa59c42886aa4d62376ddc41eacc84b2a8308f4e16c162cca9ca8b4d35c2b");

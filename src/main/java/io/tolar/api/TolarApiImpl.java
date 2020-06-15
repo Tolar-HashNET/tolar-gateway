@@ -2,10 +2,12 @@ package io.tolar.api;
 
 import com.google.protobuf.ByteString;
 import io.grpc.StatusRuntimeException;
+import io.tolar.caching.NewTxCache;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Base64;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import tolar.proto.Blockchain.*;
 import tolar.proto.BlockchainServiceGrpc;
@@ -13,15 +15,19 @@ import tolar.proto.tx.TransactionOuterClass;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
 public class TolarApiImpl implements TolarApi {
     private static final int MAX_RETRY = 5;
-    private ChannelUtils channelUtils;
+    private final ChannelUtils channelUtils;
+    private final NewTxCache txCache;
+    private long blockCount;
 
-    public TolarApiImpl(ChannelUtils channelUtils) {
+    public TolarApiImpl(ChannelUtils channelUtils, NewTxCache txCache) {
         this.channelUtils = channelUtils;
+        this.txCache = txCache;
     }
 
     @Override
@@ -34,6 +40,28 @@ public class TolarApiImpl implements TolarApi {
                 .newBlockingStub(channelUtils.getChannel())
                 .getBlockCount(getBlockCountRequest)
                 .getBlockCount();
+    }
+
+    @Scheduled(fixedRate = 2_000)
+    private void refreshCache(){
+        if(blockCount == 0){
+            blockCount = getBlockCount();
+            return;
+        }
+        long latestBlocks = getBlockCount();
+
+        for(long i = blockCount + 1; i <= latestBlocks; i++){
+            GetBlockResponse blockByIndex = getBlockByIndex(i);
+
+            List<String> list = blockByIndex.getTransactionHashesList()
+                    .stream()
+                    .map(t -> t.toStringUtf8())
+                    .collect(Collectors.toList());
+            txCache.remove(list);
+            log.info("Removed {} from cache", list.size());
+        }
+
+        log.info("Cache cleanup done.");
     }
 
     @Override
@@ -71,6 +99,14 @@ public class TolarApiImpl implements TolarApi {
                 .newBuilder()
                 .setTransactionHash(transactionHash)
                 .build();
+
+        while(!txCache.canProceed(transactionHash.toStringUtf8())){
+            try {
+                Thread.sleep(1_000);
+            } catch (InterruptedException e) {
+                log.error(e.getMessage());
+            }
+        }
 
         try {
             return BlockchainServiceGrpc
@@ -178,8 +214,11 @@ public class TolarApiImpl implements TolarApi {
                 .setNonce(BalanceConverter.toByteString(nonce))
                 .build();
 
-        return BlockchainServiceGrpc.newBlockingStub(channelUtils.getChannel())
+        TryCallTransactionResponse tryCallTransactionResponse = BlockchainServiceGrpc
+                .newBlockingStub(channelUtils.getChannel())
                 .tryCallTransaction(transaction);
+
+        return tryCallTransactionResponse;
     }
 
     @Override
@@ -192,6 +231,14 @@ public class TolarApiImpl implements TolarApi {
                     .newBuilder()
                     .setTransactionHash(transactionHash)
                     .build();
+
+        while(!txCache.canProceed(transactionHash.toStringUtf8())){
+            try {
+                Thread.sleep(1_000);
+            } catch (InterruptedException e) {
+                log.error(e.getMessage());
+            }
+        }
 
             try {
                 return BlockchainServiceGrpc
