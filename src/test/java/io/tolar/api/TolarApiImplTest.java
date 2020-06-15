@@ -19,6 +19,7 @@ import tolar.proto.tx.TransactionOuterClass;
 import java.math.BigInteger;
 import java.util.Arrays;
 
+@Ignore("manual testies")
 public class TolarApiImplTest extends TestCase {
 
     @Test
