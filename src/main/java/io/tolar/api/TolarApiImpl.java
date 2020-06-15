@@ -1,8 +1,10 @@
 package io.tolar.api;
 
 import com.google.protobuf.ByteString;
+import io.grpc.StatusRuntimeException;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,10 +16,13 @@ import java.math.BigInteger;
 import java.util.List;
 
 @Component
+@Slf4j
 public class TolarApiImpl implements TolarApi {
-    @Autowired
     private ChannelUtils channelUtils;
 
+    public TolarApiImpl(ChannelUtils channelUtils) {
+        this.channelUtils = channelUtils;
+    }
 
     @Override
     public long getBlockCount() {
@@ -63,9 +68,18 @@ public class TolarApiImpl implements TolarApi {
                 .setTransactionHash(transactionHash)
                 .build();
 
-        return BlockchainServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .getTransaction(getTransactionRequest);
+        try {
+            return BlockchainServiceGrpc
+                    .newBlockingStub(channelUtils.getChannel())
+                    .getTransaction(getTransactionRequest);
+
+        } catch (StatusRuntimeException ex){
+            if(ex.getStatus().getCode().value() != 5){
+                throw ex;
+            }
+            // return an empty result if the transaction is not found!
+            return null;
+        }
     }
 
     @Override

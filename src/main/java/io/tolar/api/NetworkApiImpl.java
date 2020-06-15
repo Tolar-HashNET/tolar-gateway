@@ -8,8 +8,11 @@ import tolar.proto.NetworkServiceGrpc;
 
 @Component
 public class NetworkApiImpl implements NetworkApi {
-    @Autowired
-    private ChannelUtils channelUtils;
+    private final ChannelUtils channelUtils;
+
+    public NetworkApiImpl(ChannelUtils channelUtils) {
+        this.channelUtils = channelUtils;
+    }
 
     @Override
     public long peerCount() {
