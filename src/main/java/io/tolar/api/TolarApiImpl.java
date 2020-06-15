@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.context.Theme;
 import tolar.proto.Blockchain.*;
 import tolar.proto.BlockchainServiceGrpc;
 import tolar.proto.tx.TransactionOuterClass;
@@ -63,6 +64,10 @@ public class TolarApiImpl implements TolarApi {
 
     @Override
     public GetTransactionResponse getTransaction(ByteString transactionHash) {
+        return getTransaction(transactionHash, false);
+    }
+
+    public GetTransactionResponse getTransaction(ByteString transactionHash, boolean tried) {
         GetTransactionRequest getTransactionRequest = GetTransactionRequest
                 .newBuilder()
                 .setTransactionHash(transactionHash)
@@ -74,11 +79,11 @@ public class TolarApiImpl implements TolarApi {
                     .getTransaction(getTransactionRequest);
 
         } catch (StatusRuntimeException ex){
-            if(ex.getStatus().getCode().value() != 5){
+            if(tried){
                 throw ex;
             }
-            // return an empty result if the transaction is not found!
-            return null;
+            // retry
+            return getTransaction(transactionHash, true);
         }
     }
 
@@ -180,14 +185,31 @@ public class TolarApiImpl implements TolarApi {
 
     @Override
     public GetTransactionReceiptResponse getTransactionReceipt(ByteString transactionHash) {
-        GetTransactionReceiptRequest getTransactionReceiptRequest = GetTransactionReceiptRequest
-                .newBuilder()
-                .setTransactionHash(transactionHash)
-                .build();
+        return getTransactionReceipt(transactionHash, false);
+    }
 
-        return BlockchainServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .getTransactionReceipt(getTransactionReceiptRequest);
+
+    public GetTransactionReceiptResponse getTransactionReceipt(ByteString transactionHash, boolean tried) {
+            GetTransactionReceiptRequest getTransactionReceiptRequest = GetTransactionReceiptRequest
+                    .newBuilder()
+                    .setTransactionHash(transactionHash)
+                    .build();
+
+            try {
+                // let's wait a bit for the tolar crew to get their stuff togather.
+                Thread.sleep(5_000);
+                return BlockchainServiceGrpc
+                        .newBlockingStub(channelUtils.getChannel())
+                        .getTransactionReceipt(getTransactionReceiptRequest);
+            } catch (StatusRuntimeException e){
+                if(tried){
+                    throw e;
+                }
+
+                return getTransactionReceipt(transactionHash, true);
+            } catch (InterruptedException e) {
+                // meh
+            }
     }
 
     @Override
