@@ -208,7 +208,7 @@ public class TolarApiImpl implements TolarApi {
 
                 return getTransactionReceipt(transactionHash, true);
             } catch (InterruptedException e) {
-                // meh
+                throw new RuntimeException();// meh
             }
     }
 
