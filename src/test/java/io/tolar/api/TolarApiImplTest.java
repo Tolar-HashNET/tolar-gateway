@@ -1,6 +1,7 @@
 package io.tolar.api;
 
 import com.google.protobuf.ByteString;
+import io.tolar.caching.NewTxCache;
 import io.tolar.config.TolarConfig;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
@@ -27,13 +28,13 @@ public class TolarApiImplTest extends TestCase {
         TolarConfig config = new TolarConfig();
         config.setHost("172.31.7.104");
         config.setPort(9200);
-        TolarApiImpl tolarApi = new TolarApiImpl(new ChannelUtils(config), txCache);
+        TolarApiImpl tolarApi = new TolarApiImpl(new ChannelUtils(config), new NewTxCache());
 
         //Blockchain.GetTransactionResponse transaction = tolarApi.getTransaction(ByteString.EMPTY);
         Blockchain.GetTransactionReceiptResponse where = tolarApi.getTransactionReceipt(ByteString.copyFromUtf8(
                 "086c823167ab33addc73518d932656e271bd31e34bca2b39bd63d456fb4ce7b1"));
 
-        Assert.assertNull(where);
+        Assert.assertNotNull(where);
     }
 
     @Test
@@ -42,8 +43,8 @@ public class TolarApiImplTest extends TestCase {
         TolarConfig config = new TolarConfig();
         config.setHost("172.31.7.104");
         config.setPort(9200);
-        TolarApiImpl tolarApi = new TolarApiImpl(new ChannelUtils(config), txCache);
-        TransactionApi api = new TransactionApiImpl(new ChannelUtils(config), txCache);
+        TolarApiImpl tolarApi = new TolarApiImpl(new ChannelUtils(config), new NewTxCache());
+        TransactionApi api = new TransactionApiImpl(new ChannelUtils(config), new NewTxCache());
 
         Credentials credentials = Credentials.create(
                 "8bfa59c42886aa4d62376ddc41eacc84b2a8308f4e16c162cca9ca8b4d35c2b");
