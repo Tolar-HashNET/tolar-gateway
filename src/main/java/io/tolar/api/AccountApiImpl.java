@@ -13,8 +13,11 @@ import java.util.List;
 
 @Component
 public class AccountApiImpl implements AccountApi {
-    @Autowired
-    private ChannelUtils channelUtils;
+    private final ChannelUtils channelUtils;
+
+    public AccountApiImpl(ChannelUtils channelUtils) {
+        this.channelUtils = channelUtils;
+    }
 
     @Override
     public boolean create(String masterPassword) {
