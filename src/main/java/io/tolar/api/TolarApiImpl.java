@@ -1,12 +1,12 @@
 package io.tolar.api;
 
 import com.google.protobuf.ByteString;
-import io.grpc.StatusRuntimeException;
 import io.tolar.caching.NewTxCache;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import tolar.proto.Blockchain.*;
@@ -15,14 +15,20 @@ import tolar.proto.tx.TransactionOuterClass;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
 @Component
-@Slf4j
 public class TolarApiImpl implements TolarApi {
-    private static final int MAX_RETRY = 5;
     private final ChannelUtils channelUtils;
     private final NewTxCache txCache;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TolarApiImpl.class);
+
+
+    private static final int MAX_AVAILABLE = 6;
+    private final Semaphore available = new Semaphore(MAX_AVAILABLE, true);
+
     private long blockCount;
 
     public TolarApiImpl(ChannelUtils channelUtils, NewTxCache txCache) {
@@ -43,14 +49,14 @@ public class TolarApiImpl implements TolarApi {
     }
 
     @Scheduled(fixedRate = 2_000)
-    private void refreshCache(){
-        if(blockCount == 0){
+    private void refreshCache() {
+        if (blockCount == 0) {
             blockCount = getBlockCount();
             return;
         }
         long latestBlocks = getBlockCount();
 
-        for(long i = blockCount + 1; i <= latestBlocks; i++){
+        for (long i = blockCount + 1; i <= latestBlocks; i++) {
             GetBlockResponse blockByIndex = getBlockByIndex(i);
 
             List<String> list = blockByIndex.getTransactionHashesList()
@@ -58,10 +64,10 @@ public class TolarApiImpl implements TolarApi {
                     .map(t -> t.toStringUtf8())
                     .collect(Collectors.toList());
             txCache.remove(list);
-            log.info("Removed {} from cache", list.size());
+            LOGGER.info("Removed {} from cache", list.size());
         }
 
-        log.info("Cache cleanup done.");
+        LOGGER.info("Cache cleanup done.");
     }
 
     @Override
@@ -91,35 +97,31 @@ public class TolarApiImpl implements TolarApi {
 
     @Override
     public GetTransactionResponse getTransaction(ByteString transactionHash) {
-        return getTransaction(transactionHash, 0);
-    }
-
-    public GetTransactionResponse getTransaction(ByteString transactionHash, int tries) {
         GetTransactionRequest getTransactionRequest = GetTransactionRequest
                 .newBuilder()
                 .setTransactionHash(transactionHash)
                 .build();
 
-        while(!txCache.canProceed(transactionHash.toStringUtf8())){
+        while (!txCache.canProceed(transactionHash.toStringUtf8())) {
             try {
                 Thread.sleep(1_000);
             } catch (InterruptedException e) {
-                log.error(e.getMessage());
+                LOGGER.error(e.getMessage());
             }
         }
 
         try {
+            available.acquire();
             return BlockchainServiceGrpc
                     .newBlockingStub(channelUtils.getChannel())
                     .getTransaction(getTransactionRequest);
 
-        } catch (StatusRuntimeException ex){
-            if (tries >= MAX_RETRY) {
-                throw ex;
-            }
-            // retry
-            return getTransaction(transactionHash, tries + 1);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            available.release();
         }
+        return null;
     }
 
     @Override
@@ -223,34 +225,31 @@ public class TolarApiImpl implements TolarApi {
 
     @Override
     public GetTransactionReceiptResponse getTransactionReceipt(ByteString transactionHash) {
-        return getTransactionReceipt(transactionHash, 0);
-    }
+        GetTransactionReceiptRequest getTransactionReceiptRequest = GetTransactionReceiptRequest
+                .newBuilder()
+                .setTransactionHash(transactionHash)
+                .build();
 
-    public GetTransactionReceiptResponse getTransactionReceipt(ByteString transactionHash, int tries) {
-            GetTransactionReceiptRequest getTransactionReceiptRequest = GetTransactionReceiptRequest
-                    .newBuilder()
-                    .setTransactionHash(transactionHash)
-                    .build();
-
-        while(!txCache.canProceed(transactionHash.toStringUtf8())){
+        while (!txCache.canProceed(transactionHash.toStringUtf8())) {
             try {
                 Thread.sleep(1_000);
             } catch (InterruptedException e) {
-                log.error(e.getMessage());
+                LOGGER.error(e.getMessage());
             }
         }
 
-            try {
-                return BlockchainServiceGrpc
-                        .newBlockingStub(channelUtils.getChannel())
-                        .getTransactionReceipt(getTransactionReceiptRequest);
-            } catch (StatusRuntimeException e){
-                if (tries >= MAX_RETRY) {
-                    throw e;
-                }
+        try {
+            available.acquire();
 
-                return getTransactionReceipt(transactionHash, tries + 1);
-            }
+            return BlockchainServiceGrpc
+                    .newBlockingStub(channelUtils.getChannel())
+                    .getTransactionReceipt(getTransactionReceiptRequest);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            available.release();
+        }
+        return null;
     }
 
     @Override
