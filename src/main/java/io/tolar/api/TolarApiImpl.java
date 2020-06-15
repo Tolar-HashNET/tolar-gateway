@@ -6,9 +6,7 @@ import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.context.Theme;
 import tolar.proto.Blockchain.*;
 import tolar.proto.BlockchainServiceGrpc;
 import tolar.proto.tx.TransactionOuterClass;
@@ -19,6 +17,7 @@ import java.util.List;
 @Component
 @Slf4j
 public class TolarApiImpl implements TolarApi {
+    private static final int MAX_RETRY = 5;
     private ChannelUtils channelUtils;
 
     public TolarApiImpl(ChannelUtils channelUtils) {
@@ -64,10 +63,10 @@ public class TolarApiImpl implements TolarApi {
 
     @Override
     public GetTransactionResponse getTransaction(ByteString transactionHash) {
-        return getTransaction(transactionHash, false);
+        return getTransaction(transactionHash, 0);
     }
 
-    public GetTransactionResponse getTransaction(ByteString transactionHash, boolean tried) {
+    public GetTransactionResponse getTransaction(ByteString transactionHash, int tries) {
         GetTransactionRequest getTransactionRequest = GetTransactionRequest
                 .newBuilder()
                 .setTransactionHash(transactionHash)
@@ -79,11 +78,11 @@ public class TolarApiImpl implements TolarApi {
                     .getTransaction(getTransactionRequest);
 
         } catch (StatusRuntimeException ex){
-            if(tried){
+            if (tries >= MAX_RETRY) {
                 throw ex;
             }
             // retry
-            return getTransaction(transactionHash, true);
+            return getTransaction(transactionHash, tries + 1);
         }
     }
 
@@ -185,30 +184,25 @@ public class TolarApiImpl implements TolarApi {
 
     @Override
     public GetTransactionReceiptResponse getTransactionReceipt(ByteString transactionHash) {
-        return getTransactionReceipt(transactionHash, false);
+        return getTransactionReceipt(transactionHash, 0);
     }
 
-
-    public GetTransactionReceiptResponse getTransactionReceipt(ByteString transactionHash, boolean tried) {
+    public GetTransactionReceiptResponse getTransactionReceipt(ByteString transactionHash, int tries) {
             GetTransactionReceiptRequest getTransactionReceiptRequest = GetTransactionReceiptRequest
                     .newBuilder()
                     .setTransactionHash(transactionHash)
                     .build();
 
             try {
-                // let's wait a bit for the tolar crew to get their stuff togather.
-                Thread.sleep(5_000);
                 return BlockchainServiceGrpc
                         .newBlockingStub(channelUtils.getChannel())
                         .getTransactionReceipt(getTransactionReceiptRequest);
             } catch (StatusRuntimeException e){
-                if(tried){
+                if (tries >= MAX_RETRY) {
                     throw e;
                 }
 
-                return getTransactionReceipt(transactionHash, true);
-            } catch (InterruptedException e) {
-                throw new RuntimeException();// meh
+                return getTransactionReceipt(transactionHash, tries + 1);
             }
     }
 
@@ -224,4 +218,5 @@ public class TolarApiImpl implements TolarApi {
     public String getTransactionProtobuf(TransactionOuterClass.Transaction transaction) {
         return Base64.toBase64String(transaction.toByteString().toByteArray());
     }
+
 }
