@@ -36,12 +36,14 @@ public class TolarHttpStatusCodeProvider implements HttpStatusCodeProvider {
                 return 503;
             case 16:
                 return 401;
+            default:
+                return 0;
         }
-        return 0;
     }
 
     @Override
     public Integer getJsonRpcCode(int i) {
         return null;
     }
+
 }

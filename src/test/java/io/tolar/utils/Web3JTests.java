@@ -255,17 +255,20 @@ public class Web3JTests {
         String tolarAddress = createTolarAddress(credentials);
         assertEquals("5484c512b1cf3d45e7506a772b7358375acc571b2930d27deb", tolarAddress);
 
+        ByteString bytes = ByteString.copyFrom(BigInteger.valueOf(124).toByteArray());
+        ByteString otherBytes = BalanceConverter.toByteString(BigInteger.valueOf(124));
+
         TransactionOuterClass.Transaction transaction = TransactionOuterClass.Transaction
                 .newBuilder()
                 .setSenderAddress(ByteString.copyFromUtf8(
                         "5484c512b1cf3d45e7506a772b7358375acc571b2930d27deb"))
                 .setReceiverAddress(ByteString.copyFromUtf8(
-                        "5472de4346f7a78fd5e719a00ab03c0aba3e1c5b6113273bde"))
-                .setValue(BalanceConverter.toByteString(BigInteger.valueOf(10)))
-                .setGas(BalanceConverter.toByteString(BigInteger.valueOf(24000)))
+                        "5484c512b1cf3d45e7506a772b7358375acc571b2930d27deb"))
+                .setValue(BalanceConverter.toByteString(BigInteger.ZERO))
+                .setGas(BalanceConverter.toByteString(BigInteger.valueOf(240000)))
                 .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
-                .setData("datata")
-                .setNonce(BalanceConverter.toByteString(BigInteger.valueOf(9)))//check nonce if needed
+                .setData("test")
+                .setNonce(bytes)//check nonce if needed
                 .build();
 
         String privKey = credentials.getEcKeyPair().getPrivateKey().toString(16);
@@ -375,11 +378,9 @@ public class Web3JTests {
         signatureData.getV()[0] = (byte) ((int) signatureData.getV()[0] - 27);
 
         System.arraycopy(signatureData.getR(), 0, concatSignatureLikeWeb3js,
-                0,
-                signatureData.getR().length);
+                0, signatureData.getR().length);
         System.arraycopy(signatureData.getS(), 0, concatSignatureLikeWeb3js,
-                signatureData.getR().length,
-                signatureData.getS().length);
+                signatureData.getR().length, signatureData.getS().length);
         System.arraycopy(signatureData.getV(), 0, concatSignatureLikeWeb3js,
                 signatureData.getR().length + signatureData.getS().length,
                 signatureData.getV().length);

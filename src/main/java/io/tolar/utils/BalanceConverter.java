@@ -17,9 +17,23 @@ public class BalanceConverter {
         }
         byte[] balanceBytes = balance.toByteArray();
 
-        if (balanceBytes[0] == 0) {
-            balanceBytes = Arrays.copyOfRange(balanceBytes, 1, balanceBytes.length);
+        int zeroes = countLeadingZeroes(balanceBytes);
+
+        if (zeroes > 0 && balanceBytes.length > 1) {
+            balanceBytes = Arrays.copyOfRange(balanceBytes, zeroes, balanceBytes.length);
         }
+
         return ByteString.copyFrom(balanceBytes);
     }
+
+    private static int countLeadingZeroes(byte[] bytes) {
+        int result = 0;
+
+        while (bytes[result] == 0 && result + 1 < bytes.length) {
+            result++;
+        }
+
+        return result;
+    }
+
 }
