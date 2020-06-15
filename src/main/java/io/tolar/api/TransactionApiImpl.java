@@ -12,8 +12,11 @@ import tolar.proto.tx.TransactionOuterClass;
 
 @Component
 public class TransactionApiImpl implements TransactionApi {
-    @Autowired
-    private ChannelUtils channelUtils;
+    private final ChannelUtils channelUtils;
+
+    public TransactionApiImpl(ChannelUtils channelUtils) {
+        this.channelUtils = channelUtils;
+    }
 
     @Override
     public ByteString sendSignedTransaction(TransactionOuterClass.SignedTransaction signedTransaction) {

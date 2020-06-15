@@ -11,6 +11,11 @@ import java.io.IOException;
 public class GetTransactionResponseSerializer extends JsonSerializer<Blockchain.GetTransactionResponse> {
     @Override
     public void serialize(Blockchain.GetTransactionResponse transactionResponse, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        // return empty result if no transaction is found
+        if(transactionResponse == null){
+            return;
+        }
+
         jsonGenerator.writeStartObject();
         jsonGenerator.writeObjectField("block_hash", transactionResponse.getBlockHash());
         jsonGenerator.writeObjectField("transaction_index", transactionResponse.getTransactionIndex());
