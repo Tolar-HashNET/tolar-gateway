@@ -73,6 +73,13 @@
             <version>1.3.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>29.0-jre</version>
+            <!-- or, for Android: -->
+        </dependency>
+
         <!-- blockchain -->
 
         <dependency>

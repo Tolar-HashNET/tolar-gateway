@@ -1,8 +1,8 @@
 package io.tolar.api;
 
 import com.google.protobuf.ByteString;
+import io.tolar.caching.NewTxCache;
 import io.tolar.utils.ChannelUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.web3j.crypto.Hash;
 import org.web3j.utils.Numeric;
@@ -13,9 +13,11 @@ import tolar.proto.tx.TransactionOuterClass;
 @Component
 public class TransactionApiImpl implements TransactionApi {
     private final ChannelUtils channelUtils;
+    private final NewTxCache txCache;
 
-    public TransactionApiImpl(ChannelUtils channelUtils) {
+    public TransactionApiImpl(ChannelUtils channelUtils, NewTxCache txCache) {
         this.channelUtils = channelUtils;
+        this.txCache = txCache;
     }
 
     @Override
@@ -25,10 +27,13 @@ public class TransactionApiImpl implements TransactionApi {
                 .setSignedTransaction(signedTransaction)
                 .build();
 
-        return TransactionServiceGrpc
+        ByteString transactionHash = TransactionServiceGrpc
                 .newBlockingStub(channelUtils.getChannel())
                 .sendSignedTransaction(sendSignedTransactionRequest)
                 .getTransactionHash();
+
+        txCache.put(transactionHash.toStringUtf8());
+        return transactionHash;
     }
 
     @Override
