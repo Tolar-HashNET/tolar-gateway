@@ -46,8 +46,7 @@ public class TolarApiImpl implements TolarApi {
     @Scheduled(fixedRate = 10_000)
     private void refreshCache() {
         if (blockCount == 0) {
-            blockCount = getBlockCount();
-            return;
+            blockCount = getBlockCount() - 500;
         }
         long latestBlocks = getBlockCount();
 
