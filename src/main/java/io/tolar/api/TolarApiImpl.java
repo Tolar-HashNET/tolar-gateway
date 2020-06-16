@@ -15,7 +15,6 @@ import tolar.proto.tx.TransactionOuterClass;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
 @Component
@@ -24,10 +23,6 @@ public class TolarApiImpl implements TolarApi {
     private final NewTxCache txCache;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TolarApiImpl.class);
-
-
-    private static final int MAX_AVAILABLE = 6;
-    private final Semaphore available = new Semaphore(MAX_AVAILABLE, true);
 
     private long blockCount;
 
@@ -72,27 +67,39 @@ public class TolarApiImpl implements TolarApi {
 
     @Override
     public GetBlockResponse getBlockByHash(ByteString blockHash) {
-        GetBlockByHashRequest getBlockByHashRequest = GetBlockByHashRequest
-                .newBuilder()
-                .setBlockHash(blockHash)
-                .build();
+        try {
+            channelUtils.acquire();
 
-        return BlockchainServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .getBlockByHash(getBlockByHashRequest);
+            GetBlockByHashRequest getBlockByHashRequest = GetBlockByHashRequest
+                    .newBuilder()
+                    .setBlockHash(blockHash)
+                    .build();
+
+            return BlockchainServiceGrpc
+                    .newBlockingStub(channelUtils.getChannel())
+                    .getBlockByHash(getBlockByHashRequest);
+
+        } finally {
+            channelUtils.release();
+        }
     }
 
     @Override
     public GetBlockResponse getBlockByIndex(long blockIndex) {
-        GetBlockByIndexRequest getBlockByIndexRequest = GetBlockByIndexRequest
-                .newBuilder()
-                .setBlockIndex(blockIndex)
-                .build();
+        channelUtils.acquire();
+        try {
+            GetBlockByIndexRequest getBlockByIndexRequest = GetBlockByIndexRequest
+                    .newBuilder()
+                    .setBlockIndex(blockIndex)
+                    .build();
 
-        return BlockchainServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .getBlockByIndex(getBlockByIndexRequest);
+            return BlockchainServiceGrpc
+                    .newBlockingStub(channelUtils.getChannel())
+                    .getBlockByIndex(getBlockByIndexRequest);
 
+        } finally {
+            channelUtils.release();
+        }
     }
 
     @Override
@@ -111,17 +118,14 @@ public class TolarApiImpl implements TolarApi {
         }
 
         try {
-            available.acquire();
+            channelUtils.acquire();
             return BlockchainServiceGrpc
                     .newBlockingStub(channelUtils.getChannel())
                     .getTransaction(getTransactionRequest);
 
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
         } finally {
-            available.release();
+            channelUtils.release();
         }
-        return null;
     }
 
     @Override
@@ -155,25 +159,33 @@ public class TolarApiImpl implements TolarApi {
                     .build();
         }
 
-
-        return BlockchainServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .getTransactionList(getTransactionListRequest);
+        try {
+            channelUtils.acquire();
+            return BlockchainServiceGrpc
+                    .newBlockingStub(channelUtils.getChannel())
+                    .getTransactionList(getTransactionListRequest);
+        } finally {
+            channelUtils.release();
+        }
     }
 
     @Override
     public BigInteger getNonce(ByteString address) {
-        GetNonceRequest getNonceRequest = GetNonceRequest
-                .newBuilder()
-                .setAddress(address)
-                .build();
+        try {
+            channelUtils.acquire();
+            GetNonceRequest getNonceRequest = GetNonceRequest
+                    .newBuilder()
+                    .setAddress(address)
+                    .build();
 
-        ByteString nonce = BlockchainServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .getNonce(getNonceRequest)
-                .getNonce();
-
-        return BalanceConverter.toBigInteger(nonce);
+            ByteString nonce = BlockchainServiceGrpc
+                    .newBlockingStub(channelUtils.getChannel())
+                    .getNonce(getNonceRequest)
+                    .getNonce();
+            return BalanceConverter.toBigInteger(nonce);
+        }  finally {
+            channelUtils.release();
+        }
     }
 
     @Override
@@ -183,10 +195,16 @@ public class TolarApiImpl implements TolarApi {
                 .setAddress(address)
                 .setBlockIndex(blockIndex)
                 .build();
+        try {
+            channelUtils.acquire();
+            return BlockchainServiceGrpc
+                    .newBlockingStub(channelUtils.getChannel())
+                    .getBalance(getBalanceRequest);
+        } finally {
+            channelUtils.release();
+        }
 
-        return BlockchainServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .getBalance(getBalanceRequest);
+
     }
 
     @Override
@@ -239,17 +257,14 @@ public class TolarApiImpl implements TolarApi {
         }
 
         try {
-            available.acquire();
+            channelUtils.acquire();
 
             return BlockchainServiceGrpc
                     .newBlockingStub(channelUtils.getChannel())
                     .getTransactionReceipt(getTransactionReceiptRequest);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
         } finally {
-            available.release();
+            channelUtils.release();
         }
-        return null;
     }
 
     @Override

@@ -26,14 +26,20 @@ public class TransactionApiImpl implements TransactionApi {
                 .newBuilder()
                 .setSignedTransaction(signedTransaction)
                 .build();
+        try {
+            channelUtils.acquire();
+            ByteString transactionHash = TransactionServiceGrpc
+                    .newBlockingStub(channelUtils.getChannel())
+                    .sendSignedTransaction(sendSignedTransactionRequest)
+                    .getTransactionHash();
 
-        ByteString transactionHash = TransactionServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .sendSignedTransaction(sendSignedTransactionRequest)
-                .getTransactionHash();
+            txCache.put(transactionHash.toStringUtf8());
+            return transactionHash;
+        } finally {
+            channelUtils.release();
+        }
 
-        txCache.put(transactionHash.toStringUtf8());
-        return transactionHash;
+
     }
 
     @Override

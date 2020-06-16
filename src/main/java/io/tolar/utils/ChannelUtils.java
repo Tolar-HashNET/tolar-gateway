@@ -8,12 +8,16 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Semaphore;
 
 @Service
 public class ChannelUtils {
     private static final int CHANNEL_NUMBER = 10;
     private TolarConfig tolarConfig;
     private final List<Channel> channelList;
+
+    private static final int MAX_AVAILABLE = 8;
+    private final Semaphore available = new Semaphore(MAX_AVAILABLE, true);
     private final Random random;
 
     public ChannelUtils(TolarConfig tolarConfig) {
@@ -35,5 +39,17 @@ public class ChannelUtils {
 
     public Channel getChannel() {
         return channelList.get(random.nextInt(CHANNEL_NUMBER));
+    }
+
+    public void acquire(){
+        try {
+            available.acquire();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public void release(){
+        available.release();
     }
 }
