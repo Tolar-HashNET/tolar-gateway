@@ -83,6 +83,7 @@ pipeline {
             steps {
                 sh 'docker-compose build'
                 sh 'docker save tolar-node:latest | ssh -C admin@172.31.7.104 sudo docker load'
+                sh 'docker save staging-node:latest | ssh -C admin@172.31.7.104 sudo docker load'
                 sh 'scp docker-compose.yaml admin@172.31.7.104:/home/admin/tolar-gateway/docker-compose.yaml'
                 sh 'ssh -C admin@172.31.7.104 "cd tolar-gateway; sudo docker-compose down"'
                 sh 'ssh -C admin@172.31.7.104 "cd tolar-gateway; sudo docker-compose up -d"'
@@ -90,7 +91,7 @@ pipeline {
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
 
-                    slackMessage = "Deployed *Tolar Node* connected to *MainNet* (" +
+                    slackMessage = "Deployed *Tolar Node* connected to *MainNet* and *StagingNet* (" +
                             "<${env.RUN_DISPLAY_URL}|Pipeline>" +
                             ") \n" +
                             "Pipeline time: ${buildTime}"
