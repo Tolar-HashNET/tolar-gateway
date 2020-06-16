@@ -93,16 +93,21 @@ public class TolarApiImpl implements TolarApi {
             return block;
         }
 
-        channelUtils.acquire();
         try {
+            channelUtils.acquire();
+
             GetBlockByIndexRequest getBlockByIndexRequest = GetBlockByIndexRequest
                     .newBuilder()
                     .setBlockIndex(blockIndex)
                     .build();
 
-            return BlockchainServiceGrpc
+            GetBlockResponse blockByIndex = BlockchainServiceGrpc
                     .newBlockingStub(channelUtils.getChannel())
                     .getBlockByIndex(getBlockByIndexRequest);
+
+            txCache.put(blockIndex, blockByIndex);
+
+            return blockByIndex;
 
         } finally {
             channelUtils.release();
