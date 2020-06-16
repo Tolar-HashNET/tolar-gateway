@@ -48,10 +48,15 @@ public class TolarApiImpl implements TolarApi {
 
     private void initCache(){
         long currentBlock = getBlockCount();
-        this.blockCount = currentBlock - 200;
+        this.blockCount = currentBlock - 50;
 
-        ExecutorService executorService = Executors.newFixedThreadPool(9);
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
         for (long i = blockCount + 1; i <= currentBlock; i++) {
+            long blockNumber = i;
+            executorService.submit(() -> getBlockByIndex(blockNumber));
+        }
+
+        for (long i = 0; i < 10; i++) {
             long blockNumber = i;
             executorService.submit(() -> getBlockByIndex(blockNumber));
         }
@@ -127,6 +132,7 @@ public class TolarApiImpl implements TolarApi {
                     .newBlockingStub(channelUtils.getChannel())
                     .getBlockByIndex(getBlockByIndexRequest);
 
+            LOGGER.info("Got block: " + blockIndex);
             txCache.put(blockIndex, blockByIndex);
 
             return blockByIndex;
