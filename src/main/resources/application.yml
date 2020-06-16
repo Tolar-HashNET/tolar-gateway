@@ -4,3 +4,8 @@ springdoc:
 tolar-hashnet:
   host: "127.0.0.1"
   port: 9200
+
+server:
+  undertow:
+    threads:
+      worker: 300
