@@ -15,6 +15,8 @@ import tolar.proto.tx.TransactionOuterClass;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Component
@@ -43,10 +45,24 @@ public class TolarApiImpl implements TolarApi {
                 .getBlockCount();
     }
 
-    @Scheduled(fixedRate = 10_000)
+    private void initCache(){
+        long currentBlock = getBlockCount();
+        this.blockCount = currentBlock - 500;
+
+        ExecutorService executorService = Executors.newFixedThreadPool(9);
+        for (long i = blockCount + 1; i <= currentBlock; i++) {
+            long blockNumber = i;
+            executorService.submit(() -> getBlockByIndex(blockNumber));
+        }
+
+        LOGGER.info("Done with block cache init!");
+    }
+
+    @Scheduled(fixedDelay = 10_000)
     private void refreshCache() {
         if (blockCount == 0) {
-            blockCount = getBlockCount() - 500;
+            initCache();
+            return;
         }
         long latestBlocks = getBlockCount();
 
