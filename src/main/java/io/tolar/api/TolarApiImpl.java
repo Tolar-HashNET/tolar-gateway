@@ -43,7 +43,7 @@ public class TolarApiImpl implements TolarApi {
                 .getBlockCount();
     }
 
-    @Scheduled(fixedRate = 2_000)
+    @Scheduled(fixedRate = 10_000)
     private void refreshCache() {
         if (blockCount == 0) {
             blockCount = getBlockCount();
@@ -86,6 +86,13 @@ public class TolarApiImpl implements TolarApi {
 
     @Override
     public GetBlockResponse getBlockByIndex(long blockIndex) {
+
+        GetBlockResponse block = txCache.getBlock(blockIndex);
+
+        if(block != null){
+            return block;
+        }
+
         channelUtils.acquire();
         try {
             GetBlockByIndexRequest getBlockByIndexRequest = GetBlockByIndexRequest
