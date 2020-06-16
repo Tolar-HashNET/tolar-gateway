@@ -17,6 +17,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Component
@@ -47,12 +48,18 @@ public class TolarApiImpl implements TolarApi {
 
     private void initCache(){
         long currentBlock = getBlockCount();
-        this.blockCount = currentBlock - 500;
+        this.blockCount = currentBlock - 200;
 
         ExecutorService executorService = Executors.newFixedThreadPool(9);
         for (long i = blockCount + 1; i <= currentBlock; i++) {
             long blockNumber = i;
             executorService.submit(() -> getBlockByIndex(blockNumber));
+        }
+
+        try {
+            executorService.awaitTermination(10, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
 
         LOGGER.info("Done with block cache init!");
