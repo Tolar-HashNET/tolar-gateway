@@ -21,7 +21,7 @@ public class NewTxCache {
 
         blockCache = CacheBuilder.newBuilder()
                 .maximumSize(10_000)
-                .expireAfterWrite(10, TimeUnit.MINUTES)
+                .expireAfterWrite(1, TimeUnit.HOURS)
                 .build();
     }
 

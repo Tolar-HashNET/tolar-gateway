@@ -42,6 +42,7 @@ public class TolarServlet extends HttpServlet {
     @Autowired
     private Module module;
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         try {
             jsonRpcServer.handle(request, response);
@@ -50,6 +51,12 @@ public class TolarServlet extends HttpServlet {
         }
     }
 
+    @Override
+    protected void doOptions(HttpServletRequest request, HttpServletResponse response){
+        // nothing
+    }
+
+    @Override
     public void init(ServletConfig servletConfig) {
         Object compositeService = ProxyUtil.createCompositeServiceProxy(
                 this.getClass().getClassLoader(),
