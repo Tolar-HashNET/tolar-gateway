@@ -136,7 +136,7 @@ public class TolarApiImpl implements TolarApi {
                     .newBlockingStub(channelUtils.getChannel())
                     .getBlockByIndex(getBlockByIndexRequest);
 
-            LOGGER.info("Got block: " + blockIndex, " in " + ChronoUnit.SECONDS.between(Instant.now(), now) + " sec.");
+            LOGGER.info("Got block: " + blockIndex + " in " + ChronoUnit.SECONDS.between(Instant.now(), now) + " sec.");
             txCache.put(blockIndex, blockByIndex);
 
             return blockByIndex;
