@@ -7,6 +7,7 @@ import io.tolar.utils.ChannelUtils;
 import org.bouncycastle.util.encoders.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import tolar.proto.Blockchain.*;
@@ -14,6 +15,8 @@ import tolar.proto.BlockchainServiceGrpc;
 import tolar.proto.tx.TransactionOuterClass;
 
 import java.math.BigInteger;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -123,6 +126,7 @@ public class TolarApiImpl implements TolarApi {
         try {
             channelUtils.acquire();
 
+            Instant now = Instant.now();
             GetBlockByIndexRequest getBlockByIndexRequest = GetBlockByIndexRequest
                     .newBuilder()
                     .setBlockIndex(blockIndex)
@@ -132,7 +136,7 @@ public class TolarApiImpl implements TolarApi {
                     .newBlockingStub(channelUtils.getChannel())
                     .getBlockByIndex(getBlockByIndexRequest);
 
-            LOGGER.info("Got block: " + blockIndex);
+            LOGGER.info("Got block: " + blockIndex, " in " + ChronoUnit.SECONDS.between(Instant.now(), now) + " sec.");
             txCache.put(blockIndex, blockByIndex);
 
             return blockByIndex;
