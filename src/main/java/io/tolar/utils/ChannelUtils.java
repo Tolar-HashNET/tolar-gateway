@@ -3,6 +3,8 @@ package io.tolar.utils;
 import io.grpc.Channel;
 import io.grpc.ManagedChannelBuilder;
 import io.tolar.config.TolarConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,6 +16,8 @@ import java.util.concurrent.Semaphore;
 public class ChannelUtils {
     private static final int CHANNEL_NUMBER = 10;
     private TolarConfig tolarConfig;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChannelUtils.class);
+
     private final List<Channel> channelList;
 
     private static final int MAX_AVAILABLE = 8;
@@ -51,5 +55,8 @@ public class ChannelUtils {
 
     public void release(){
         available.release();
+
+        LOGGER.info("Available permits: " + available.availablePermits()
+                + " queue length: " + available.getQueueLength());
     }
 }
