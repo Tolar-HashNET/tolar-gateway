@@ -73,7 +73,7 @@ public class TolarApiImpl implements TolarApi {
         LOGGER.info("Done with block cache init!");
     }
 
-    @Scheduled(fixedDelay = 10_000)
+    /*@Scheduled(fixedDelay = 10_000)
     private void refreshCache() {
         if (blockCount == 0) {
             initCache();
@@ -93,7 +93,7 @@ public class TolarApiImpl implements TolarApi {
         }
 
         LOGGER.info("Cache cleanup done.");
-    }
+    }*/
 
     @Override
     public GetBlockResponse getBlockByHash(ByteString blockHash) {
