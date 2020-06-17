@@ -54,21 +54,14 @@ public class TolarApiImpl implements TolarApi {
 
         LOGGER.info("Started block cache init!");
 
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
         for (long i = blockCount + 1; i <= currentBlock; i++) {
             long blockNumber = i;
-            executorService.submit(() -> getBlockByIndex(blockNumber));
+            getBlockByIndex(blockNumber);
         }
 
         for (long i = 0; i < 10; i++) {
             long blockNumber = i;
-            executorService.submit(() -> getBlockByIndex(blockNumber));
-        }
-
-        try {
-            executorService.awaitTermination(10, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+           getBlockByIndex(blockNumber);
         }
 
         LOGGER.info("Done with block cache init!");
