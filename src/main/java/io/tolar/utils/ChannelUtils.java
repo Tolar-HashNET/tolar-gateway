@@ -14,13 +14,13 @@ import java.util.concurrent.Semaphore;
 
 @Service
 public class ChannelUtils {
-    private static final int CHANNEL_NUMBER = 10;
+    private static final int CHANNEL_NUMBER = 30;
     private TolarConfig tolarConfig;
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelUtils.class);
 
     private final List<Channel> channelList;
 
-    private static final int MAX_AVAILABLE = 8;
+    private static final int MAX_AVAILABLE = 50;
     private final Semaphore available = new Semaphore(MAX_AVAILABLE, true);
     private final Random random;
 
