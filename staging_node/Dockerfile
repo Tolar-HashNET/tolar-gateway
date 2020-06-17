@@ -1,7 +1,7 @@
 FROM ubuntu:20.10
 RUN mkdir -p /home/thin_node/.tolar/keystore/Thin_node/keys
 RUN mkdir -p /home/thin_node/.tolar/keystore/Thin_node/db
-WORKDIR /home/thin_node/
+WORKDIR /home/staging_node/
 COPY config.json .
 COPY thin_node_bin .
 CMD ["./thin_node_bin", "--config_path=/home/thin_node/config.json"]
