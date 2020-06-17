@@ -52,6 +52,8 @@ public class TolarApiImpl implements TolarApi {
         long currentBlock = getBlockCount();
         this.blockCount = currentBlock - 50;
 
+        LOGGER.info("Started block cache init!");
+
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         for (long i = blockCount + 1; i <= currentBlock; i++) {
             long blockNumber = i;
