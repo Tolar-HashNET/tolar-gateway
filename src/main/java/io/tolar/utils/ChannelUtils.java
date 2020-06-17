@@ -11,43 +11,48 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ChannelUtils {
-    private static final int CHANNEL_NUMBER = 30;
-    private TolarConfig tolarConfig;
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelUtils.class);
+    private final int channelCount;
+    private final int permitTimeout;
 
+    private final TolarConfig tolarConfig;
     private final List<Channel> channelList;
 
-    private static final int MAX_AVAILABLE = 100;
-    private final Semaphore available = new Semaphore(MAX_AVAILABLE, true);
+    private final Semaphore available;
     private final Random random;
 
     public ChannelUtils(TolarConfig tolarConfig) {
         this.tolarConfig = tolarConfig;
-        channelList = new ArrayList<>();
-        random = new Random();
-        for(int i = 0; i < CHANNEL_NUMBER; i++){
+        LOGGER.info("host: {}, port: {}", tolarConfig.getHost(), tolarConfig.getPort());
+        this.channelList = new ArrayList<>();
+        this.random = new Random();
+        this.available = new Semaphore(tolarConfig.getSemaphorePermitsAsInt(), true);
+        this.channelCount = tolarConfig.getChannelCountAsInt();
+        this.permitTimeout = tolarConfig.getSemaphoreTimeoutAsInt();
+
+        for(int i = 0; i < channelCount; i++){
             channelList.add(generateChannel());
         }
-
     }
 
     public Channel generateChannel(){
         return ManagedChannelBuilder
-                .forAddress(tolarConfig.getHost(), tolarConfig.getPort())
+                .forAddress(tolarConfig.getHost(), tolarConfig.getPortAsInt())
                 .usePlaintext()
                 .build();
     }
 
     public Channel getChannel() {
-        return channelList.get(random.nextInt(CHANNEL_NUMBER));
+        return channelList.get(random.nextInt(channelCount));
     }
 
     public void acquire(){
         try {
-            available.acquire();
+            available.tryAcquire(permitTimeout, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

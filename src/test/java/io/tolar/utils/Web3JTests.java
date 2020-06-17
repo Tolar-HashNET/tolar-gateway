@@ -251,23 +251,24 @@ public class Web3JTests {
         File file = new File("/Users/frane/Documents/Tolar/keys/d90f9e3d-9b1c-cd85-99b7-5161379c97b1.json");
 
         assertTrue(file.exists());
-        Credentials credentials = WalletUtils.loadCredentials("supersifra", file);
+        Credentials credentials = Credentials.create("78e36e1756542e69eed2fe60b5a4a788e20f519bfac38d428275e868f9d84baa");//WalletUtils.loadCredentials("supersifra", file);
         String tolarAddress = createTolarAddress(credentials);
-        assertEquals("5484c512b1cf3d45e7506a772b7358375acc571b2930d27deb", tolarAddress);
+        assertEquals("5493b8597964a2a7f0c93c49f9e4c4a170e0c42a5eb3beda0d", tolarAddress);
 
-        ByteString bytes = ByteString.copyFrom(BigInteger.valueOf(124).toByteArray());
+        ByteString bytes = ByteString.copyFrom(BigInteger.valueOf(70).toByteArray());
         ByteString otherBytes = BalanceConverter.toByteString(BigInteger.valueOf(124));
+        BigInteger pare = new BigInteger("999999999999983932946");
 
         TransactionOuterClass.Transaction transaction = TransactionOuterClass.Transaction
                 .newBuilder()
                 .setSenderAddress(ByteString.copyFromUtf8(
-                        "5484c512b1cf3d45e7506a772b7358375acc571b2930d27deb"))
+                        "5493b8597964a2a7f0c93c49f9e4c4a170e0c42a5eb3beda0d"))
                 .setReceiverAddress(ByteString.copyFromUtf8(
-                        "5484c512b1cf3d45e7506a772b7358375acc571b2930d27deb"))
-                .setValue(BalanceConverter.toByteString(BigInteger.ZERO))
-                .setGas(BalanceConverter.toByteString(BigInteger.valueOf(240000)))
+                        "5408fc50bf0ae1a9d842507271a308b653c368af367d41ba4c"))
+                .setValue(BalanceConverter.toByteString(pare))
+                .setGas(BalanceConverter.toByteString(BigInteger.valueOf(24000)))
                 .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
-                .setData("test")
+                .setData("")
                 .setNonce(bytes)//check nonce if needed
                 .build();
 

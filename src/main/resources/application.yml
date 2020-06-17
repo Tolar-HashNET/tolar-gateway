@@ -1,6 +1,9 @@
 tolar-hashnet:
-  host: "127.0.0.1"
-  port: 9200
+  host: ${TOLAR_HASHNET_HOST}
+  port: ${TOLAR_HASHNET_PORT}
+  channelCount: ${TOLAR_CHANNEL_COUNT}
+  semaphorePermits: ${TOLAR_SEMAPHORE_PERMITS}
+  semaphoreTimeout: ${TOLAR_SEMAPHORE_TIMEOUT}
 
 server:
   undertow:

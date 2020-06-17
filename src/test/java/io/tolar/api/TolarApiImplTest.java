@@ -27,7 +27,7 @@ public class TolarApiImplTest extends TestCase {
     public void testGetTransaction() {
         TolarConfig config = new TolarConfig();
         config.setHost("172.31.7.104");
-        config.setPort(9200);
+        config.setPort("9200");
         TolarApiImpl tolarApi = new TolarApiImpl(new ChannelUtils(config), new NewTxCache());
 
         //Blockchain.GetTransactionResponse transaction = tolarApi.getTransaction(ByteString.EMPTY);
@@ -42,7 +42,7 @@ public class TolarApiImplTest extends TestCase {
 
         TolarConfig config = new TolarConfig();
         config.setHost("172.31.7.104");
-        config.setPort(9200);
+        config.setPort("9200");
         TolarApiImpl tolarApi = new TolarApiImpl(new ChannelUtils(config), new NewTxCache());
         TransactionApi api = new TransactionApiImpl(new ChannelUtils(config), new NewTxCache());
 
