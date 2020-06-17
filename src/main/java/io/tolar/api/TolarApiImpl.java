@@ -7,7 +7,6 @@ import io.tolar.utils.ChannelUtils;
 import org.bouncycastle.util.encoders.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import tolar.proto.Blockchain.*;
@@ -73,7 +72,7 @@ public class TolarApiImpl implements TolarApi {
         LOGGER.info("Done with block cache init!");
     }
 
-    /*@Scheduled(fixedDelay = 10_000)
+    @Scheduled(fixedDelay = 10_000)
     private void refreshCache() {
         if (blockCount == 0) {
             initCache();
@@ -86,14 +85,14 @@ public class TolarApiImpl implements TolarApi {
 
             List<String> list = blockByIndex.getTransactionHashesList()
                     .stream()
-                    .map(t -> t.toStringUtf8())
+                    .map(ByteString::toStringUtf8)
                     .collect(Collectors.toList());
             txCache.remove(list);
             LOGGER.info("Removed {} from cache", list.size());
         }
 
         LOGGER.info("Cache cleanup done.");
-    }*/
+    }
 
     @Override
     public GetBlockResponse getBlockByHash(ByteString blockHash) {
