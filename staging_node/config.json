@@ -236,7 +236,7 @@
         {
             "public_key": "ebac646c3411194b00c916c0427c7e5fd9c4c0a6ddbd36ec731ffaaa0dbdd9e6c7612c17f2e435acb0450595e4e3de2fad5c1b8a10fd31e0c469f4b27a46f0c3",
             "blockchain_explorer_endpoint": {
-                "ip_address": "159.69.30.81",
+                "ip_address": "116.203.236.208",
                 "port": "9876"
             }
         }
