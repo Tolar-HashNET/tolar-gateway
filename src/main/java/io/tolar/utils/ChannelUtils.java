@@ -20,7 +20,7 @@ public class ChannelUtils {
 
     private final List<Channel> channelList;
 
-    private static final int MAX_AVAILABLE = 50;
+    private static final int MAX_AVAILABLE = 100;
     private final Semaphore available = new Semaphore(MAX_AVAILABLE, true);
     private final Random random;
 

@@ -1,4 +1,5 @@
 server:
   port: 8081
 tolar-hashnet:
-  port: 9300
+  # port: 9300
+  host: "116.203.236.148"
