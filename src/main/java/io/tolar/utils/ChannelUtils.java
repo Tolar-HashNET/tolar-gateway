@@ -98,7 +98,7 @@ public class ChannelUtils {
 
         LOGGER.info("Available permits: " + semaphore.availablePermits()
                 + " queue length: " + semaphore.getQueueLength() + ", semaphore index: {}, host: {}",
-                semaphoreHolder.index, semaphoreHolder.host);
+                semaphoreHolder.getIndex(), semaphoreHolder.getHost());
     }
 
     public static class SemaphoreHolder {
