@@ -30,12 +30,14 @@ public class ChannelUtils {
         this.channelList = new ArrayList<>();
         this.random = new Random();
         this.available = new Semaphore(tolarConfig.getSemaphorePermitsAsInt(), true);
-        this.channelCount = tolarConfig.getChannelCountAsInt();
+        //this.channelCount = tolarConfig.getChannelCountAsInt();
         this.permitTimeout = tolarConfig.getSemaphoreTimeoutAsInt();
 
         for (String host : tolarConfig.getHosts()) {
             channelList.add(generateChannel(host));
         }
+
+        channelCount = tolarConfig.getHosts().size();
     }
 
     public Channel generateChannel(String host){
