@@ -32,6 +32,7 @@ public class TransactionApiImpl implements TransactionApi {
 
         try {
             channel = channelUtils.getChannel();
+
             ByteString transactionHash = TransactionServiceGrpc
                     .newBlockingStub(channel)
                     .sendSignedTransaction(sendSignedTransactionRequest)
@@ -42,8 +43,6 @@ public class TransactionApiImpl implements TransactionApi {
         } finally {
             channelUtils.release(channel);
         }
-
-
     }
 
     @Override

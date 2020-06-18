@@ -1,6 +1,7 @@
 package io.tolar.api;
 
 import com.google.protobuf.ByteString;
+import io.grpc.Channel;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,18 @@ public class AccountApiImpl implements AccountApi {
                 .setMasterPassword(masterPassword)
                 .build();
 
-        return AccountServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .create(createRequest)
-                .getResult();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return AccountServiceGrpc
+                    .newBlockingStub(channel)
+                    .create(createRequest)
+                    .getResult();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -40,10 +49,17 @@ public class AccountApiImpl implements AccountApi {
                 .setMasterPassword(masterPassword)
                 .build();
 
-        return AccountServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .open(openRequest)
-                .getResult();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+            return AccountServiceGrpc
+                    .newBlockingStub(channel)
+                    .open(openRequest)
+                    .getResult();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -52,10 +68,17 @@ public class AccountApiImpl implements AccountApi {
                 .newBuilder()
                 .build();
 
-        return AccountServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .listAddresses(listAddressesRequest)
-                .getAddressesList();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+            return AccountServiceGrpc
+                    .newBlockingStub(channel)
+                    .listAddresses(listAddressesRequest)
+                    .getAddressesList();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -65,10 +88,18 @@ public class AccountApiImpl implements AccountApi {
                 .setAddress(address)
                 .build();
 
-        return AccountServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .verifyAddress(verifyAddressRequest)
-                .getResult();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return AccountServiceGrpc
+                    .newBlockingStub(channel)
+                    .verifyAddress(verifyAddressRequest)
+                    .getResult();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -90,10 +121,18 @@ public class AccountApiImpl implements AccountApi {
 
         CreateNewAddressRequest createNewAddressRequest = createNewAddressRequestBuilder.build();
 
-        return AccountServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .createNewAddress(createNewAddressRequest)
-                .getAddress();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return AccountServiceGrpc
+                    .newBlockingStub(channel)
+                    .createNewAddress(createNewAddressRequest)
+                    .getAddress();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
 
@@ -104,10 +143,18 @@ public class AccountApiImpl implements AccountApi {
                 .setAddress(address)
                 .build();
 
-        return AccountServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .exportKeyFile(exportKeyFileRequest)
-                .getJsonKeyFile();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return AccountServiceGrpc
+                    .newBlockingStub(channel)
+                    .exportKeyFile(exportKeyFileRequest)
+                    .getJsonKeyFile();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -128,10 +175,18 @@ public class AccountApiImpl implements AccountApi {
         }
 
         ImportKeyFileRequest request = requestBuilder.build();
-        return AccountServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .importKeyFile(request)
-                .getResult();
+
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+            return AccountServiceGrpc
+                    .newBlockingStub(channel)
+                    .importKeyFile(request)
+                    .getResult();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -140,10 +195,18 @@ public class AccountApiImpl implements AccountApi {
                 .newBuilder()
                 .build();
 
-        return AccountServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .listBalancePerAddress(listBalancePerAddressRequest)
-                .getAddressesList();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return AccountServiceGrpc
+                    .newBlockingStub(channel)
+                    .listBalancePerAddress(listBalancePerAddressRequest)
+                    .getAddressesList();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -163,11 +226,18 @@ public class AccountApiImpl implements AccountApi {
                 .setNonce(BalanceConverter.toByteString(nonce))
                 .build();
 
-        return AccountServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .sendRawTransaction(sendRawTransactionRequest)
-                .getTransactionHash();
+        Channel channel = null;
 
+        try {
+            channel = channelUtils.getChannel();
+
+            return AccountServiceGrpc
+                    .newBlockingStub(channel)
+                    .sendRawTransaction(sendRawTransactionRequest)
+                    .getTransactionHash();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -179,10 +249,18 @@ public class AccountApiImpl implements AccountApi {
                 .setNewMasterPassword(newMasterPassword)
                 .build();
 
-        return AccountServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .changePassword(changePasswordRequest)
-                .getResult();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return AccountServiceGrpc
+                    .newBlockingStub(channel)
+                    .changePassword(changePasswordRequest)
+                    .getResult();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -195,10 +273,18 @@ public class AccountApiImpl implements AccountApi {
                 .setNewPassword(newPassword)
                 .build();
 
-        return AccountServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .changeAddressPassword(changeAddressPasswordRequest)
-                .getResult();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return AccountServiceGrpc
+                    .newBlockingStub(channel)
+                    .changeAddressPassword(changeAddressPasswordRequest)
+                    .getResult();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -217,10 +303,18 @@ public class AccountApiImpl implements AccountApi {
                 .setNonce(BalanceConverter.toByteString(nonce))
                 .build();
 
-        return AccountServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .sendFundTransferTransaction(sendFundTransferTransactionRequest)
-                .getTransactionHash();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return AccountServiceGrpc
+                    .newBlockingStub(channel)
+                    .sendFundTransferTransaction(sendFundTransferTransactionRequest)
+                    .getTransactionHash();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -239,10 +333,18 @@ public class AccountApiImpl implements AccountApi {
                         .setNonce(BalanceConverter.toByteString(nonce))
                         .build();
 
-        return AccountServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .sendDeployContractTransaction(sendDeployContractTransactionRequest)
-                .getTransactionHash();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return AccountServiceGrpc
+                    .newBlockingStub(channel)
+                    .sendDeployContractTransaction(sendDeployContractTransactionRequest)
+                    .getTransactionHash();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -263,10 +365,18 @@ public class AccountApiImpl implements AccountApi {
                         .setNonce(BalanceConverter.toByteString(nonce))
                         .build();
 
-        return AccountServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .sendExecuteFunctionTransaction(sendExecuteFunctionTransactionRequest)
-                .getTransactionHash();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return AccountServiceGrpc
+                    .newBlockingStub(channel)
+                    .sendExecuteFunctionTransaction(sendExecuteFunctionTransactionRequest)
+                    .getTransactionHash();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
 }
