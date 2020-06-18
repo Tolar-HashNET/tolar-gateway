@@ -4,7 +4,7 @@ tolar-hashnet:
   port: 9200
   # host: "116.203.236.148"
   channelCount: 30
-  semaphorePermits: 10
+  semaphorePermits: 5
   semaphoreTimeout: 60
   hosts:
     - "116.203.236.134"
