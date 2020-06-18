@@ -19,7 +19,7 @@ public class ChannelUtils {
 
     private final TolarConfig tolarConfig;
     private final List<Channel> channelList;
-    private final Map<Channel, Semaphore> channelSemaphores;
+    private final Map<Channel, SemaphoreHolder> channelSemaphores;
 
     private final Random random;
     private final AtomicInteger roundRobinCounter;
@@ -30,12 +30,20 @@ public class ChannelUtils {
         this.random = new Random();
         this.permitTimeout = tolarConfig.getSemaphoreTimeoutAsInt();
 
-        HashMap<Channel, Semaphore> semaphoreTempMap = new HashMap<>();
+        HashMap<Channel, SemaphoreHolder> semaphoreTempMap = new HashMap<>();
+
+        int index = 0;
 
         for (String host : tolarConfig.getHosts()) {
             Channel channel = generateChannel(host);
             channelList.add(channel);
-            semaphoreTempMap.put(channel, new Semaphore(tolarConfig.getSemaphorePermitsAsInt(), true));
+
+            Semaphore semaphore = new Semaphore(tolarConfig.getSemaphorePermitsAsInt(), true);
+
+            SemaphoreHolder semaphoreHolder = new SemaphoreHolder(semaphore, index, host);
+
+            semaphoreTempMap.put(channel, semaphoreHolder);
+            index++;
         }
 
         this.channelSemaphores = Collections.unmodifiableMap(semaphoreTempMap);
@@ -51,7 +59,7 @@ public class ChannelUtils {
 
     public Channel getChannel() {
         Channel nextChannel = channelList.get(roundRobinCounter.getAndIncrement() % channelList.size());
-        Semaphore semaphore = channelSemaphores.get(nextChannel);
+        Semaphore semaphore = channelSemaphores.get(nextChannel).getSemaphore();
 
         if (semaphore.availablePermits() < 1) {
             try {
@@ -82,12 +90,39 @@ public class ChannelUtils {
         }
 
 
-        Semaphore semaphore = channelSemaphores.get(channel);
+        SemaphoreHolder semaphoreHolder = channelSemaphores.get(channel);
+
+        Semaphore semaphore = semaphoreHolder.getSemaphore();
 
         semaphore.release();
 
         LOGGER.info("Available permits: " + semaphore.availablePermits()
-                + " queue length: " + semaphore.getQueueLength());
+                + " queue length: " + semaphore.getQueueLength() + ", semaphore index: {}, host: {}",
+                semaphoreHolder.index, semaphoreHolder.host);
+    }
+
+    public static class SemaphoreHolder {
+        private final Semaphore semaphore;
+        private final int index;
+        private final String host;
+
+        public SemaphoreHolder(Semaphore semaphore, int index, String host) {
+            this.semaphore = semaphore;
+            this.index = index;
+            this.host = host;
+        }
+
+        public Semaphore getSemaphore() {
+            return semaphore;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public String getHost() {
+            return host;
+        }
     }
 
 }
