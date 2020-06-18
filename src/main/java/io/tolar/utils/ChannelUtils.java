@@ -7,11 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class ChannelUtils {
@@ -21,9 +20,11 @@ public class ChannelUtils {
 
     private final TolarConfig tolarConfig;
     private final List<Channel> channelList;
+    private Map<Channel, Semaphore> channelSemaphores;
 
     private final Semaphore available;
     private final Random random;
+    private final AtomicInteger roundRobinCounter;
 
     public ChannelUtils(TolarConfig tolarConfig) {
         this.tolarConfig = tolarConfig;
@@ -33,14 +34,21 @@ public class ChannelUtils {
         //this.channelCount = tolarConfig.getChannelCountAsInt();
         this.permitTimeout = tolarConfig.getSemaphoreTimeoutAsInt();
 
+        HashMap<Channel, Semaphore> semaphoreTempMap = new HashMap<>();
+
         for (String host : tolarConfig.getHosts()) {
-            channelList.add(generateChannel(host));
+            Channel channel = generateChannel(host);
+            channelList.add(channel);
+            semaphoreTempMap.put(channel, new Semaphore(tolarConfig.getSemaphorePermitsAsInt(), true));
         }
+
+        this.channelSemaphores = Collections.unmodifiableMap(semaphoreTempMap);
+        this.roundRobinCounter = new AtomicInteger();
 
         channelCount = tolarConfig.getHosts().size();
     }
 
-    public Channel generateChannel(String host){
+    public Channel generateChannel(String host) {
         return ManagedChannelBuilder
                 .forAddress(host, tolarConfig.getPortAsInt())
                 .usePlaintext()
@@ -48,21 +56,44 @@ public class ChannelUtils {
     }
 
     public Channel getChannel() {
-        return channelList.get(random.nextInt(channelCount));
+        Channel nextChannel = channelList.get(roundRobinCounter.getAndIncrement());
+        Semaphore semaphore = channelSemaphores.get(nextChannel);
+
+        if (semaphore.availablePermits() < 1) {
+            try {
+                Thread.sleep(10 + random.nextInt(490));
+            } catch (InterruptedException e) {
+                LOGGER.error("Interrupted", e);
+                Thread.currentThread().interrupt();
+            }
+
+            return getChannel();
+        }
+
+        acquire(semaphore);
+        return nextChannel;
     }
 
-    public void acquire(){
+    public void acquire(Semaphore semaphore) {
         try {
-            available.tryAcquire(permitTimeout, TimeUnit.SECONDS);
+            semaphore.tryAcquire(permitTimeout, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
     }
 
-    public void release(){
-        available.release();
+    public void release(Channel channel) {
+        if (channel == null) {
+            return;
+        }
 
-        LOGGER.info("Available permits: " + available.availablePermits()
-                + " queue length: " + available.getQueueLength());
+
+        Semaphore semaphore = channelSemaphores.get(channel);
+
+        semaphore.release();
+
+        LOGGER.info("Available permits: " + semaphore.availablePermits()
+                + " queue length: " + semaphore.getQueueLength());
     }
+
 }
