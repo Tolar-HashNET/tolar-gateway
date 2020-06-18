@@ -74,7 +74,7 @@ public class TolarApiImpl implements TolarApi {
         }
         long latestBlocks = getBlockCount();
 
-        for (long i = blockCount + 1; i <= latestBlocks; i++) {
+        for (long i = blockCount + 1; i < latestBlocks; i++) {
             GetBlockResponse blockByIndex = getBlockByIndex(i);
 
             List<String> list = blockByIndex.getTransactionHashesList()
