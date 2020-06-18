@@ -137,7 +137,7 @@ public class TolarApiImpl implements TolarApi {
                     .newBlockingStub(channelUtils.getChannel())
                     .getBlockByIndex(getBlockByIndexRequest);
 
-            LOGGER.info("Got block: " + blockIndex + " in " + ChronoUnit.SECONDS.between(now, Instant.now()) + " sec.");
+            LOGGER.info("Got block: " + blockIndex + " in " + ChronoUnit.MILLIS.between(now, Instant.now()) + " sec.");
             txCache.put(blockIndex, blockByIndex);
 
             return blockByIndex;
@@ -179,7 +179,7 @@ public class TolarApiImpl implements TolarApi {
                     .newBlockingStub(channelUtils.getChannel())
                     .getTransaction(getTransactionRequest);
 
-            LOGGER.info("Tx get in: " + ChronoUnit.SECONDS.between(now, Instant.now()) + " sec.");
+            LOGGER.info("Tx get in: " + ChronoUnit.MILLIS.between(now, Instant.now()) + " sec.");
 
             return transaction;
         } finally {
@@ -243,7 +243,7 @@ public class TolarApiImpl implements TolarApi {
                     .getNonce(getNonceRequest)
                     .getNonce();
 
-            LOGGER.info("Nonce get in: " + ChronoUnit.SECONDS.between(now, Instant.now()) + " sec.");
+            LOGGER.info("Nonce get in: " + ChronoUnit.MILLIS.between(now, Instant.now()) + " sec.");
 
             return BalanceConverter.toBigInteger(nonce);
         }  finally {
