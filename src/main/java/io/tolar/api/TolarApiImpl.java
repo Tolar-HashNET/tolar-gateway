@@ -146,11 +146,6 @@ public class TolarApiImpl implements TolarApi {
 
             if (Status.NOT_FOUND.getCode().value() == ex.getStatus().getCode().value()
                     && tries <= 3) {
-                try {
-                    Thread.sleep(1000L);
-                } catch (InterruptedException e) {
-                    LOGGER.error("interrupted", e);
-                }
                 return retryBlock(blockIndex, tries + 1);
             } else {
                 throw ex;
