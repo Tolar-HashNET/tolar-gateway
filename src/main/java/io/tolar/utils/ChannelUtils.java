@@ -15,14 +15,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class ChannelUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelUtils.class);
-    private final int channelCount;
     private final int permitTimeout;
 
     private final TolarConfig tolarConfig;
     private final List<Channel> channelList;
-    private Map<Channel, Semaphore> channelSemaphores;
+    private final Map<Channel, Semaphore> channelSemaphores;
 
-    private final Semaphore available;
     private final Random random;
     private final AtomicInteger roundRobinCounter;
 
@@ -30,8 +28,6 @@ public class ChannelUtils {
         this.tolarConfig = tolarConfig;
         this.channelList = new ArrayList<>();
         this.random = new Random();
-        this.available = new Semaphore(tolarConfig.getSemaphorePermitsAsInt(), true);
-        //this.channelCount = tolarConfig.getChannelCountAsInt();
         this.permitTimeout = tolarConfig.getSemaphoreTimeoutAsInt();
 
         HashMap<Channel, Semaphore> semaphoreTempMap = new HashMap<>();
@@ -44,8 +40,6 @@ public class ChannelUtils {
 
         this.channelSemaphores = Collections.unmodifiableMap(semaphoreTempMap);
         this.roundRobinCounter = new AtomicInteger();
-
-        channelCount = tolarConfig.getHosts().size();
     }
 
     public Channel generateChannel(String host) {
