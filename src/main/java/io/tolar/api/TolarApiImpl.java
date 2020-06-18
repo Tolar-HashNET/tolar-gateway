@@ -114,12 +114,14 @@ public class TolarApiImpl implements TolarApi {
         return retryBlock(blockIndex, 0);
     }
 
-    private GetBlockResponse retryBlock(long blockIndex, int tries) {
+    private GetBlockResponse retryBlock(Long blockIndex, int tries) {
         GetBlockResponse block = txCache.getBlock(blockIndex);
 
         if (block != null) {
             return block;
         }
+
+        LOGGER.info("finding block: {}, tries: {}", blockIndex, tries);
 
         try {
             channelUtils.acquire();
