@@ -75,7 +75,7 @@ public class TolarApiImpl implements TolarApi {
         GetBlockchainInfoResponse latestBlocks = getBlockchainInfo();
         long confirmedBlocksCount = latestBlocks.getConfirmedBlocksCount();
 
-        for (long i = blockCount + 1; i <= confirmedBlocksCount; i++) {
+        for (long i = blockCount + 1; i < confirmedBlocksCount; i++) {
             GetBlockResponse blockByIndex = getBlockByIndex(i);
 
             List<String> list = blockByIndex.getTransactionHashesList()
