@@ -72,9 +72,10 @@ public class TolarApiImpl implements TolarApi {
             initCache();
             return;
         }
-        long latestBlocks = getBlockCount();
+        GetBlockchainInfoResponse latestBlocks = getBlockchainInfo();
+        long confirmedBlocksCount = latestBlocks.getConfirmedBlocksCount();
 
-        for (long i = blockCount + 1; i < latestBlocks; i++) {
+        for (long i = blockCount + 1; i <= confirmedBlocksCount; i++) {
             GetBlockResponse blockByIndex = getBlockByIndex(i);
 
             List<String> list = blockByIndex.getTransactionHashesList()
@@ -85,7 +86,7 @@ public class TolarApiImpl implements TolarApi {
             LOGGER.info("Removed {} from cache", list.size());
         }
 
-        blockCount = latestBlocks;
+        blockCount = confirmedBlocksCount;
 
         LOGGER.info("Cache cleanup done.");
     }
