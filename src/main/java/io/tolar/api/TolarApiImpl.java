@@ -1,6 +1,8 @@
 package io.tolar.api;
 
 import com.google.protobuf.ByteString;
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import io.tolar.caching.NewTxCache;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
@@ -17,9 +19,6 @@ import java.math.BigInteger;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Component
@@ -111,11 +110,14 @@ public class TolarApiImpl implements TolarApi {
     }
 
     @Override
-    public GetBlockResponse getBlockByIndex(long blockIndex) {
+    public GetBlockResponse getBlockByIndex(Long blockIndex) {
+        return retryBlock(blockIndex, 0);
+    }
 
+    private GetBlockResponse retryBlock(long blockIndex, int tries) {
         GetBlockResponse block = txCache.getBlock(blockIndex);
 
-        if(block != null){
+        if (block != null) {
             return block;
         }
 
@@ -137,6 +139,14 @@ public class TolarApiImpl implements TolarApi {
 
             return blockByIndex;
 
+        } catch (StatusRuntimeException ex) {
+            LOGGER.warn("Could not get block: {}, tries: {}", blockIndex, tries);
+
+            if (Status.NOT_FOUND.equals(ex.getStatus()) && tries <= 3) {
+                return retryBlock(blockIndex, tries + 1);
+            } else {
+                throw ex;
+            }
         } finally {
             channelUtils.release();
         }

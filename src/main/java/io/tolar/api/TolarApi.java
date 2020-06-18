@@ -17,7 +17,7 @@ public interface TolarApi {
     GetBlockResponse getBlockByHash(@JsonRpcParam(value = "block_hash") ByteString blockHash);
 
     @JsonRpcMethod("tol_getBlockByIndex")
-    GetBlockResponse getBlockByIndex(@JsonRpcParam(value = "block_index") long blockIndex);
+    GetBlockResponse getBlockByIndex(@JsonRpcParam(value = "block_index") Long blockIndex);
 
     @JsonRpcMethod("tol_getTransaction")
     GetTransactionResponse getTransaction(@JsonRpcParam(value = "transaction_hash") ByteString transactionHash);
