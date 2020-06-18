@@ -1,6 +1,7 @@
 package io.tolar.api;
 
 import com.google.protobuf.ByteString;
+import io.grpc.Channel;
 import io.tolar.caching.NewTxCache;
 import io.tolar.utils.ChannelUtils;
 import org.springframework.stereotype.Component;
@@ -26,17 +27,20 @@ public class TransactionApiImpl implements TransactionApi {
                 .newBuilder()
                 .setSignedTransaction(signedTransaction)
                 .build();
+
+        Channel channel = null;
+
         try {
-            channelUtils.acquire();
+            channel = channelUtils.getChannel();
             ByteString transactionHash = TransactionServiceGrpc
-                    .newBlockingStub(channelUtils.getChannel())
+                    .newBlockingStub(channel)
                     .sendSignedTransaction(sendSignedTransactionRequest)
                     .getTransactionHash();
 
             txCache.put(transactionHash.toStringUtf8());
             return transactionHash;
         } finally {
-            channelUtils.release();
+            channelUtils.release(channel);
         }
 
 
