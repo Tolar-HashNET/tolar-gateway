@@ -19,6 +19,7 @@ import tolar.proto.tx.TransactionOuterClass;
 
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Collections;
 
 @Ignore("manual testies")
 public class TolarApiImplTest extends TestCase {
@@ -26,7 +27,7 @@ public class TolarApiImplTest extends TestCase {
     @Test
     public void testGetTransaction() {
         TolarConfig config = new TolarConfig();
-        config.setHost("172.31.7.104");
+        config.setHosts(Collections.singletonList("172.31.7.104"));
         config.setPort("9200");
         TolarApiImpl tolarApi = new TolarApiImpl(new ChannelUtils(config), new NewTxCache());
 
@@ -41,7 +42,7 @@ public class TolarApiImplTest extends TestCase {
     public void testTransactionCheckStatus() {
 
         TolarConfig config = new TolarConfig();
-        config.setHost("172.31.7.104");
+        config.setHosts(Collections.singletonList("172.31.7.104"));
         config.setPort("9200");
         TolarApiImpl tolarApi = new TolarApiImpl(new ChannelUtils(config), new NewTxCache());
         TransactionApi api = new TransactionApiImpl(new ChannelUtils(config), new NewTxCache());

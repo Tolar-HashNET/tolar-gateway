@@ -27,21 +27,20 @@ public class ChannelUtils {
 
     public ChannelUtils(TolarConfig tolarConfig) {
         this.tolarConfig = tolarConfig;
-        LOGGER.info("host: {}, port: {}", tolarConfig.getHost(), tolarConfig.getPort());
         this.channelList = new ArrayList<>();
         this.random = new Random();
         this.available = new Semaphore(tolarConfig.getSemaphorePermitsAsInt(), true);
         this.channelCount = tolarConfig.getChannelCountAsInt();
         this.permitTimeout = tolarConfig.getSemaphoreTimeoutAsInt();
 
-        for(int i = 0; i < channelCount; i++){
-            channelList.add(generateChannel());
+        for (String host : tolarConfig.getHosts()) {
+            channelList.add(generateChannel(host));
         }
     }
 
-    public Channel generateChannel(){
+    public Channel generateChannel(String host){
         return ManagedChannelBuilder
-                .forAddress(tolarConfig.getHost(), tolarConfig.getPortAsInt())
+                .forAddress(host, tolarConfig.getPortAsInt())
                 .usePlaintext()
                 .build();
     }

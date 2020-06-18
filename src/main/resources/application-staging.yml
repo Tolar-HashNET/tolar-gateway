@@ -2,7 +2,15 @@ server:
   port: 8081
 tolar-hashnet:
   port: 9200
-  host: "116.203.236.148"
+  # host: "116.203.236.148"
   channelCount: 30
-  semaphorePermits: 50
+  semaphorePermits: 200
   semaphoreTimeout: 60
+  hosts:
+    - "116.203.236.134"
+    - "116.203.236.148"
+    - "116.203.236.150"
+    - "116.203.236.138"
+    - "116.203.236.151"
+    - "116.203.236.152"
+    - "116.203.236.139"

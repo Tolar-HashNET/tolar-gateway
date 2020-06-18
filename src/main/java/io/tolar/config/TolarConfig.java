@@ -6,25 +6,28 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Collections;
+import java.util.List;
+
 @Configuration
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "tolar-hashnet")
 public class TolarConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(TolarConfig.class);
     private static final String DEFAULT_HOST = "127.0.0.1";
-    private String host;
+    private List<String> hosts;
     private String port;
     private String channelCount;
     private String semaphorePermits;
     private String semaphoreTimeout;
 
-    public String getHost() {
-        if ("${TOLAR_HASHNET_HOST}".equals(host)) {
+    public List<String> getHosts() {
+        if ("${TOLAR_HASHNET_HOST}".equals(hosts)) {
             LOGGER.info("TOLAR_HASHNET_HOST variable not found! Defaulting to {}", DEFAULT_HOST);
-            return DEFAULT_HOST;
+            return Collections.singletonList(DEFAULT_HOST);
         }
 
-        return host;
+        return hosts;
     }
 
     public int getPortAsInt() {
@@ -90,8 +93,8 @@ public class TolarConfig {
         this.port = port;
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setHosts(List<String> hosts) {
+        this.hosts = hosts;
     }
 
 }
