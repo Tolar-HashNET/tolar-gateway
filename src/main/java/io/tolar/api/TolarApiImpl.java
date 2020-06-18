@@ -75,7 +75,7 @@ public class TolarApiImpl implements TolarApi {
         GetBlockchainInfoResponse latestBlocks = getBlockchainInfo();
         long confirmedBlocksCount = latestBlocks.getConfirmedBlocksCount();
 
-        for (long i = blockCount + 1; i < confirmedBlocksCount; i++) {
+        for (long i = blockCount; i < confirmedBlocksCount; i++) {
             GetBlockResponse blockByIndex = getBlockByIndex(i);
 
             List<String> list = blockByIndex.getTransactionHashesList()
@@ -87,8 +87,6 @@ public class TolarApiImpl implements TolarApi {
         }
 
         blockCount = confirmedBlocksCount;
-
-        LOGGER.info("Cache cleanup done.");
     }
 
     @Override
@@ -137,7 +135,7 @@ public class TolarApiImpl implements TolarApi {
                     .newBlockingStub(channelUtils.getChannel())
                     .getBlockByIndex(getBlockByIndexRequest);
 
-            LOGGER.info("Got block: " + blockIndex + " in " + ChronoUnit.MILLIS.between(now, Instant.now()) + " sec.");
+            LOGGER.info("Got block: " + blockIndex + " in " + ChronoUnit.MILLIS.between(now, Instant.now()) + " milis.");
             txCache.put(blockIndex, blockByIndex);
 
             return blockByIndex;
@@ -179,7 +177,7 @@ public class TolarApiImpl implements TolarApi {
                     .newBlockingStub(channelUtils.getChannel())
                     .getTransaction(getTransactionRequest);
 
-            LOGGER.info("Tx get in: " + ChronoUnit.MILLIS.between(now, Instant.now()) + " sec.");
+            LOGGER.info("Tx get in: " + ChronoUnit.MILLIS.between(now, Instant.now()) + " milis.");
 
             return transaction;
         } finally {
@@ -243,7 +241,7 @@ public class TolarApiImpl implements TolarApi {
                     .getNonce(getNonceRequest)
                     .getNonce();
 
-            LOGGER.info("Nonce get in: " + ChronoUnit.MILLIS.between(now, Instant.now()) + " sec.");
+            LOGGER.info("Nonce get in: " + ChronoUnit.MILLIS.between(now, Instant.now()) + " milis.");
 
             return BalanceConverter.toBigInteger(nonce);
         }  finally {
