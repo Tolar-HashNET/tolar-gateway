@@ -144,7 +144,8 @@ public class TolarApiImpl implements TolarApi {
         } catch (StatusRuntimeException ex) {
             LOGGER.warn("Could not get block: {}, tries: {}", blockIndex, tries);
 
-            if (Status.NOT_FOUND.equals(ex.getStatus()) && tries <= 3) {
+            if (Status.NOT_FOUND.getCode().value() == ex.getStatus().getCode().value()
+                    && tries <= 3) {
                 return retryBlock(blockIndex, tries + 1);
             } else {
                 throw ex;
