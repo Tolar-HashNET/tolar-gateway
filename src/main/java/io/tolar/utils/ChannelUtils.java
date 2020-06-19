@@ -93,7 +93,6 @@ public class ChannelUtils {
         SemaphoreHolder semaphoreHolder = channelSemaphores.get(channel);
 
         Semaphore semaphore = semaphoreHolder.getSemaphore();
-
         semaphore.release();
 
         LOGGER.info("Available permits: " + semaphore.availablePermits()
