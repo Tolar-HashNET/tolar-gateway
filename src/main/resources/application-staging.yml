@@ -3,7 +3,6 @@ server:
 tolar-hashnet:
   port: 9200
   # host: "116.203.236.148"
-  channelCount: 30
   semaphorePermits: 90
   semaphoreTimeout: 60
   hosts:

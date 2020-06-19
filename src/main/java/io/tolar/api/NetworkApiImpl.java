@@ -1,5 +1,6 @@
 package io.tolar.api;
 
+import io.grpc.Channel;
 import io.tolar.utils.ChannelUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,10 +21,18 @@ public class NetworkApiImpl implements NetworkApi {
                 .newBuilder()
                 .build();
 
-        return NetworkServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .peerCount(peerCountRequest)
-                .getCount();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return NetworkServiceGrpc
+                    .newBlockingStub(channel)
+                    .peerCount(peerCountRequest)
+                    .getCount();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -32,10 +41,18 @@ public class NetworkApiImpl implements NetworkApi {
                 .newBuilder()
                 .build();
 
-        return NetworkServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .masterNodeCount(masterNodeCountRequest)
-                .getCount();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return NetworkServiceGrpc
+                    .newBlockingStub(channel)
+                    .masterNodeCount(masterNodeCountRequest)
+                    .getCount();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -44,10 +61,18 @@ public class NetworkApiImpl implements NetworkApi {
                 .newBuilder()
                 .build();
 
-        return NetworkServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .isMasterNode(isMasterNodeRequest)
-                .getIsMaster();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return NetworkServiceGrpc
+                    .newBlockingStub(channel)
+                    .isMasterNode(isMasterNodeRequest)
+                    .getIsMaster();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -56,9 +81,17 @@ public class NetworkApiImpl implements NetworkApi {
                 .newBuilder()
                 .build();
 
-        return NetworkServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .maxPeerCount(maxPeerCountRequest)
-                .getCount();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return NetworkServiceGrpc
+                    .newBlockingStub(channel)
+                    .maxPeerCount(maxPeerCountRequest)
+                    .getCount();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 }

@@ -42,10 +42,18 @@ public class TolarApiImpl implements TolarApi {
                 .newBuilder()
                 .build();
 
-        return BlockchainServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .getBlockCount(getBlockCountRequest)
-                .getBlockCount();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return BlockchainServiceGrpc
+                    .newBlockingStub(channel)
+                    .getBlockCount(getBlockCountRequest)
+                    .getBlockCount();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     private void initCache(){
@@ -199,9 +207,17 @@ public class TolarApiImpl implements TolarApi {
                 .newBuilder()
                 .build();
 
-        return BlockchainServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .getBlockchainInfo(getBlockchainInfoRequest);
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return BlockchainServiceGrpc
+                    .newBlockingStub(channel)
+                    .getBlockchainInfo(getBlockchainInfoRequest);
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -293,9 +309,17 @@ public class TolarApiImpl implements TolarApi {
                 .setAddress(address)
                 .build();
 
-        return BlockchainServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .getLatestBalance(getBalanceRequest);
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return BlockchainServiceGrpc
+                    .newBlockingStub(channel)
+                    .getLatestBalance(getBalanceRequest);
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -313,11 +337,19 @@ public class TolarApiImpl implements TolarApi {
                 .setNonce(BalanceConverter.toByteString(nonce))
                 .build();
 
-        TryCallTransactionResponse tryCallTransactionResponse = BlockchainServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .tryCallTransaction(transaction);
+        Channel channel = null;
 
-        return tryCallTransactionResponse;
+        try {
+            channel = channelUtils.getChannel();
+
+            TryCallTransactionResponse tryCallTransactionResponse = BlockchainServiceGrpc
+                    .newBlockingStub(channel)
+                    .tryCallTransaction(transaction);
+
+            return tryCallTransactionResponse;
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
@@ -350,10 +382,18 @@ public class TolarApiImpl implements TolarApi {
 
     @Override
     public long getGasEstimate(TransactionOuterClass.Transaction transaction) {
-        return BlockchainServiceGrpc
-                .newBlockingStub(channelUtils.getChannel())
-                .getGasEstimate(transaction)
-                .getGasEstimate();
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return BlockchainServiceGrpc
+                    .newBlockingStub(channel)
+                    .getGasEstimate(transaction)
+                    .getGasEstimate();
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
     @Override
