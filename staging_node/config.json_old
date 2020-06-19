@@ -1,0 +1,244 @@
+{
+    "ThinNodeConfig": {
+        "client_endpoint": {
+            "ip_address": "0.0.0.0",
+            "port": "9300"
+        }
+    },
+    "NetworkConfiguration": {
+        "heartbeat_milliseconds": "1000",
+        "max_transactions_per_event": "1000",
+        "seeds": [
+            {
+                "public_key": "edf9518e3e206c31a193790f8353155f1a63beadd80160ad35895f06ee72d30af65fc84ccd69437237819510794cd22d2ed6543338b8d78408f00461cd81e2bd",
+                "node_endpoint": {
+                    "ip_address": "116.203.236.134",
+                    "port": "9100"
+                },
+                "client_endpoint": {
+                    "ip_address": "116.203.236.134",
+                    "port": "9200"
+                },
+                "remote_cmd_endpoint": {
+                    "ip_address": "116.203.236.134",
+                    "port": "9400"
+                },
+                "account_endpoint": {
+                    "ip_address": "116.203.236.134",
+                    "port": "9600"
+                },
+                "stake": "1",
+                "PrometheusPullConfig": {
+                    "bind_endpoint": {
+                        "ip_address": "0.0.0.0",
+                        "port": "9500"
+                    },
+                    "access_endpoint": {
+                        "ip_address": "116.203.236.134",
+                        "port": "9500"
+                    },
+                    "url_path": "/metrics"
+                }
+            },
+            {
+                "public_key": "c505c65b7625959abe37941cf55edd5ab8d671d06298ff701492bed69bbd10eb586233ee49d1e187a49cd272dfa22ab9f395024ac9714679515b8bb1a16d2d28",
+                "node_endpoint": {
+                    "ip_address": "116.203.236.148",
+                    "port": "9100"
+                },
+                "client_endpoint": {
+                    "ip_address": "116.203.236.148",
+                    "port": "9200"
+                },
+                "remote_cmd_endpoint": {
+                    "ip_address": "116.203.236.148",
+                    "port": "9400"
+                },
+                "account_endpoint": {
+                    "ip_address": "116.203.236.148",
+                    "port": "9600"
+                },
+                "stake": "1",
+                "PrometheusPullConfig": {
+                    "bind_endpoint": {
+                        "ip_address": "0.0.0.0",
+                        "port": "9500"
+                    },
+                    "access_endpoint": {
+                        "ip_address": "116.203.236.148",
+                        "port": "9500"
+                    },
+                    "url_path": "/metrics"
+                }
+            },
+            {
+                "public_key": "55bc9516bd2c3c60fe72f88a956c5fd263e34d355a08b8aabbd5f5c2e45ad0d0a2d9767aeba2db9721e194b77c6bf4a0a516e210cdca10e6fb584a9120df7c5e",
+                "node_endpoint": {
+                    "ip_address": "116.203.236.150",
+                    "port": "9100"
+                },
+                "client_endpoint": {
+                    "ip_address": "116.203.236.150",
+                    "port": "9200"
+                },
+                "remote_cmd_endpoint": {
+                    "ip_address": "116.203.236.150",
+                    "port": "9400"
+                },
+                "account_endpoint": {
+                    "ip_address": "116.203.236.150",
+                    "port": "9600"
+                },
+                "stake": "1",
+                "PrometheusPullConfig": {
+                    "bind_endpoint": {
+                        "ip_address": "0.0.0.0",
+                        "port": "9500"
+                    },
+                    "access_endpoint": {
+                        "ip_address": "116.203.236.150",
+                        "port": "9500"
+                    },
+                    "url_path": "/metrics"
+                }
+            },
+            {
+                "public_key": "9411985cdd4458adfa4153f59f3e2c171a487849d89595e14bf5e5ffed724689d8f8eeaca2d7bcc922feb0435805c2a7d4e6ffa75ab34bba12cab74dd0f42250",
+                "node_endpoint": {
+                    "ip_address": "116.203.236.138",
+                    "port": "9100"
+                },
+                "client_endpoint": {
+                    "ip_address": "116.203.236.138",
+                    "port": "9200"
+                },
+                "remote_cmd_endpoint": {
+                    "ip_address": "116.203.236.138",
+                    "port": "9400"
+                },
+                "account_endpoint": {
+                    "ip_address": "116.203.236.138",
+                    "port": "9600"
+                },
+                "stake": "1",
+                "PrometheusPullConfig": {
+                    "bind_endpoint": {
+                        "ip_address": "0.0.0.0",
+                        "port": "9500"
+                    },
+                    "access_endpoint": {
+                        "ip_address": "116.203.236.138",
+                        "port": "9500"
+                    },
+                    "url_path": "/metrics"
+                }
+            },
+            {
+                "public_key": "b7f775ef2b01aef89003d9d5cdec35295c277e5139c942690d82c90b05c6fa0ec147082b88463774c92cc1bc663f135d6b219d766a19c4acd24c8cd6654d6039",
+                "node_endpoint": {
+                    "ip_address": "116.203.236.151",
+                    "port": "9100"
+                },
+                "client_endpoint": {
+                    "ip_address": "116.203.236.151",
+                    "port": "9200"
+                },
+                "remote_cmd_endpoint": {
+                    "ip_address": "116.203.236.151",
+                    "port": "9400"
+                },
+                "account_endpoint": {
+                    "ip_address": "116.203.236.151",
+                    "port": "9600"
+                },
+                "stake": "1",
+                "PrometheusPullConfig": {
+                    "bind_endpoint": {
+                        "ip_address": "0.0.0.0",
+                        "port": "9500"
+                    },
+                    "access_endpoint": {
+                        "ip_address": "116.203.236.151",
+                        "port": "9500"
+                    },
+                    "url_path": "/metrics"
+                }
+            },
+            {
+                "public_key": "34a06a7ecb0f19827fd7130db3b0da5cfcac9411a326eace5b7fdd70a21e112b31c73e5c81baa16fb50543098a25f0f65bfe8e9fff4add2446a34445215527d9",
+                "node_endpoint": {
+                    "ip_address": "116.203.236.152",
+                    "port": "9100"
+                },
+                "client_endpoint": {
+                    "ip_address": "116.203.236.152",
+                    "port": "9200"
+                },
+                "remote_cmd_endpoint": {
+                    "ip_address": "116.203.236.152",
+                    "port": "9400"
+                },
+                "account_endpoint": {
+                    "ip_address": "116.203.236.152",
+                    "port": "9600"
+                },
+                "stake": "1",
+                "PrometheusPullConfig": {
+                    "bind_endpoint": {
+                        "ip_address": "0.0.0.0",
+                        "port": "9500"
+                    },
+                    "access_endpoint": {
+                        "ip_address": "116.203.236.152",
+                        "port": "9500"
+                    },
+                    "url_path": "/metrics"
+                }
+            },
+            {
+                "public_key": "014a1724385600abe40244bd7256ae70548d0d319e04ec32e586e654a13e76bb7acf6c79c196e1e4fb369cf879343b425f7f74d5e1543ea38b1c2c9e3f3ce35f",
+                "node_endpoint": {
+                    "ip_address": "116.203.236.139",
+                    "port": "9100"
+                },
+                "client_endpoint": {
+                    "ip_address": "116.203.236.139",
+                    "port": "9200"
+                },
+                "remote_cmd_endpoint": {
+                    "ip_address": "116.203.236.139",
+                    "port": "9400"
+                },
+                "account_endpoint": {
+                    "ip_address": "116.203.236.139",
+                    "port": "9600"
+                },
+                "stake": "1",
+                "PrometheusPullConfig": {
+                    "bind_endpoint": {
+                        "ip_address": "0.0.0.0",
+                        "port": "9500"
+                    },
+                    "access_endpoint": {
+                        "ip_address": "116.203.236.139",
+                        "port": "9500"
+                    },
+                    "url_path": "/metrics"
+                }
+            }
+        ]
+    },
+    "KeyStoreConfig": {
+        "keys_file_path": "/home/thin_node/.tolar/keystore/Thin_node/keys.info",
+        "secrets_path": "/home/thin_node/.tolar/keystore/Thin_node/keys"
+    },
+    "blockchain_explorers": [
+        {
+            "public_key": "ebac646c3411194b00c916c0427c7e5fd9c4c0a6ddbd36ec731ffaaa0dbdd9e6c7612c17f2e435acb0450595e4e3de2fad5c1b8a10fd31e0c469f4b27a46f0c3",
+            "blockchain_explorer_endpoint": {
+                "ip_address": "116.203.236.208",
+                "port": "9876"
+            }
+        }
+    ]
+}
