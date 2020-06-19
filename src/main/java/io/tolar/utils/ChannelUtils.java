@@ -22,7 +22,6 @@ public class ChannelUtils {
     private final List<Channel> channelList;
     private Map<Channel, Semaphore> channelSemaphores;
 
-    private final Semaphore available;
     private final Random random;
     private final AtomicInteger roundRobinCounter;
 
@@ -30,8 +29,6 @@ public class ChannelUtils {
         this.tolarConfig = tolarConfig;
         this.channelList = new ArrayList<>();
         this.random = new Random();
-        this.available = new Semaphore(tolarConfig.getSemaphorePermitsAsInt(), true);
-        //this.channelCount = tolarConfig.getChannelCountAsInt();
         this.permitTimeout = tolarConfig.getSemaphoreTimeoutAsInt();
 
         HashMap<Channel, Semaphore> semaphoreTempMap = new HashMap<>();
@@ -87,9 +84,7 @@ public class ChannelUtils {
             return;
         }
 
-
         Semaphore semaphore = channelSemaphores.get(channel);
-
         semaphore.release();
 
         LOGGER.info("Available permits: " + semaphore.availablePermits()
