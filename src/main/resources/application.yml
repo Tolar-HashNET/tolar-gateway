@@ -1,7 +1,6 @@
 tolar-hashnet:
-  host: ${TOLAR_HASHNET_HOST}
+  hosts: ${TOLAR_HASHNET_HOSTS}
   port: ${TOLAR_HASHNET_PORT}
-  channelCount: ${TOLAR_CHANNEL_COUNT}
   semaphorePermits: ${TOLAR_SEMAPHORE_PERMITS}
   semaphoreTimeout: ${TOLAR_SEMAPHORE_TIMEOUT}
 
