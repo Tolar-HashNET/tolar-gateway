@@ -5,7 +5,6 @@ tolar-hashnet:
   semaphorePermits: 90
   semaphoreTimeout: 60
 
-
   hosts: "127.0.0.1"
   port: 9300
 
