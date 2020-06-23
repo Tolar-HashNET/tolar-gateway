@@ -47,7 +47,7 @@ You can choose the networking mode of the docker image (service):
 
 `--network=host` -> uses host networking
 `-p 8083:8080` -> exposes the docker port 8080 (default for the service) and maps it to 8083 of the host 
-`-e "-Dserver.port=8083"` -> changes the default server port to another one (8083 in this case), useful when using host networking
+`-e "--server.port=8083"` -> changes the default server port to another one (8083 in this case), useful when using host networking
 
 ## Semaphore tuning
 
@@ -66,5 +66,5 @@ The timeout is in seconds and the default is 60 seconds.
 These are all arbitrary values, just to show how a customized configuration looks like!
 
 ```
-docker run -d -e "TOLAR_HASHNET_PORT=9300" -e "TOLAR_HASHNET_HOSTS=127.0.0.1,127.0.0.5" -e "TOLAR_SEMAPHORE_PERMITS=100" -e "TOLAR_SEMAPHORE_TIMEOUT=100" -e "-Dserver.port=8083" --network=host --name tolar-gateway dreamfactoryhr/tolar-gateway:latest
+docker run -d -e "TOLAR_HASHNET_PORT=9300" -e "TOLAR_HASHNET_HOSTS=127.0.0.1,127.0.0.5" -e "TOLAR_SEMAPHORE_PERMITS=100" -e "TOLAR_SEMAPHORE_TIMEOUT=100" -e "--server.port=8083" --network=host --name tolar-gateway dreamfactoryhr/tolar-gateway:latest
 ```
