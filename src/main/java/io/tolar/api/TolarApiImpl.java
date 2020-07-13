@@ -4,11 +4,10 @@ import com.google.protobuf.ByteString;
 import io.grpc.Channel;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import io.tolar.caching.BlockWithChannel;
 import io.tolar.caching.NewTxCache;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
-import lombok.Builder;
-import lombok.Data;
 import org.bouncycastle.util.encoders.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,6 +98,7 @@ public class TolarApiImpl implements TolarApi {
                         .stream()
                         .map(ByteString::toStringUtf8)
                         .collect(Collectors.toList());
+
                 txCache.remove(list, blockByIndex.getChannel());
                 LOGGER.info("Removed {} from cache", list.size());
             }
@@ -132,7 +132,7 @@ public class TolarApiImpl implements TolarApi {
 
     @Override
     public GetBlockResponse getBlockByIndex(Long blockIndex) {
-        return retryBlock(blockIndex, 0).response;
+        return retryBlock(blockIndex, 0).getResponse();
     }
 
     public BlockWithChannel getBlockByIndexWithChannel(Long blockIndex) {
@@ -144,12 +144,10 @@ public class TolarApiImpl implements TolarApi {
 
         try {
             channel = channelUtils.getChannel();
-            GetBlockResponse block = txCache.getBlock(blockIndex);
+            BlockWithChannel block = txCache.getBlock(blockIndex);
 
             if (block != null) {
-                return BlockWithChannel.builder()
-                        .response(block)
-                        .build();
+                return block;
             }
 
             LOGGER.info("finding block: {}, tries: {}", blockIndex, tries);
@@ -168,13 +166,14 @@ public class TolarApiImpl implements TolarApi {
                 LOGGER.info("Got block: {} in {} millis.",
                         blockIndex, ChronoUnit.MILLIS.between(now, Instant.now()) + "");
 
-                txCache.put(blockIndex, blockByIndex);
-
-                return BlockWithChannel
+                BlockWithChannel foundBlock = BlockWithChannel
                         .builder()
                         .response(blockByIndex)
                         .channel(channel)
                         .build();
+
+                txCache.put(blockIndex, foundBlock);
+                return foundBlock;
 
             } catch (StatusRuntimeException ex) {
                 LOGGER.warn("Could not get block: {}, tries: {}", blockIndex, tries);
@@ -424,13 +423,6 @@ public class TolarApiImpl implements TolarApi {
     @Override
     public String getTransactionProtobuf(TransactionOuterClass.Transaction transaction) {
         return Base64.toBase64String(transaction.toByteString().toByteArray());
-    }
-
-    @Data
-    @Builder
-    private static class BlockWithChannel {
-        Channel channel;
-        GetBlockResponse response;
     }
 
 }

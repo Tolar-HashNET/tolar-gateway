@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class NewTxCache {
     private final Cache<String, String> reverseTxCache;
-    private final Cache<Long, Blockchain.GetBlockResponse> blockCache;
+    private final Cache<Long, BlockWithChannel> blockCache;
     private final Cache<String, Channel> txToChannelCache;
 
     public NewTxCache() {
@@ -42,7 +42,9 @@ public class NewTxCache {
             reverseTxCache.invalidate(hash);
         }
 
-        hashes.forEach(t -> txToChannelCache.put(t, channel));
+        if(channel != null){
+            hashes.forEach(t -> txToChannelCache.put(t, channel));
+        }
     }
 
     public Channel getChannelForTx(String tx) {
@@ -53,11 +55,11 @@ public class NewTxCache {
         return reverseTxCache.size();
     }
 
-    public void put(Long blockNumber, Blockchain.GetBlockResponse block){
+    public void put(Long blockNumber, BlockWithChannel block){
         blockCache.put(blockNumber, block);
     }
 
-    public Blockchain.GetBlockResponse getBlock(Long blockNumber) {
+    public BlockWithChannel getBlock(Long blockNumber) {
         return blockCache.getIfPresent(blockNumber);
     }
 
