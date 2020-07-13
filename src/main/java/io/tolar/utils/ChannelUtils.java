@@ -57,8 +57,15 @@ public class ChannelUtils {
                 .build();
     }
 
-    public Channel getChannel() {
-        Channel nextChannel = channelList.get(roundRobinCounter.getAndIncrement() % channelList.size());
+    public Channel getChannel(){
+        return getChannel(null);
+    }
+    public Channel getChannel(Channel channel) {
+        Channel nextChannel = channel;
+        if(nextChannel == null){
+            nextChannel = channelList.get(roundRobinCounter.getAndIncrement() % channelList.size());
+        }
+
         Semaphore semaphore = channelSemaphores.get(nextChannel).getSemaphore();
 
         if (semaphore.availablePermits() < 1) {

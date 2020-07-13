@@ -2,6 +2,7 @@ package io.tolar.caching;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import io.grpc.Channel;
 import org.springframework.stereotype.Service;
 import tolar.proto.Blockchain;
 
@@ -12,12 +13,19 @@ import java.util.concurrent.TimeUnit;
 public class NewTxCache {
     private final Cache<String, String> reverseTxCache;
     private final Cache<Long, Blockchain.GetBlockResponse> blockCache;
+    private final Cache<String, Channel> txToChannelCache;
 
     public NewTxCache(){
         reverseTxCache = CacheBuilder.newBuilder()
                 .maximumSize(10_000)
-                .expireAfterWrite(1, TimeUnit.MINUTES)
+                .expireAfterWrite(2, TimeUnit.MINUTES)
                 .build();
+
+        txToChannelCache = CacheBuilder.newBuilder()
+                .maximumSize(100_000)
+                .expireAfterWrite(3, TimeUnit.MINUTES)
+                .build();
+
 
         blockCache = CacheBuilder.newBuilder()
                 .maximumSize(10_000)
@@ -29,10 +37,16 @@ public class NewTxCache {
         return ! reverseTxCache.asMap().containsKey(hash);
     }
 
-    public void remove(List<String> hashes){
+    public void remove(List<String> hashes, Channel channel){
         for (String hash : hashes) {
             reverseTxCache.invalidate(hash);
         }
+        hashes.stream()
+                .forEach(t -> txToChannelCache.put(t, channel));
+    }
+
+    public Channel getChannelForTx(String tx){
+        return txToChannelCache.getIfPresent(tx);
     }
 
     public void put(Long blockNumber, Blockchain.GetBlockResponse block){
