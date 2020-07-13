@@ -81,18 +81,30 @@ public class TolarApiImpl implements TolarApi {
             initCache();
             return;
         }
+
         GetBlockchainInfoResponse latestBlocks = getBlockchainInfo();
         long confirmedBlocksCount = latestBlocks.getConfirmedBlocksCount();
+        Channel channel = null;
 
-        for (long i = blockCount; i < confirmedBlocksCount; i++) {
-            GetBlockResponse blockByIndex = getBlockByIndex(i);
 
-            List<String> list = blockByIndex.getTransactionHashesList()
-                    .stream()
-                    .map(ByteString::toStringUtf8)
-                    .collect(Collectors.toList());
-            txCache.remove(list);
-            LOGGER.info("Removed {} from cache", list.size());
+        try {
+            channel = channelUtils.getChannel();
+
+            for (long i = blockCount; i < confirmedBlocksCount; i++) {
+                GetBlockResponse blockByIndex = retryBlock(i, 0, channel);
+
+                List<String> list = blockByIndex.getTransactionHashesList()
+                        .stream()
+                        .map(ByteString::toStringUtf8)
+                        .collect(Collectors.toList());
+
+                txCache.remove(list, channel);
+
+                LOGGER.info("Removed {} from cache", list.size());
+            }
+
+        } finally {
+            channelUtils.release(channel);
         }
 
         blockCount = confirmedBlocksCount;
@@ -121,10 +133,17 @@ public class TolarApiImpl implements TolarApi {
 
     @Override
     public GetBlockResponse getBlockByIndex(Long blockIndex) {
-        return retryBlock(blockIndex, 0);
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+            return retryBlock(blockIndex, 0, channel);
+        } finally {
+            channelUtils.release(channel);
+        }
     }
 
-    private GetBlockResponse retryBlock(Long blockIndex, int tries) {
+    private GetBlockResponse retryBlock(Long blockIndex, int tries, Channel channel) {
         GetBlockResponse block = txCache.getBlock(blockIndex);
 
         if (block != null) {
@@ -133,8 +152,6 @@ public class TolarApiImpl implements TolarApi {
 
         LOGGER.info("finding block: {}, tries: {}", blockIndex, tries);
 
-        Channel channel = null;
-
         try {
             Instant now = Instant.now();
             GetBlockByIndexRequest getBlockByIndexRequest = GetBlockByIndexRequest
@@ -142,13 +159,13 @@ public class TolarApiImpl implements TolarApi {
                     .setBlockIndex(blockIndex)
                     .build();
 
-            channel = channelUtils.getChannel();
-
             GetBlockResponse blockByIndex = BlockchainServiceGrpc
                     .newBlockingStub(channel)
                     .getBlockByIndex(getBlockByIndexRequest);
 
-            LOGGER.info("Got block: " + blockIndex + " in " + ChronoUnit.MILLIS.between(now, Instant.now()) + " milis.");
+            LOGGER.info("Got block: {} in {} millis.",
+                    blockIndex, ChronoUnit.MILLIS.between(now, Instant.now()) + "");
+
             txCache.put(blockIndex, blockByIndex);
 
             return blockByIndex;
@@ -158,12 +175,10 @@ public class TolarApiImpl implements TolarApi {
 
             if (Status.NOT_FOUND.getCode().value() == ex.getStatus().getCode().value()
                     && tries <= 10) {
-                return retryBlock(blockIndex, tries + 1);
+                return retryBlock(blockIndex, tries + 1, channel);
             } else {
                 throw ex;
             }
-        } finally {
-            channelUtils.release(channel);
         }
     }
 

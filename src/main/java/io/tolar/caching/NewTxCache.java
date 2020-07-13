@@ -15,7 +15,7 @@ public class NewTxCache {
     private final Cache<Long, Blockchain.GetBlockResponse> blockCache;
     private final Cache<String, Channel> txToChannelCache;
 
-    public NewTxCache(){
+    public NewTxCache() {
         reverseTxCache = CacheBuilder.newBuilder()
                 .maximumSize(10_000)
                 .expireAfterWrite(2, TimeUnit.MINUTES)
@@ -33,27 +33,27 @@ public class NewTxCache {
                 .build();
     }
 
-    public boolean canProceed(String hash){
+    public boolean canProceed(String hash) {
         return ! reverseTxCache.asMap().containsKey(hash);
     }
 
-    public void remove(List<String> hashes, Channel channel){
+    public void remove(List<String> hashes, Channel channel) {
         for (String hash : hashes) {
             reverseTxCache.invalidate(hash);
         }
-        hashes.stream()
-                .forEach(t -> txToChannelCache.put(t, channel));
+
+        hashes.forEach(t -> txToChannelCache.put(t, channel));
     }
 
-    public Channel getChannelForTx(String tx){
+    public Channel getChannelForTx(String tx) {
         return txToChannelCache.getIfPresent(tx);
     }
 
-    public void put(Long blockNumber, Blockchain.GetBlockResponse block){
+    public void put(Long blockNumber, Blockchain.GetBlockResponse block) {
         blockCache.put(blockNumber, block);
     }
 
-    public Blockchain.GetBlockResponse getBlock(Long blockNumber){
+    public Blockchain.GetBlockResponse getBlock(Long blockNumber) {
         return blockCache.getIfPresent(blockNumber);
     }
 
