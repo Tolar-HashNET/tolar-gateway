@@ -4,7 +4,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import io.grpc.Channel;
 import org.springframework.stereotype.Service;
-import tolar.proto.Blockchain;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

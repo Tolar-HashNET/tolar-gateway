@@ -180,6 +180,11 @@ public class TolarApiImpl implements TolarApi {
 
                 if (Status.NOT_FOUND.getCode().value() == ex.getStatus().getCode().value()
                         && tries <= 10) {
+                    try {
+                        Thread.sleep(1_000);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
                     return retryBlock(blockIndex, tries + 1);
                 } else {
                     throw ex;
@@ -200,6 +205,7 @@ public class TolarApiImpl implements TolarApi {
         while (!txCache.canProceed(transactionHash.toStringUtf8())) {
             try {
                 Thread.sleep(1_000);
+                LOGGER.info("Tx Pending size: {}", txCache.notFlushedTx());
             } catch (InterruptedException e) {
                 LOGGER.error(e.getMessage());
             }

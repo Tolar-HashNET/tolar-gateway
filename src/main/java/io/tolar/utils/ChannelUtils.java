@@ -102,7 +102,7 @@ public class ChannelUtils {
         Semaphore semaphore = semaphoreHolder.getSemaphore();
         semaphore.release();
 
-        LOGGER.info("Available permits: " + semaphore.availablePermits()
+        LOGGER.debug("Available permits: " + semaphore.availablePermits()
                 + " queue length: " + semaphore.getQueueLength() + ", semaphore index: {}, host: {}",
                 semaphoreHolder.getIndex(), semaphoreHolder.getHost());
     }

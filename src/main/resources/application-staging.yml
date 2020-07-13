@@ -2,7 +2,7 @@ server:
   port: 8081
 
 tolar-hashnet:
-  semaphorePermits: 90
+  semaphorePermits: 30
   semaphoreTimeout: 60
 #  hosts: "127.0.0.1"
 #  port: 9300
