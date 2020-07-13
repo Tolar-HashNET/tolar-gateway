@@ -7,6 +7,8 @@ import io.grpc.StatusRuntimeException;
 import io.tolar.caching.NewTxCache;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
+import lombok.Builder;
+import lombok.Data;
 import org.bouncycastle.util.encoders.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,13 +87,13 @@ public class TolarApiImpl implements TolarApi {
         long confirmedBlocksCount = latestBlocks.getConfirmedBlocksCount();
 
         for (long i = blockCount; i < confirmedBlocksCount; i++) {
-            GetBlockResponse blockByIndex = getBlockByIndex(i);
+            BlockWithChannel blockByIndex = getBlockByIndexWithChannel(i);
 
-            List<String> list = blockByIndex.getTransactionHashesList()
+            List<String> list = blockByIndex.getResponse().getTransactionHashesList()
                     .stream()
                     .map(ByteString::toStringUtf8)
                     .collect(Collectors.toList());
-            txCache.remove(list);
+            txCache.remove(list, blockByIndex.getChannel());
             LOGGER.info("Removed {} from cache", list.size());
         }
 
@@ -121,14 +123,19 @@ public class TolarApiImpl implements TolarApi {
 
     @Override
     public GetBlockResponse getBlockByIndex(Long blockIndex) {
+        return retryBlock(blockIndex, 0).response;
+    }
+
+    public BlockWithChannel getBlockByIndexWithChannel(Long blockIndex) {
         return retryBlock(blockIndex, 0);
     }
 
-    private GetBlockResponse retryBlock(Long blockIndex, int tries) {
+    private BlockWithChannel retryBlock(Long blockIndex, int tries) {
         GetBlockResponse block = txCache.getBlock(blockIndex);
 
         if (block != null) {
-            return block;
+            return BlockWithChannel.builder().response(block)
+                    .build();
         }
 
         LOGGER.info("finding block: {}, tries: {}", blockIndex, tries);
@@ -151,7 +158,11 @@ public class TolarApiImpl implements TolarApi {
             LOGGER.info("Got block: " + blockIndex + " in " + ChronoUnit.MILLIS.between(now, Instant.now()) + " milis.");
             txCache.put(blockIndex, blockByIndex);
 
-            return blockByIndex;
+            return BlockWithChannel
+                    .builder()
+                    .response(blockByIndex)
+                    .channel(channel)
+                    .build();
 
         } catch (StatusRuntimeException ex) {
             LOGGER.warn("Could not get block: {}, tries: {}", blockIndex, tries);
@@ -362,6 +373,7 @@ public class TolarApiImpl implements TolarApi {
         while (!txCache.canProceed(transactionHash.toStringUtf8())) {
             try {
                 Thread.sleep(1_000);
+                LOGGER.info("TX Pending Pool size:", txCache.notFlushedTx());
             } catch (InterruptedException e) {
                 LOGGER.error(e.getMessage());
             }
@@ -399,6 +411,13 @@ public class TolarApiImpl implements TolarApi {
     @Override
     public String getTransactionProtobuf(TransactionOuterClass.Transaction transaction) {
         return Base64.toBase64String(transaction.toByteString().toByteArray());
+    }
+
+    @Data
+    @Builder
+    private static class BlockWithChannel {
+        Channel channel;
+        GetBlockResponse response;
     }
 
 }

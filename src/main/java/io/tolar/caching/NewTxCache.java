@@ -49,6 +49,10 @@ public class NewTxCache {
         return txToChannelCache.getIfPresent(tx);
     }
 
+    public long notFlushedTx(){
+        return reverseTxCache.size();
+    }
+
     public void put(Long blockNumber, Blockchain.GetBlockResponse block){
         blockCache.put(blockNumber, block);
     }
