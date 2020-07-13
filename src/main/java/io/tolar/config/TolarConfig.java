@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,27 +16,22 @@ import java.util.List;
 public class TolarConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(TolarConfig.class);
     private static final String DEFAULT_HOST = "127.0.0.1";
-    private List<String> hosts;
+    private String hosts;
     private String port;
-    private String channelCount;
     private String semaphorePermits;
     private String semaphoreTimeout;
 
     public List<String> getHosts() {
-        if ("${TOLAR_HASHNET_HOST}".equals(hosts)) {
+        if ("${TOLAR_HASHNET_HOSTS}".equals(hosts)) {
             LOGGER.info("TOLAR_HASHNET_HOST variable not found! Defaulting to {}", DEFAULT_HOST);
             return Collections.singletonList(DEFAULT_HOST);
         }
 
-        return hosts;
+        return Arrays.asList(hosts.split(","));
     }
 
     public int getPortAsInt() {
         return getAsInt(port, "TOLAR_HASHNET_PORT", 9200);
-    }
-
-    public int getChannelCountAsInt() {
-        return getAsInt(channelCount, "TOLAR_CHANNEL_COUNT", 10);
     }
 
     public int getSemaphorePermitsAsInt() {
@@ -61,16 +57,8 @@ public class TolarConfig {
         return defaultValue;
     }
 
-    public String getChannelCount() {
-        return channelCount;
-    }
-
     public String getPort() {
         return port;
-    }
-
-    public void setChannelCount(String channelCount) {
-        this.channelCount = channelCount;
     }
 
     public String getSemaphorePermits() {
@@ -93,7 +81,7 @@ public class TolarConfig {
         this.port = port;
     }
 
-    public void setHosts(List<String> hosts) {
+    public void setHosts(String hosts) {
         this.hosts = hosts;
     }
 
