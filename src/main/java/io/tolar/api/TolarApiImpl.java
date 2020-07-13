@@ -58,7 +58,7 @@ public class TolarApiImpl implements TolarApi {
         }
     }
 
-    private void initCache(){
+    private void initCache() {
         long currentBlock = getBlockCount();
         this.blockCount = currentBlock - 50;
 
@@ -71,7 +71,7 @@ public class TolarApiImpl implements TolarApi {
 
         for (long i = 0; i < 10; i++) {
             long blockNumber = i;
-           getBlockByIndex(blockNumber);
+            getBlockByIndex(blockNumber);
         }
 
         LOGGER.info("Done with block cache init!");
@@ -83,18 +83,27 @@ public class TolarApiImpl implements TolarApi {
             initCache();
             return;
         }
+
         GetBlockchainInfoResponse latestBlocks = getBlockchainInfo();
         long confirmedBlocksCount = latestBlocks.getConfirmedBlocksCount();
+        Channel channel = null;
 
-        for (long i = blockCount; i < confirmedBlocksCount; i++) {
-            BlockWithChannel blockByIndex = getBlockByIndexWithChannel(i);
 
-            List<String> list = blockByIndex.getResponse().getTransactionHashesList()
-                    .stream()
-                    .map(ByteString::toStringUtf8)
-                    .collect(Collectors.toList());
-            txCache.remove(list, blockByIndex.getChannel());
-            LOGGER.info("Removed {} from cache", list.size());
+        try {
+            channel = channelUtils.getChannel();
+
+            for (long i = blockCount; i < confirmedBlocksCount; i++) {
+                BlockWithChannel blockByIndex = getBlockByIndexWithChannel(i);
+
+                List<String> list = blockByIndex.getResponse().getTransactionHashesList()
+                        .stream()
+                        .map(ByteString::toStringUtf8)
+                        .collect(Collectors.toList());
+                txCache.remove(list, blockByIndex.getChannel());
+                LOGGER.info("Removed {} from cache", list.size());
+            }
+        } finally {
+            channelUtils.release(channel);
         }
 
         blockCount = confirmedBlocksCount;
@@ -103,7 +112,7 @@ public class TolarApiImpl implements TolarApi {
     @Override
     public GetBlockResponse getBlockByHash(ByteString blockHash) {
         Channel channel = null;
-        
+
         try {
             GetBlockByHashRequest getBlockByHashRequest = GetBlockByHashRequest
                     .newBuilder()
@@ -111,7 +120,7 @@ public class TolarApiImpl implements TolarApi {
                     .build();
 
             channel = channelUtils.getChannel();
-            
+
             return BlockchainServiceGrpc
                     .newBlockingStub(channel)
                     .getBlockByHash(getBlockByHashRequest);
@@ -131,47 +140,51 @@ public class TolarApiImpl implements TolarApi {
     }
 
     private BlockWithChannel retryBlock(Long blockIndex, int tries) {
-        GetBlockResponse block = txCache.getBlock(blockIndex);
-
-        if (block != null) {
-            return BlockWithChannel.builder().response(block)
-                    .build();
-        }
-
-        LOGGER.info("finding block: {}, tries: {}", blockIndex, tries);
-
         Channel channel = null;
 
         try {
-            Instant now = Instant.now();
-            GetBlockByIndexRequest getBlockByIndexRequest = GetBlockByIndexRequest
-                    .newBuilder()
-                    .setBlockIndex(blockIndex)
-                    .build();
-
             channel = channelUtils.getChannel();
+            GetBlockResponse block = txCache.getBlock(blockIndex);
 
-            GetBlockResponse blockByIndex = BlockchainServiceGrpc
-                    .newBlockingStub(channel)
-                    .getBlockByIndex(getBlockByIndexRequest);
+            if (block != null) {
+                return BlockWithChannel.builder()
+                        .response(block)
+                        .build();
+            }
 
-            LOGGER.info("Got block: " + blockIndex + " in " + ChronoUnit.MILLIS.between(now, Instant.now()) + " milis.");
-            txCache.put(blockIndex, blockByIndex);
+            LOGGER.info("finding block: {}, tries: {}", blockIndex, tries);
 
-            return BlockWithChannel
-                    .builder()
-                    .response(blockByIndex)
-                    .channel(channel)
-                    .build();
+            try {
+                Instant now = Instant.now();
+                GetBlockByIndexRequest getBlockByIndexRequest = GetBlockByIndexRequest
+                        .newBuilder()
+                        .setBlockIndex(blockIndex)
+                        .build();
 
-        } catch (StatusRuntimeException ex) {
-            LOGGER.warn("Could not get block: {}, tries: {}", blockIndex, tries);
+                GetBlockResponse blockByIndex = BlockchainServiceGrpc
+                        .newBlockingStub(channel)
+                        .getBlockByIndex(getBlockByIndexRequest);
 
-            if (Status.NOT_FOUND.getCode().value() == ex.getStatus().getCode().value()
-                    && tries <= 10) {
-                return retryBlock(blockIndex, tries + 1);
-            } else {
-                throw ex;
+                LOGGER.info("Got block: {} in {} millis.",
+                        blockIndex, ChronoUnit.MILLIS.between(now, Instant.now()) + "");
+
+                txCache.put(blockIndex, blockByIndex);
+
+                return BlockWithChannel
+                        .builder()
+                        .response(blockByIndex)
+                        .channel(channel)
+                        .build();
+
+            } catch (StatusRuntimeException ex) {
+                LOGGER.warn("Could not get block: {}, tries: {}", blockIndex, tries);
+
+                if (Status.NOT_FOUND.getCode().value() == ex.getStatus().getCode().value()
+                        && tries <= 10) {
+                    return retryBlock(blockIndex, tries + 1);
+                } else {
+                    throw ex;
+                }
             }
         } finally {
             channelUtils.release(channel);
@@ -285,7 +298,7 @@ public class TolarApiImpl implements TolarApi {
             LOGGER.info("Nonce get in: " + ChronoUnit.MILLIS.between(now, Instant.now()) + " milis.");
 
             return BalanceConverter.toBigInteger(nonce);
-        }  finally {
+        } finally {
             channelUtils.release(channel);
         }
     }
