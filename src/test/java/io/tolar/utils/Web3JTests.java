@@ -248,9 +248,9 @@ public class Web3JTests {
 
     @Test
     public void createSignedTxFromCreatedAccountTest_deb() throws Exception {
-        File file = new File("/Users/frane/Documents/Tolar/keys/d90f9e3d-9b1c-cd85-99b7-5161379c97b1.json");
+        //File file = new File("/Users/frane/Documents/Tolar/keys/d90f9e3d-9b1c-cd85-99b7-5161379c97b1.json");
 
-        assertTrue(file.exists());
+        //assertTrue(file.exists());
         Credentials credentials = Credentials.create("78e36e1756542e69eed2fe60b5a4a788e20f519bfac38d428275e868f9d84baa");//WalletUtils.loadCredentials("supersifra", file);
         String tolarAddress = createTolarAddress(credentials);
         assertEquals("5493b8597964a2a7f0c93c49f9e4c4a170e0c42a5eb3beda0d", tolarAddress);
@@ -291,6 +291,9 @@ public class Web3JTests {
                         .setBody(transaction)
                         .setSigData(signatureTx)
                         .build();
+
+
+
         assertTrue(true);
     }
 
@@ -338,6 +341,8 @@ public class Web3JTests {
                 .setData(deployData)
                 .setNonce(BalanceConverter.toByteString(BigInteger.valueOf(2)))//check nonce if needed
                 .build();
+
+
     }
 
     private String createTolarAddress(Credentials credentials) {

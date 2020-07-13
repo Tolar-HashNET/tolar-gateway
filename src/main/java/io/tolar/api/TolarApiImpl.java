@@ -182,12 +182,12 @@ public class TolarApiImpl implements TolarApi {
             }
         }
 
-        Channel channel = null;
+        Channel channel = txCache.getChannelForTx(transactionHash.toStringUtf8());
 
         try {
             Instant now = Instant.now();
 
-            channel = channelUtils.getChannel();
+            channel = channelUtils.getChannel(channel);
 
             GetTransactionResponse transaction = BlockchainServiceGrpc
                     .newBlockingStub(channel)
