@@ -58,7 +58,8 @@ pipeline {
                 ' | xargs --no-run-if-empty sudo docker container rm"'
 
                 sh 'ssh admin@172.31.7.104 sudo docker run -d ' +
-                ' -e "SPRING_PROFILES_ACTIVE=staging"  --network=host ' +
+                ' -e "SPRING_PROFILES_ACTIVE=staging" -e JAVA_OPTS="-Xmx:4g -XX:MaxDirectMemorySize=1g"  ' +
+                        '--network=host ' +
                 ' --name tolar-gateway-staging --user 1001:1001 ' +
                 ' dreamfactoryhr/tolar-gateway:staging '
 
