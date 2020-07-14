@@ -98,9 +98,10 @@ public class TolarApiImpl implements TolarApi {
                         .stream()
                         .map(ByteString::toStringUtf8)
                         .collect(Collectors.toList());
-
-                txCache.remove(list, blockByIndex.getChannel());
-                LOGGER.info("Removed {} from cache", list.size());
+                if(list.size() > 0){
+                    txCache.remove(list, blockByIndex.getChannel());
+                    LOGGER.info("Removed {} tx from reverse cache", list.size());
+                }
             }
         } finally {
             channelUtils.release(channel);
@@ -173,6 +174,7 @@ public class TolarApiImpl implements TolarApi {
                         .build();
 
                 txCache.put(blockIndex, foundBlock);
+                LOGGER.info("Tx Pending size: {}", txCache.notFlushedTx());
                 return foundBlock;
 
             } catch (StatusRuntimeException ex) {
@@ -205,7 +207,6 @@ public class TolarApiImpl implements TolarApi {
         while (!txCache.canProceed(transactionHash.toStringUtf8())) {
             try {
                 Thread.sleep(1_000);
-                LOGGER.info("Tx Pending size: {}", txCache.notFlushedTx());
             } catch (InterruptedException e) {
                 LOGGER.error(e.getMessage());
             }
@@ -391,7 +392,6 @@ public class TolarApiImpl implements TolarApi {
         while (!txCache.canProceed(transactionHash.toStringUtf8())) {
             try {
                 Thread.sleep(1_000);
-                LOGGER.info("TX Pending Pool size:", txCache.notFlushedTx());
             } catch (InterruptedException e) {
                 LOGGER.error(e.getMessage());
             }
