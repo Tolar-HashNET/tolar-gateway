@@ -16,8 +16,8 @@ public class NewTxCache {
 
     public NewTxCache() {
         reverseTxCache = CacheBuilder.newBuilder()
-                .maximumSize(10_000)
-                .expireAfterWrite(2, TimeUnit.MINUTES)
+                .maximumSize(100_000)
+                .expireAfterWrite(30, TimeUnit.MINUTES)
                 .build();
 
         txToChannelCache = CacheBuilder.newBuilder()

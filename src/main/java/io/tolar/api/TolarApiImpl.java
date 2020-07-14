@@ -301,7 +301,7 @@ public class TolarApiImpl implements TolarApi {
                     .getNonce(getNonceRequest)
                     .getNonce();
 
-            LOGGER.info("Nonce get in: " + ChronoUnit.MILLIS.between(now, Instant.now()) + " milis.");
+            LOGGER.debug("Nonce get in: " + ChronoUnit.MILLIS.between(now, Instant.now()) + " milis.");
 
             return BalanceConverter.toBigInteger(nonce);
         } finally {
