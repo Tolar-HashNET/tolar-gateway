@@ -31,7 +31,7 @@ public class TransactionApiImpl implements TransactionApi {
         Channel channel = null;
 
         try {
-            channel = channelUtils.getChannel();
+            channel = channelUtils.getChannel(signedTransaction.getBody().getSenderAddress().toStringUtf8());
 
             ByteString transactionHash = TransactionServiceGrpc
                     .newBlockingStub(channel)

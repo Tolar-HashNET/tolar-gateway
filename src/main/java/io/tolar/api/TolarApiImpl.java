@@ -293,7 +293,7 @@ public class TolarApiImpl implements TolarApi {
                     .setAddress(address)
                     .build();
 
-            channel = channelUtils.getChannel();
+            channel = channelUtils.getChannel(address.toStringUtf8());
 
             ByteString nonce = BlockchainServiceGrpc
                     .newBlockingStub(channel)
@@ -319,7 +319,7 @@ public class TolarApiImpl implements TolarApi {
         Channel channel = null;
 
         try {
-            channel = channelUtils.getChannel();
+            channel = channelUtils.getChannel(address.toStringUtf8());
 
             return BlockchainServiceGrpc
                     .newBlockingStub(channel)
@@ -341,7 +341,7 @@ public class TolarApiImpl implements TolarApi {
         Channel channel = null;
 
         try {
-            channel = channelUtils.getChannel();
+            channel = channelUtils.getChannel(address.toStringUtf8());
 
             return BlockchainServiceGrpc
                     .newBlockingStub(channel)
@@ -369,7 +369,7 @@ public class TolarApiImpl implements TolarApi {
         Channel channel = null;
 
         try {
-            channel = channelUtils.getChannel();
+            channel = channelUtils.getChannel(senderAddress.toStringUtf8());
 
             TryCallTransactionResponse tryCallTransactionResponse = BlockchainServiceGrpc
                     .newBlockingStub(channel)

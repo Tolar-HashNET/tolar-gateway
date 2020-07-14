@@ -26,7 +26,7 @@ public class ChannelUtils {
 
     public ChannelUtils(TolarConfig tolarConfig) {
         this.tolarConfig = tolarConfig;
-        this.channelList = new ArrayList<>();
+        ArrayList<Channel> tempList = new ArrayList<>();
         this.random = new Random();
         this.permitTimeout = tolarConfig.getSemaphoreTimeoutAsInt();
 
@@ -36,7 +36,7 @@ public class ChannelUtils {
 
         for (String host : tolarConfig.getHosts()) {
             Channel channel = generateChannel(host);
-            channelList.add(channel);
+            tempList.add(channel);
 
             Semaphore semaphore = new Semaphore(tolarConfig.getSemaphorePermitsAsInt(), true);
 
@@ -46,6 +46,7 @@ public class ChannelUtils {
             index++;
         }
 
+        this.channelList = Collections.unmodifiableList(tempList);
         this.channelSemaphores = Collections.unmodifiableMap(semaphoreTempMap);
         this.roundRobinCounter = new AtomicInteger();
     }
@@ -58,12 +59,24 @@ public class ChannelUtils {
     }
 
     public Channel getChannel(){
-        return getChannel(null);
+        return getChannel(null ,null);
     }
-    public Channel getChannel(Channel channel) {
+
+    public Channel getChannel(String address){
+        return getChannel(address ,null);
+    }
+
+    public Channel getChannel(Channel channel){
+        return getChannel(null,channel);
+    }
+
+    public Channel getChannel(String address, Channel channel) {
         Channel nextChannel = channel;
-        if(nextChannel == null){
+        if(nextChannel == null && address == null){
             nextChannel = channelList.get(roundRobinCounter.getAndIncrement() % channelList.size());
+        } else if(nextChannel == null & address != null){
+            Character dragon = address.charAt(address.length() - 1);
+            nextChannel = channelList.get(dragon % channelList.size());
         }
 
         Semaphore semaphore = channelSemaphores.get(nextChannel).getSemaphore();
