@@ -23,7 +23,8 @@ pipeline {
                 ' | xargs --no-run-if-empty sudo docker container rm"'
 
                 sh 'ssh admin@172.31.7.104 sudo docker run -d ' +
-                ' -e "SPRING_PROFILES_ACTIVE=prod"  --network=host ' +
+                ' -e "SPRING_PROFILES_ACTIVE=prod" -e JAVA_OPTS="-Xmx:4g -XX:MaxDirectMemorySize=512m" --network=host' +
+                        ' ' +
                 ' --name tolar-gateway-main --user 1001:1001 ' +
                 ' dreamfactoryhr/tolar-gateway:latest '
 
