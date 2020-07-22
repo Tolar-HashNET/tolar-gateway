@@ -57,7 +57,7 @@ pipeline {
                 ' | xargs --no-run-if-empty sudo docker container stop ' +
                 ' | xargs --no-run-if-empty sudo docker container rm"'
 
-                sh "ssh admin@172.31.7.104 sudo docker run -d " +
+                sh "ssh admin@172.31.7.104 sudo docker run -m 4g -d " +
                 " -e SPRING_PROFILES_ACTIVE=\\'staging\\' " +
                 " -e JAVA_OPTS=\\'-Xmx4g -XX:MaxDirectMemorySize=2g\\'  " +
                 "--network=host --name tolar-gateway-staging --user 1001:1001 " +
