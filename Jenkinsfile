@@ -119,7 +119,7 @@ pipeline {
                     }
                 }
 
-                sh 'ssh -C admin@172.31.7.104 "sudo docker system prune -f"'
+                sh 'ssh -C admin@172.31.7.104 "sudo docker image prune -f"'
             }
         }
     }
