@@ -57,12 +57,11 @@ pipeline {
                 ' | xargs --no-run-if-empty sudo docker container stop ' +
                 ' | xargs --no-run-if-empty sudo docker container rm"'
 
-                sh 'ssh admin@172.31.7.104 sudo docker run -d ' +
-                " -e SPRING_PROFILES_ACTIVE=\\'staging\\' -e JAVA_OPTS=\\'-Xms2g -Xmx3g " +
-                        "-XX:MaxDirectMemorySize=1g\\'  " +
-                        '--network=host ' +
-                ' --name tolar-gateway-staging --user 1001:1001 ' +
-                ' dreamfactoryhr/tolar-gateway:staging '
+                sh "ssh admin@172.31.7.104 sudo docker run -d " +
+                " -e SPRING_PROFILES_ACTIVE=\\'staging\\' " +
+                " -e JAVA_OPTS=\\'-Xms2g -Xmx3g -XX:MaxDirectMemorySize=1g\\'  " +
+                "--network=host --name tolar-gateway-staging --user 1001:1001 " +
+                " dreamfactoryhr/tolar-gateway:staging "
 
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
