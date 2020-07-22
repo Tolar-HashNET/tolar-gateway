@@ -59,7 +59,7 @@ pipeline {
 
                 sh "ssh admin@172.31.7.104 sudo docker run -d " +
                 " -e SPRING_PROFILES_ACTIVE=\\'staging\\' " +
-                " -e JAVA_OPTS=\\'-Xms2g -Xmx3g -XX:MaxDirectMemorySize=2g\\'  " +
+                " -e JAVA_OPTS=\\'-Xmx4g -XX:MaxDirectMemorySize=2g\\'  " +
                 "--network=host --name tolar-gateway-staging --user 1001:1001 " +
                 " dreamfactoryhr/tolar-gateway:staging "
 
