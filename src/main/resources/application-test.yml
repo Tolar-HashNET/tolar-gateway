@@ -1,0 +1,6 @@
+server:
+  port: 8082
+
+tolar-hashnet:
+  port: 9100
+
