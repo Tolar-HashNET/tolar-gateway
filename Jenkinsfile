@@ -1,3 +1,16 @@
+def buildCommand = 'mvn clean spring-boot:build-image'
+def imageName = 'dreamfactoryhr/tolar-gateway:latest'
+def remoteAddress = 'admin@172.31.7.104'
+def containerName = 'tolar-gateway-main'
+def springProfile = 'prod'
+
+def targetNetwork = 'MAIN'
+def gatewayLink = 'tolar.dream-factory.hr'
+
+def slackChannel = 'deployments'
+def defaultBuildMessage = " \'${env.JOB_NAME}\' [${env.BUILD_NUMBER}]" +
+                         " (<${env.RUN_DISPLAY_URL}|Pipeline>)"
+
 pipeline {
     agent any
     options { disableConcurrentBuilds() }
@@ -9,106 +22,75 @@ pipeline {
     }
 
     stages {
-        stage('Deploy Gateway MainNet') {
-            when { branch 'master' }
-
+        stage('Setup branch variable') {
             steps {
-                sh 'mvn clean spring-boot:build-image'
-
-                sh 'docker save dreamfactoryhr/tolar-gateway:latest ' +
-                ' | ssh -C admin@172.31.7.104 sudo docker load'
-
-                sh 'ssh -C admin@172.31.7.104 "sudo docker ps -f name=tolar-gateway-main -q ' +
-                ' | xargs --no-run-if-empty sudo docker container stop ' +
-                ' | xargs --no-run-if-empty sudo docker container rm"'
-
-                sh 'ssh admin@172.31.7.104 sudo docker run -m 4g -d ' +
-                ' -e "SPRING_PROFILES_ACTIVE=prod" ' +
-                ' -e JAVA_OPTS="-Xmx3g" ' +
-                ' --network=host --name tolar-gateway-main --user 1001:1001 ' +
-                ' dreamfactoryhr/tolar-gateway:latest '
-
                 script {
-                    def buildTime = currentBuild.durationString.replace(' and counting', '')
+                    if (env.BRANCH_NAME == 'develop') {
+                        buildCommand = buildCommand + ' -P test'
 
-                    slackMessage = "Deployed *Tolar Gateway* connected to *MAIN NETWORK* (" +
-                            "<${env.RUN_DISPLAY_URL}|Pipeline>" +
-                            ") \n" +
-                            "JSON-RPC available at: " +
-                            "<https://tolar.dream-factory.hr|tolar.dream-factory.hr>\n" +
-                            "Pipeline time: ${buildTime}"
+                        imageName = imageName.replace('latest', 'test')
 
-                    slackSend(channel: 'deployments', color: 'good', message: slackMessage,
-                            teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
+                        containerName = containerName.replace('main', 'test')
+
+                        springProfile = 'test'
+
+                        targetNetwork = 'TEST'
+
+                        gatewayLink = gatewayLink.replace('tolar', 'tolar-test')
+                    } else if (env.BRANCH_NAME == 'staging') {
+                        buildCommand = buildCommand + ' -P staging'
+
+                        imageName = imageName.replace('latest', 'staging')
+
+                        containerName = containerName.replace('main', 'staging')
+
+                        springProfile = 'staging'
+
+                        targetNetwork = 'STAGING'
+
+                        gatewayLink = gatewayLink.replace('tolar', 'tolar-staging')
+                    } else if (env.BRANCH_NAME != 'master' && env.BRANCH_NAME != 'tolar-node') {
+                        error('Invalid branch! ' + env.BRANCH_NAME)
+                    }
                 }
             }
         }
 
-        stage('Deploy Gateway TestNet') {
-            when { branch 'develop' }
-
-            steps {
-                sh 'mvn clean spring-boot:build-image -P test'
-
-                sh 'docker save dreamfactoryhr/tolar-gateway:test ' +
-                ' | ssh -C admin@172.31.7.104 sudo docker load'
-
-                sh 'ssh -C admin@172.31.7.104 "sudo docker ps -f name=tolar-gateway-test -q ' +
-                ' | xargs --no-run-if-empty sudo docker container stop ' +
-                ' | xargs --no-run-if-empty sudo docker container rm"'
-
-                sh 'ssh admin@172.31.7.104 sudo docker run -m 4g -d ' +
-                ' -e "SPRING_PROFILES_ACTIVE=test" ' +
-                ' -e JAVA_OPTS="-Xmx2g" ' +
-                ' --network=host --name tolar-gateway-test --user 1001:1001 ' +
-                ' dreamfactoryhr/tolar-gateway:test '
-
-                script {
-                    def buildTime = currentBuild.durationString.replace(' and counting', '')
-
-                    slackMessage = "Deployed *Tolar Gateway* connected to *TEST NETWORK* (" +
-                            "<${env.RUN_DISPLAY_URL}|Pipeline>" +
-                            ") \n" +
-                            "JSON-RPC available at: " +
-                            "<https://tolar-test.dream-factory.hr|tolar-test.dream-factory.hr>\n" +
-                            "Pipeline time: ${buildTime}"
-
-                    slackSend(channel: 'deployments', color: 'good', message: slackMessage,
-                            teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
+        stage('Deploy Gateway') {
+            when {
+                anyOf {
+                    branch 'master';
+                    branch 'develop';
+                    branch 'staging';
                 }
             }
-        }
-
-        stage('Deploy Gateway Staging') {
-            when { branch 'staging' }
 
             steps {
-                sh 'mvn clean spring-boot:build-image -P staging'
+                sh buildCommand
 
-                sh 'docker save dreamfactoryhr/tolar-gateway:staging ' +
-                ' | ssh -C admin@172.31.7.104 sudo docker load'
+                sh 'docker save ' + imageName +
+                ' | ssh -C ' + remoteAddress + ' sudo docker load'
 
-                sh 'ssh -C admin@172.31.7.104 "sudo docker ps -f name=tolar-gateway-staging -q ' +
+                sh 'ssh -C ' + remoteAddress + ' "sudo docker ps -f name=' + containerName + ' -q ' +
                 ' | xargs --no-run-if-empty sudo docker container stop ' +
                 ' | xargs --no-run-if-empty sudo docker container rm"'
 
-                sh 'ssh admin@172.31.7.104 sudo docker run -m 4g -d ' +
-                ' -e "SPRING_PROFILES_ACTIVE=staging" ' +
-                ' -e JAVA_OPTS="-Xmx2g" ' +
-                ' --network=host --name tolar-gateway-staging --user 1001:1001 ' +
-                ' dreamfactoryhr/tolar-gateway:staging '
+                sh 'ssh -C ' + remoteAddress + ' sudo docker run -m 3g -d ' +
+                ' -e "SPRING_PROFILES_ACTIVE=' + springProfile + '" ' +
+                ' -e JAVA_OPTS="-Xmx2g" --network=host --name ' + containerName +
+                ' --user 1001:1001 ' + imageName
 
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
 
-                    slackMessage = "Deployed *Tolar Gateway* connected to *STAGING NETWORK* (" +
+                    slackMessage = "Deployed *Tolar Gateway* connected to *" + targetNetwork + " NETWORK* (" +
                             "<${env.RUN_DISPLAY_URL}|Pipeline>" +
                             ") \n" +
                             "JSON-RPC available at: " +
-                            "<https://tolar-staging.dream-factory.hr|tolar-staging.dream-factory.hr>\n" +
+                            "<https://" + gatewayLink + "|" + gatewayLink + ">\n" +
                             "Pipeline time: ${buildTime}"
 
-                    slackSend(channel: 'deployments', color: 'good', message: slackMessage,
+                    slackSend(channel: slackChannel, color: 'good', message: slackMessage,
                             teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
                 }
             }
@@ -123,22 +105,22 @@ pipeline {
                 unzip zipFile: 'thin_node_bin_1.0.0.zip', dir: 'main_node'
 
                 sh 'docker-compose build'
-                sh 'docker save tolar-node:latest | ssh -C admin@172.31.7.104 sudo docker load'
-                sh 'docker save staging-node:latest | ssh -C admin@172.31.7.104 sudo docker load'
-                sh 'docker save main-node:latest | ssh -C admin@172.31.7.104 sudo docker load'
-                sh 'scp docker-compose.yaml admin@172.31.7.104:/home/admin/tolar-gateway/docker-compose.yaml'
-                sh 'ssh -C admin@172.31.7.104 "cd tolar-gateway; sudo docker-compose down"'
-                sh 'ssh -C admin@172.31.7.104 "cd tolar-gateway; sudo docker-compose up -d"'
+                sh 'docker save tolar-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
+                sh 'docker save staging-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
+                sh 'docker save main-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
+                sh 'scp docker-compose.yaml ' + remoteAddress + ':/home/admin/tolar-gateway/docker-compose.yaml'
+                sh 'ssh -C ' + remoteAddress + ' "cd tolar-gateway; sudo docker-compose down"'
+                sh 'ssh -C ' + remoteAddress + ' "cd tolar-gateway; sudo docker-compose up -d"'
 
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
 
-                    slackMessage = "Deployed *Tolar Node* connected to *MainNet*, *StagingNet* and *TestNet* (" +
+                    slackMessage = "Deployed *Tolar Nodes* connected to *MainNet*, *StagingNet* and *TestNet* (" +
                             "<${env.RUN_DISPLAY_URL}|Pipeline>" +
                             ") \n" +
                             "Pipeline time: ${buildTime}"
 
-                    slackSend(channel: 'deployments', color: 'good', message: slackMessage,
+                    slackSend(channel: slackChannel, color: 'good', message: slackMessage,
                             teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
                 }
             }
@@ -153,16 +135,12 @@ pipeline {
                         sh 'docker rmi tolar-node'
                         sh 'docker rmi staging-node'
                         sh 'docker rmi main-node'
-                    } else if (env.BRANCH_NAME == 'develop') {
-                        sh 'docker rmi dreamfactoryhr/tolar-gateway:test'
-                    } else if (env.BRANCH_NAME == 'staging') {
-                        sh 'docker rmi dreamfactoryhr/tolar-gateway:staging'
                     } else {
-                        sh 'docker rmi dreamfactoryhr/tolar-gateway'
+                        sh 'docker rmi ' + imageName
                     }
                 }
 
-                sh 'ssh -C admin@172.31.7.104 "sudo docker image prune -f"'
+                sh 'ssh -C ' + remoteAddress + ' "sudo docker image prune -f"'
             }
         }
     }
@@ -171,9 +149,8 @@ pipeline {
         success {
             script {
                 if (env.BRANCH_NAME == 'noMessageHack') {
-                    slackSend(channel: 'deployments', color: 'good',
-                            message: "Success \'${env.JOB_NAME} [${env.BUILD_NUMBER}]\'" +
-                                    " (<${env.RUN_DISPLAY_URL}|Pipeline>)",
+                    slackSend(channel: slackChannel, color: 'good',
+                            message: "Success" + defaultBuildMessage,
                             teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
                 }
             }
@@ -181,9 +158,8 @@ pipeline {
 
         failure {
             script {
-                slackSend(channel: 'deployments', color: 'danger',
-                        message: "FAILED \'${env.JOB_NAME} [${env.BUILD_NUMBER}]\'" +
-                                " (<${env.RUN_DISPLAY_URL}|Pipeline>)",
+                slackSend(channel: slackChannel, color: 'danger',
+                        message: "FAILED" + defaultBuildMessage,
                         teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
             }
         }
