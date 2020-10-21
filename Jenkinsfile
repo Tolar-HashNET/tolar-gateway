@@ -22,9 +22,10 @@ pipeline {
                 ' | xargs --no-run-if-empty sudo docker container stop ' +
                 ' | xargs --no-run-if-empty sudo docker container rm"'
 
-                sh 'ssh admin@172.31.7.104 sudo docker run -d ' +
-                ' -e "SPRING_PROFILES_ACTIVE=prod" -e JAVA_OPTS="-Xmx:4g -XX:MaxDirectMemorySize=512m" --network=host' +
-                        ' ' +
+                sh 'ssh admin@172.31.7.104 sudo docker run -m 4g -d ' +
+                ' -e "SPRING_PROFILES_ACTIVE=prod" ' +
+                ' -e JAVA_OPTS="-Xmx:4g -XX:MaxDirectMemorySize=512m" ' +
+                ' --network=host ' +
                 ' --name tolar-gateway-main --user 1001:1001 ' +
                 ' dreamfactoryhr/tolar-gateway:latest '
 
@@ -44,8 +45,43 @@ pipeline {
             }
         }
 
-        stage('Deploy Gateway Staging') {
+        stage('Deploy Gateway TestNet') {
             when { branch 'develop' }
+
+            steps {
+                sh 'mvn clean spring-boot:build-image -Pstaging -DprofileIdEnabled=true'
+
+                sh 'docker save dreamfactoryhr/tolar-gateway:staging ' +
+                ' | ssh -C admin@172.31.7.104 sudo docker load'
+
+                sh 'ssh -C admin@172.31.7.104 "sudo docker ps -f name=tolar-gateway-test -q ' +
+                ' | xargs --no-run-if-empty sudo docker container stop ' +
+                ' | xargs --no-run-if-empty sudo docker container rm"'
+
+                sh 'ssh admin@172.31.7.104 sudo docker run -m 4g -d ' +
+                ' -e "SPRING_PROFILES_ACTIVE=test" ' +
+                ' -e JAVA_OPTS="-Xmx2g -Xms512m"  ' +
+                '--network=host --name tolar-gateway-test --user 1001:1001 ' +
+                ' dreamfactoryhr/tolar-gateway:test '
+
+                script {
+                    def buildTime = currentBuild.durationString.replace(' and counting', '')
+
+                    slackMessage = "Deployed *Tolar Gateway* connected to *TEST NETWORK* (" +
+                            "<${env.RUN_DISPLAY_URL}|Pipeline>" +
+                            ") \n" +
+                            "JSON-RPC available at: " +
+                            "<https://tolar-staging.dream-factory.hr|tolar-staging.dream-factory.hr>\n" +
+                            "Pipeline time: ${buildTime}"
+
+                    slackSend(channel: 'deployments', color: 'good', message: slackMessage,
+                            teamDomain: SLACK_TEAM, baseUrl: SLACK_URL, token: SLACK_TOKEN)
+                }
+            }
+        }
+
+        stage('Deploy Gateway Staging') {
+            when { branch 'staging' }
 
             steps {
                 sh 'mvn clean spring-boot:build-image -Pstaging -DprofileIdEnabled=true'
@@ -57,11 +93,11 @@ pipeline {
                 ' | xargs --no-run-if-empty sudo docker container stop ' +
                 ' | xargs --no-run-if-empty sudo docker container rm"'
 
-                sh "ssh admin@172.31.7.104 sudo docker run -m 4g -d " +
-                " -e SPRING_PROFILES_ACTIVE=\\'staging\\' " +
-                " -e JAVA_OPTS=\\'-Xms512m -Xmx2g\\'  " +
-                "--network=host --name tolar-gateway-staging --user 1001:1001 " +
-                " dreamfactoryhr/tolar-gateway:staging "
+                sh 'ssh admin@172.31.7.104 sudo docker run -m 4g -d ' +
+                ' -e "SPRING_PROFILES_ACTIVE=staging" ' +
+                ' -e JAVA_OPTS="-Xmx2g -Xms512m"  ' +
+                '--network=host --name tolar-gateway-staging --user 1001:1001 ' +
+                ' dreamfactoryhr/tolar-gateway:staging '
 
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
@@ -79,7 +115,7 @@ pipeline {
             }
         }
 
-        stage('Deploy Node MainNet') {
+        stage('Deploy Nodes') {
             when { branch 'tolar-node' }
 
             steps {
@@ -119,6 +155,8 @@ pipeline {
                         sh 'docker rmi staging-node'
                         sh 'docker rmi main-node'
                     } else if (env.BRANCH_NAME == 'develop') {
+                        sh 'docker rmi dreamfactoryhr/tolar-gateway:test'
+                    } else if (env.BRANCH_NAME == 'staging') {
                         sh 'docker rmi dreamfactoryhr/tolar-gateway:staging'
                     } else {
                         sh 'docker rmi dreamfactoryhr/tolar-gateway'
