@@ -49,9 +49,9 @@ pipeline {
             when { branch 'develop' }
 
             steps {
-                sh 'mvn clean spring-boot:build-image -Pstaging -DprofileIdEnabled=true'
+                sh 'mvn clean spring-boot:build-image -P test'
 
-                sh 'docker save dreamfactoryhr/tolar-gateway:staging ' +
+                sh 'docker save dreamfactoryhr/tolar-gateway:test ' +
                 ' | ssh -C admin@172.31.7.104 sudo docker load'
 
                 sh 'ssh -C admin@172.31.7.104 "sudo docker ps -f name=tolar-gateway-test -q ' +
@@ -84,7 +84,7 @@ pipeline {
             when { branch 'staging' }
 
             steps {
-                sh 'mvn clean spring-boot:build-image -Pstaging -DprofileIdEnabled=true'
+                sh 'mvn clean spring-boot:build-image -P staging'
 
                 sh 'docker save dreamfactoryhr/tolar-gateway:staging ' +
                 ' | ssh -C admin@172.31.7.104 sudo docker load'
