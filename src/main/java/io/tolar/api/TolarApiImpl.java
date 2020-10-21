@@ -83,8 +83,9 @@ public class TolarApiImpl implements TolarApi {
             return;
         }
 
-        GetBlockchainInfoResponse latestBlocks = getBlockchainInfo();
-        long confirmedBlocksCount = latestBlocks.getConfirmedBlocksCount();
+        //GetBlockchainInfoResponse latestBlocks = getBlockchainInfo();
+        //long confirmedBlocksCount = latestBlocks.getConfirmedBlocksCount();
+        long confirmedBlocksCount = getBlockCount();
         Channel channel = null;
 
 
