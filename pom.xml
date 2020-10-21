@@ -4,6 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>io.tolar</groupId>
+    <artifactId>tolar-gateway</artifactId>
+    <version>1.1</version>
+
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -29,11 +33,14 @@
                 <docker.tag>staging</docker.tag>
             </properties>
         </profile>
-    </profiles>
 
-    <groupId>io.tolar</groupId>
-    <artifactId>tolar-gateway</artifactId>
-    <version>1.0</version>
+        <profile>
+            <id>test</id>
+            <properties>
+                <docker.tag>test</docker.tag>
+            </properties>
+        </profile>
+    </profiles>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
