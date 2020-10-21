@@ -25,8 +25,7 @@ pipeline {
                 sh 'ssh admin@172.31.7.104 sudo docker run -m 4g -d ' +
                 ' -e "SPRING_PROFILES_ACTIVE=prod" ' +
                 ' -e JAVA_OPTS="-Xmx3g" ' +
-                ' --network=host ' +
-                ' --name tolar-gateway-main --user 1001:1001 ' +
+                ' --network=host --name tolar-gateway-main --user 1001:1001 ' +
                 ' dreamfactoryhr/tolar-gateway:latest '
 
                 script {
@@ -60,8 +59,8 @@ pipeline {
 
                 sh 'ssh admin@172.31.7.104 sudo docker run -m 4g -d ' +
                 ' -e "SPRING_PROFILES_ACTIVE=test" ' +
-                ' -e JAVA_OPTS="-Xmx2g"  ' +
-                '--network=host --name tolar-gateway-test --user 1001:1001 ' +
+                ' -e JAVA_OPTS="-Xmx2g" ' +
+                ' --network=host --name tolar-gateway-test --user 1001:1001 ' +
                 ' dreamfactoryhr/tolar-gateway:test '
 
                 script {
@@ -95,8 +94,8 @@ pipeline {
 
                 sh 'ssh admin@172.31.7.104 sudo docker run -m 4g -d ' +
                 ' -e "SPRING_PROFILES_ACTIVE=staging" ' +
-                ' -e JAVA_OPTS="-Xmx2g"  ' +
-                '--network=host --name tolar-gateway-staging --user 1001:1001 ' +
+                ' -e JAVA_OPTS="-Xmx2g" ' +
+                ' --network=host --name tolar-gateway-staging --user 1001:1001 ' +
                 ' dreamfactoryhr/tolar-gateway:staging '
 
                 script {
