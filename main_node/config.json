@@ -1,5 +1,5 @@
 {
-  "client_api_endpoint": "127.0.0.1:9100",
+  "client_api_endpoint": "127.0.0.1:9200",
   "master_node_client_api_endpoints": [
     "94.130.59.140:9200",
     "195.201.29.196:9200",
