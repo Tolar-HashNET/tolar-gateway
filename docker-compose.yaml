@@ -21,6 +21,17 @@ services:
     volumes:
       - staging:/home/thin_node/.tolar/keystore/
 
+  main_node:
+    image: main-node
+    build:
+      context: main_node
+    container_name: main-node
+    network_mode: host
+    restart: on-failure:5
+    volumes:
+      - main:/home/thin_node/.tolar/keystore/
+
 volumes:
   keystore:
   staging:
+  main:

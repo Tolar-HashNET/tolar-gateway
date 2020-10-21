@@ -83,9 +83,14 @@ pipeline {
             when { branch 'tolar-node' }
 
             steps {
+                unzip zipFile: 'thin_node_bin_1.0.0.zip', dir: 'thin_node'
+                unzip zipFile: 'thin_node_bin_1.0.0.zip', dir: 'staging_node'
+                unzip zipFile: 'thin_node_bin_1.0.0.zip', dir: 'main_node'
+
                 sh 'docker-compose build'
                 sh 'docker save tolar-node:latest | ssh -C admin@172.31.7.104 sudo docker load'
                 sh 'docker save staging-node:latest | ssh -C admin@172.31.7.104 sudo docker load'
+                sh 'docker save main-node:latest | ssh -C admin@172.31.7.104 sudo docker load'
                 sh 'scp docker-compose.yaml admin@172.31.7.104:/home/admin/tolar-gateway/docker-compose.yaml'
                 sh 'ssh -C admin@172.31.7.104 "cd tolar-gateway; sudo docker-compose down"'
                 sh 'ssh -C admin@172.31.7.104 "cd tolar-gateway; sudo docker-compose up -d"'
@@ -93,7 +98,7 @@ pipeline {
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
 
-                    slackMessage = "Deployed *Tolar Node* connected to *MainNet* and *StagingNet* (" +
+                    slackMessage = "Deployed *Tolar Node* connected to *MainNet*, *StagingNet* and *TestNet* (" +
                             "<${env.RUN_DISPLAY_URL}|Pipeline>" +
                             ") \n" +
                             "Pipeline time: ${buildTime}"
@@ -111,6 +116,8 @@ pipeline {
                 script {
                     if (env.BRANCH_NAME == 'tolar-node') {
                         sh 'docker rmi tolar-node'
+                        sh 'docker rmi staging-node'
+                        sh 'docker rmi main-node'
                     } else if (env.BRANCH_NAME == 'develop') {
                         sh 'docker rmi dreamfactoryhr/tolar-gateway:staging'
                     } else {

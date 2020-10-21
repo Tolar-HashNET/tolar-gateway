@@ -1,19 +1,21 @@
 {
-    "client_api_endpoint": "0.0.0.0:9300",
-    "master_node_client_api_endpoints": [
-        "116.203.236.134:9200",
-        "116.203.236.148:9200",
-        "116.203.236.150:9200",
-        "116.203.236.138:9200",
-        "116.203.236.151:9200",
-        "116.203.236.152:9200",
-        "116.203.236.139:9200"
-    ],
-    "blockchain_explorer_client_api_endpoints": [
-        "116.203.236.208:9876"
-    ],
-    "key_store": {
-        "keys_file_path": "/home/thin_node/.tolar/keystore/Thin_node/keys.info",
-        "secrets_path": "/home/thin_node/.tolar/keystore/Thin_node/keys"
-    }
+  "client_api_endpoint": "127.0.0.1:9300",
+  "master_node_client_api_endpoints": [
+    "116.203.236.134:9200",
+    "116.203.236.148:9200",
+    "116.203.236.150:9200",
+    "116.203.236.138:9200",
+    "116.203.236.151:9200",
+    "116.203.236.152:9200",
+    "116.203.236.139:9200"
+  ],
+  "blockchain_explorer_client_api_endpoints": [
+    "116.203.236.208:9876"
+  ],
+  "key_store": {
+    "keys_file_path": "/home/thin_node/.tolar/keystore/staging_node/keys.info",
+    "secrets_path": "/home/thin_node/.tolar/keystore/staging_node/keys"
+  },
+  "max_grpc_threads": 100,
+  "minimum_gas_price": "1000000000000"
 }
