@@ -35,7 +35,7 @@ public class TolarConfig {
     }
 
     public int getSemaphorePermitsAsInt() {
-        return getAsInt(semaphorePermits, "TOLAR_SEMAPHORE_PERMITS", 10);
+        return getAsInt(semaphorePermits, "TOLAR_SEMAPHORE_PERMITS", 100);
     }
 
     public int getSemaphoreTimeoutAsInt() {
