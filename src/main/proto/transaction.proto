@@ -10,7 +10,7 @@ message Transaction {
     bytes value = 3;
     bytes gas = 4;
     bytes gas_price = 5;
-    string data = 6;
+    bytes data = 6;
     bytes nonce = 7;
 }
 
@@ -23,7 +23,7 @@ message TxExecutionResult {
     bytes gas_used = 1;
     bytes gas_refunded = 2;
     bytes new_address = 3;
-    string output = 4;
+    bytes output = 4;
     bool excepted = 5;
 }
 

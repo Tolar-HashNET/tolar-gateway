@@ -356,7 +356,7 @@ public class TolarApiImpl implements TolarApi {
     @Override
     public TryCallTransactionResponse tryCallTransaction(ByteString senderAddress, ByteString receiverAddress,
                                                          BigInteger amount, BigInteger gas, BigInteger gasPrice,
-                                                         String data, BigInteger nonce) {
+                                                         ByteString data, BigInteger nonce) {
         TransactionOuterClass.Transaction transaction = TransactionOuterClass.Transaction
                 .newBuilder()
                 .setSenderAddress(senderAddress)

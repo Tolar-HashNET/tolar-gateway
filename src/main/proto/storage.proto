@@ -30,15 +30,21 @@ message Snapshot {
     bytes id = 2;
 }
 
+message LastBlockchainPendingEvent {
+    uint64 round_received = 1;
+    bytes events_proof_hash = 2;
+    uint64 timestamp = 3;
+    repeated tx.SignedTransaction transactions = 4;
+}
+
 message LastBlockChainState {
-    bytes id = 1;
-    uint64 last_block_index = 2;
-    uint64 last_round_received = 3;
-    bytes last_block_hash = 4;
-    repeated uint64 event_timestamps = 5;
-    repeated tx.SignedTransaction pending_block_transactions = 6;
-    repeated bytes last_block_validators = 7;
-    bytes last_events_proof_hash = 8;
+    uint64 last_block_index = 1;
+    uint64 last_round_received = 2;
+    bytes last_block_hash = 3;
+    repeated LastBlockchainPendingEvent pending_block_events = 4;
+    bytes last_events_proof_hash = 5;
+    uint64 next_pending_event_index = 6;
+    repeated LastBlockchainPendingEvent new_events = 7;
 }
 
 message RecoverySnapshot {
@@ -64,11 +70,6 @@ message Block {
     string state_root_hash = 3;
 }
 
-message ValidBlock {
-    bytes hash = 1;
-    uint64 confirmation_timestamp = 2;
-}
-
 message EventRelationsLookupElement {
     bytes chain = 1;
     bytes hash = 2;
@@ -85,4 +86,17 @@ message EventLastAncestors {
 
 message EventFirstDescendants {
     EventRelations relations = 1;
+}
+
+message LatestValidBlock {
+    uint64 index = 1;
+}
+
+message InitialEventsElement {
+    bytes chain = 1;
+    bytes hash = 2;
+}
+
+message InitialEvents {
+    repeated InitialEventsElement elements = 1;
 }

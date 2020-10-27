@@ -4,7 +4,6 @@ import com.google.protobuf.ByteString;
 import io.grpc.Channel;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tolar.proto.Account.*;
 import tolar.proto.AccountServiceGrpc;
@@ -212,7 +211,7 @@ public class AccountApiImpl implements AccountApi {
     @Override
     public ByteString sendRawTransaction(ByteString senderAddress, ByteString receiverAddress, BigInteger amount,
                                          String senderAddressPassword, BigInteger gas, BigInteger gasPrice,
-                                         String data, BigInteger nonce) {
+                                         ByteString data, BigInteger nonce) {
         //todo: check if the data field is optional?
         SendRawTransactionRequest sendRawTransactionRequest = SendRawTransactionRequest
                 .newBuilder()
@@ -320,7 +319,7 @@ public class AccountApiImpl implements AccountApi {
     @Override
     public ByteString sendDeployContractTransaction(ByteString senderAddress, BigInteger amount,
                                                     String senderAddressPassword, BigInteger gas,
-                                                    BigInteger gasPrice, String data, BigInteger nonce) {
+                                                    BigInteger gasPrice, ByteString data, BigInteger nonce) {
         SendDeployContractTransactionRequest sendDeployContractTransactionRequest =
                 SendDeployContractTransactionRequest
                         .newBuilder()
@@ -350,7 +349,7 @@ public class AccountApiImpl implements AccountApi {
     @Override
     public ByteString sendExecuteFunctionTransaction(ByteString senderAddress, ByteString receiverAddress,
                                                      BigInteger amount, String senderAddressPassword,
-                                                     BigInteger gas, BigInteger gasPrice, String data,
+                                                     BigInteger gas, BigInteger gasPrice, ByteString data,
                                                      BigInteger nonce) {
         SendExecuteFunctionTransactionRequest sendExecuteFunctionTransactionRequest =
                 SendExecuteFunctionTransactionRequest

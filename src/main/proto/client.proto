@@ -4,19 +4,6 @@ package tolar.proto;
 
 import "transaction.proto";
 
-// TODO(ibrajer): remove this service when send to address is finished
-service TolarService {
-  rpc SendTransaction(SendTransactionRequest) returns(SendTransactionResponse);
-}
-
-message SendTransactionRequest {
-  tx.SignedTransaction transaction = 1;
-}
-
-message SendTransactionResponse {
-  bool result = 1;
-}
-
 service TransactionService {
   rpc SendSignedTransaction(SendSignedTransactionRequest) returns (SendSignedTransactionResponse);
 }

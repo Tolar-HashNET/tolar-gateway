@@ -5,12 +5,9 @@ package tolar.proto;
 import "core.proto";
 
 service HashNet {
-    rpc Sync (SyncRequest) returns (SyncResponse);
-}
-
-message Peer {
-    string peer_id = 2;
-    string ip_address = 1;
+    rpc Sync (SyncRequest) returns (stream SignedEvent);
+    rpc FirstChainEvent(FirstChainEventRequest) returns (FirstChainEventResponse);
+    rpc LastChainEvent(LastChainEventRequest) returns (LastChainEventResponse);
 }
 
 message EventSnapshot {
@@ -19,18 +16,21 @@ message EventSnapshot {
 }
 
 message SyncRequest {
-    string peer_id = 1;
-
-    repeated EventSnapshot event_snapshot = 2;
-
-    repeated Peer peers = 3;
+    repeated EventSnapshot event_snapshot = 1;
 }
 
-message SyncResponse {
-    string peer_id = 1;
+message FirstChainEventRequest {
+    string node_id = 1;
+}
 
-    repeated SignedEvent events = 2;
-    bool is_paginated_diff = 3;
+message FirstChainEventResponse {
+    SignedEvent event = 1;
+}
 
-    repeated Peer peers = 4;
+message LastChainEventRequest {
+    string node_id = 1;
+}
+
+message LastChainEventResponse {
+    SignedEvent event = 1;
 }

@@ -45,7 +45,7 @@ public interface AccountApi {
                                   @JsonRpcParam(value = "sender_address_password") String senderAddressPassword,
                                   @JsonRpcParam(value = "gas") BigInteger gas,
                                   @JsonRpcParam(value = "gas_price") BigInteger gasPrice,
-                                  @JsonRpcParam(value = "data") String data,
+                                  @JsonRpcParam(value = "data") ByteString data,
                                   @JsonRpcParam(value = "nonce") BigInteger nonce);
 
     @JsonRpcMethod("account_changePassword")
@@ -72,7 +72,7 @@ public interface AccountApi {
                                              @JsonRpcParam(value = "sender_address_password") String senderAddressPassword,
                                              @JsonRpcParam(value = "gas") BigInteger gas,
                                              @JsonRpcParam(value = "gas_price") BigInteger gasPrice,
-                                             @JsonRpcParam(value = "data") String data,
+                                             @JsonRpcParam(value = "data") ByteString data,
                                              @JsonRpcParam(value = "nonce") BigInteger nonce);
 
     @JsonRpcMethod("account_sendExecuteFunctionTransaction")
@@ -82,6 +82,6 @@ public interface AccountApi {
                                               @JsonRpcParam(value = "sender_address_password") String senderAddressPassword,
                                               @JsonRpcParam(value = "gas") BigInteger gas,
                                               @JsonRpcParam(value = "gas_price") BigInteger gasPrice,
-                                              @JsonRpcParam(value = "data") String data,
+                                              @JsonRpcParam(value = "data") ByteString data,
                                               @JsonRpcParam(value = "nonce") BigInteger nonce);
 }

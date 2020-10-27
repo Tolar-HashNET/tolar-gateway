@@ -46,7 +46,7 @@ public interface TolarApi {
                                                   @JsonRpcParam(value = "amount") BigInteger amount,
                                                   @JsonRpcParam(value = "gas") BigInteger gas,
                                                   @JsonRpcParam(value = "gas_price") BigInteger gasPrice,
-                                                  @JsonRpcParam(value = "data") String data,
+                                                  @JsonRpcParam(value = "data") ByteString data,
                                                   @JsonRpcParam(value = "nonce") BigInteger nonce);
 
     @JsonRpcMethod("tol_getTransactionReceipt")

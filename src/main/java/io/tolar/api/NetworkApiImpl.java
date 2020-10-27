@@ -2,7 +2,6 @@ package io.tolar.api;
 
 import io.grpc.Channel;
 import io.tolar.utils.ChannelUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tolar.proto.Network;
 import tolar.proto.NetworkServiceGrpc;

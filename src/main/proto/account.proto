@@ -13,6 +13,7 @@ service AccountService {
     rpc ChangeAddressPassword(ChangeAddressPasswordRequest) returns (ChangeAddressPasswordResponse);
     rpc ExportKeyFile(ExportKeyFileRequest) returns (ExportKeyFileResponse);
     rpc ImportKeyFile(ImportKeyFileRequest) returns (ImportKeyFileResponse);
+    rpc ImportRawPrivateKey(ImportRawPrivateKeyRequest) returns (ImportRawPrivateKeyResponse);
     rpc SendRawTransaction(SendRawTransactionRequest) returns (SendTransactionsResponse);
     rpc SendFundTransferTransaction(SendFundTransferTransactionRequest) returns (SendTransactionsResponse);
     rpc SendDeployContractTransaction(SendDeployContractTransactionRequest) returns (SendTransactionsResponse);
@@ -107,7 +108,18 @@ message ImportKeyFileRequest {
     string lock_hint = 4;
 }
 
+message ImportRawPrivateKeyRequest {
+    string raw_private_key = 1;
+    string name = 2;
+    string lock_password = 3;
+    string lock_hint = 4;
+}
+
 message ImportKeyFileResponse {
+    bool result = 1;
+}
+
+message ImportRawPrivateKeyResponse {
     bool result = 1;
 }
 
@@ -119,7 +131,7 @@ message SendRawTransactionRequest {
     string sender_address_password = 4;
     bytes gas = 5;
     bytes gas_price = 6;
-    string data = 7;
+    bytes data = 7;
     bytes nonce = 8;
 }
 
@@ -140,7 +152,7 @@ message SendDeployContractTransactionRequest {
     string sender_address_password = 3;
     bytes gas = 4;
     bytes gas_price = 5;
-    string data = 6;
+    bytes data = 6;
     bytes nonce = 7;
 
 }
@@ -152,9 +164,8 @@ message SendExecuteFunctionTransactionRequest {
     string sender_address_password = 4;
     bytes gas = 5;
     bytes gas_price = 6;
-    string data = 7;
+    bytes data = 7;
     bytes nonce = 8;
-
 }
 
 message SendTransactionsResponse {

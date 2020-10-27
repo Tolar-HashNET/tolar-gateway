@@ -7,9 +7,10 @@ import "transaction.proto";
 
 service BlockchainService {
     rpc GetBlockCount(GetBlockCountRequest) returns (GetBlockCountResponse);
+    rpc GetLatestBlock(GetLatestBlockRequest) returns (GetBlockResponse);
     rpc GetBlockByHash(GetBlockByHashRequest) returns (GetBlockResponse);
     rpc GetBlockByIndex(GetBlockByIndexRequest) returns (GetBlockResponse);
-    rpc GetPaginatedBlocksByIndex(GetPaginatedBlocksByIndexRequest) returns (GetPaginatedBlocksResponse);
+    rpc GetPaginatedBlocksByIndexStream(GetPaginatedBlocksByIndexRequest) returns (stream storage.Block);
     rpc GetCompleteBlockByIndex (GetBlockByIndexRequest) returns (GetCompleteBlockByIndexResponse);
     rpc GetTransaction(GetTransactionRequest) returns (GetTransactionResponse);
     rpc GetTransactionReceipt(GetTransactionReceiptRequest) returns (GetTransactionReceiptResponse);
@@ -27,6 +28,9 @@ message GetBlockCountRequest {
 
 message GetBlockCountResponse {
     uint64 block_count = 1;
+}
+
+message GetLatestBlockRequest {
 }
 
 message GetBlockByHashRequest {
@@ -50,13 +54,8 @@ message GetPaginatedBlocksByIndexRequest {
     uint64 number_of_blocks = 2;
 }
 
-message GetPaginatedBlocksResponse {
-    repeated storage.Block blocks = 1;
-}
-
 message GetCompleteBlockByIndexResponse {
-    storage.ValidBlock valid_block = 1;
-    storage.Block block = 2;
+    storage.Block block = 1;
 }
 
 message GetTransactionRequest {
@@ -64,21 +63,22 @@ message GetTransactionRequest {
 }
 
 message GetTransactionResponse {
-    bytes block_hash = 1;
-    uint64 transaction_index = 2;
-    bytes sender_address = 3;
-    bytes receiver_address = 4;
-    bytes value = 5;
-    bytes gas = 6;
-    bytes gas_price = 7;
-    string data = 8;
-    bytes nonce = 9;
-    uint64 confirmation_timestamp = 10;
-    bytes gas_used = 11;
-    bytes gas_refunded = 12;
-    bytes new_address = 13;
-    string output = 14;
-    bool excepted = 15;
+    bytes transaction_hash = 1;
+    bytes block_hash = 2;
+    uint64 transaction_index = 3;
+    bytes sender_address = 4;
+    bytes receiver_address = 5;
+    bytes value = 6;
+    bytes gas = 7;
+    bytes gas_price = 8;
+    bytes data = 9;
+    bytes nonce = 10;
+    uint64 confirmation_timestamp = 11;
+    bytes gas_used = 12;
+    bytes gas_refunded = 13;
+    bytes new_address = 14;
+    bytes output = 15;
+    bool excepted = 16;
 }
 
 message GetBlockchainInfoRequest {
@@ -87,7 +87,7 @@ message GetBlockchainInfoRequest {
 message GetBlockchainInfoResponse {
     uint64 confirmed_blocks_count = 1;
     uint64 total_blocks_count = 2;
-    bytes last_confimed_block_hash = 3;
+    bytes last_confirmed_block_hash = 3;
 }
 
 message GetTransactionReceiptRequest {
@@ -136,7 +136,7 @@ message GetNonceResponse {
 }
 
 message TryCallTransactionResponse {
-    string output = 1;
+    bytes output = 1;
     bool excepted = 2;
 }
 
