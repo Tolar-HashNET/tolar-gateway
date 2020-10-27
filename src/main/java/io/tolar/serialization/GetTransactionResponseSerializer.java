@@ -9,14 +9,17 @@ import tolar.proto.Blockchain;
 import java.io.IOException;
 
 public class GetTransactionResponseSerializer extends JsonSerializer<Blockchain.GetTransactionResponse> {
+
     @Override
-    public void serialize(Blockchain.GetTransactionResponse transactionResponse, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+    public void serialize(Blockchain.GetTransactionResponse transactionResponse, JsonGenerator jsonGenerator,
+                          SerializerProvider serializerProvider) throws IOException {
         // return empty result if no transaction is found
-        if(transactionResponse == null){
+        if (transactionResponse == null) {
             return;
         }
 
         jsonGenerator.writeStartObject();
+        jsonGenerator.writeObjectField("transaction_hash", transactionResponse.getTransactionHash());
         jsonGenerator.writeObjectField("block_hash", transactionResponse.getBlockHash());
         jsonGenerator.writeObjectField("transaction_index", transactionResponse.getTransactionIndex());
         jsonGenerator.writeObjectField("sender_address", transactionResponse.getSenderAddress());
@@ -40,4 +43,5 @@ public class GetTransactionResponseSerializer extends JsonSerializer<Blockchain.
         jsonGenerator.writeObjectField("confirmation_timestamp", transactionResponse.getConfirmationTimestamp());
         jsonGenerator.writeEndObject();
     }
+
 }

@@ -13,6 +13,7 @@ public class GetTransactionReceiptResponseSerializer extends JsonSerializer<Bloc
     public void serialize(Blockchain.GetTransactionReceiptResponse getTransactionReceiptResponse,
                           JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
+        jsonGenerator.writeObjectField("transaction_hash", getTransactionReceiptResponse.getTransactionHash());
         jsonGenerator.writeObjectField("block_hash", getTransactionReceiptResponse.getBlockHash());
         jsonGenerator.writeObjectField("transaction_index", getTransactionReceiptResponse.getTransactionIndex());
         jsonGenerator.writeObjectField("sender_address", getTransactionReceiptResponse.getSenderAddress());

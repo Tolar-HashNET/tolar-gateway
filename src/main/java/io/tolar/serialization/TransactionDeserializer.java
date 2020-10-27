@@ -42,4 +42,5 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
         module.addDeserializer(ByteString.class, new ByteStringDeserializer());
         return module;
     }
+
 }

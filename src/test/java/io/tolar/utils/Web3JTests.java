@@ -88,7 +88,7 @@ public class Web3JTests {
                 .setValue(BalanceConverter.toByteString(BigInteger.ZERO))
                 .setGas(BalanceConverter.toByteString(BigInteger.valueOf(21463)))
                 .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
-                .setData("b3de648b0000000000000000000000000000000000000000000000000000000000000001")
+                .setData(ByteString.copyFromUtf8("b3de648b0000000000000000000000000000000000000000000000000000000000000001"))
                 .setNonce(BalanceConverter.toByteString(BigInteger.ZERO))
                 .build();
         ByteString correctByteString = transaction.toByteString();
@@ -129,7 +129,7 @@ public class Web3JTests {
                 .setValue(BalanceConverter.toByteString(BigInteger.ZERO))
                 .setGas(BalanceConverter.toByteString(BigInteger.valueOf(21463)))
                 .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
-                .setData("")
+                .setData(ByteString.copyFromUtf8(""))
                 .setNonce(BalanceConverter.toByteString(BigInteger.ZERO))
                 .build();
 
@@ -182,7 +182,7 @@ public class Web3JTests {
                 .setValue(BalanceConverter.toByteString(BigInteger.ZERO))
                 .setGas(BalanceConverter.toByteString(BigInteger.valueOf(21463)))
                 .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
-                .setData("kitula")
+                .setData(ByteString.copyFromUtf8("kitula"))
                 .setNonce(BalanceConverter.toByteString(BigInteger.ZERO))//check nonce if needed
                 .build();
 
@@ -220,7 +220,7 @@ public class Web3JTests {
                 .setValue(BalanceConverter.toByteString(BigInteger.ZERO))
                 .setGas(BalanceConverter.toByteString(BigInteger.valueOf(21463)))
                 .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
-                .setData("")
+                .setData(ByteString.copyFromUtf8(""))
                 .setNonce(BalanceConverter.toByteString(BigInteger.ZERO))//check nonce if needed
                 .build();
 
@@ -268,7 +268,7 @@ public class Web3JTests {
                 .setValue(BalanceConverter.toByteString(pare))
                 .setGas(BalanceConverter.toByteString(BigInteger.valueOf(24000)))
                 .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
-                .setData("")
+                .setData(ByteString.copyFromUtf8(""))
                 .setNonce(bytes)//check nonce if needed
                 .build();
 
@@ -338,7 +338,7 @@ public class Web3JTests {
                 .setValue(BalanceConverter.toByteString(BigInteger.ZERO))
                 .setGas(BalanceConverter.toByteString(BigInteger.valueOf(gasLimit)))
                 .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
-                .setData(deployData)
+                .setData(ByteString.copyFromUtf8(deployData))
                 .setNonce(BalanceConverter.toByteString(BigInteger.valueOf(2)))//check nonce if needed
                 .build();
 

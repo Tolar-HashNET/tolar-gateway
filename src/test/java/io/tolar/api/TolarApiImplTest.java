@@ -56,7 +56,7 @@ public class TolarApiImplTest {
                 .setValue(BalanceConverter.toByteString(BigInteger.ZERO))
                 .setGas(BalanceConverter.toByteString(BigInteger.valueOf(240000)))
                 .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
-                .setData("test")
+                .setData(ByteString.copyFromUtf8("test"))
                 .setNonce(BalanceConverter.toByteString(BigInteger.valueOf(129)))
                 .build();
 
