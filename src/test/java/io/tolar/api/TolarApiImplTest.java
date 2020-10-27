@@ -5,7 +5,6 @@ import io.tolar.caching.NewTxCache;
 import io.tolar.config.TolarConfig;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
-import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -19,10 +18,9 @@ import tolar.proto.tx.TransactionOuterClass;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Collections;
 
 @Ignore("manual testies")
-public class TolarApiImplTest extends TestCase {
+public class TolarApiImplTest {
 
     @Test
     public void testGetTransaction() {
@@ -87,7 +85,7 @@ public class TolarApiImplTest extends TestCase {
 
         Blockchain.GetTransactionReceiptResponse transactionReceipt = tolarApi.getTransactionReceipt(bytes);
 
-        assertNotNull(transactionReceipt);
+        Assert.assertNotNull(transactionReceipt);
     }
 
     private String createTolarAddress(Credentials credentials) {
@@ -142,4 +140,5 @@ public class TolarApiImplTest extends TestCase {
     private String createSignerId(Credentials credentials) {
         return credentials.getEcKeyPair().getPublicKey().toString(16);
     }
+
 }
