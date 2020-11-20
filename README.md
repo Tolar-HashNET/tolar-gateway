@@ -3,6 +3,8 @@
 A Spring Boot server acting as a proxy for connecting with Tolar HashNET
 Transforms JSON-RPC calls (incoming) to gRPC calls (HashNET) and return JSON-RPC responses from gRPC responses
 
+More details documentation on Tolar HashNET found here: https://tolar-clients.kwiki.io/docs/tolar-hashnet
+
 # Usage
 
 To build a image, use:
