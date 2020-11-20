@@ -38,7 +38,7 @@ You can set only 1 host:
 or use multiple hosts, separated with commas:
 ` -e "TOLAR_HASHNET_HOSTS=127.0.0.1,127.0.0.5" `
 
-To change the port, the environment variable **TOLAR_HASHNET_HOSTS**:
+To change the port, the environment variable **TOLAR_HASHNET_PORT**:
 ` -e "TOLAR_HASHNET_PORT=9300" `
 
 ## Service Networking
@@ -68,3 +68,12 @@ These are all arbitrary values, just to show how a customized configuration look
 ```
 docker run -d -e "TOLAR_HASHNET_PORT=9300" -e "TOLAR_HASHNET_HOSTS=127.0.0.1,127.0.0.5" -e "TOLAR_SEMAPHORE_PERMITS=100" -e "TOLAR_SEMAPHORE_TIMEOUT=100" -e "--server.port=8083" --network=host --name tolar-gateway dreamfactoryhr/tolar-gateway:latest
 ```
+
+# Changelog
+
+## v1.1
+
+Updated proto files with changes to:
+1. *Transaction objects* - data is not byte instead of string
+2. *Blockchain Info* - change to field name, "last_confimed_block_hash" to "last_confirmed_block_hash"
+3. *getTransaction and getTransactionReceipt* - added transactionHash from response
