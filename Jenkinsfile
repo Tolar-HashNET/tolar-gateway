@@ -75,9 +75,9 @@ pipeline {
                 ' | xargs --no-run-if-empty sudo docker container stop ' +
                 ' | xargs --no-run-if-empty sudo docker container rm"'
 
-                sh 'ssh -C ' + remoteAddress + ' sudo docker run -m 3g -d ' +
+                sh 'ssh -C ' + remoteAddress + ' sudo docker run -m 2g -d ' +
                 ' -e "SPRING_PROFILES_ACTIVE=' + springProfile + '" ' +
-                ' -e JAVA_OPTS="-Xmx2g" --network=host --name ' + containerName +
+                ' -e JAVA_OPTS="-Xmx1500m" --network=host --name ' + containerName +
                 ' --user 1001:1001 ' + imageName
 
                 script {
