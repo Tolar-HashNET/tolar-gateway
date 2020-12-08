@@ -53,6 +53,9 @@ You can choose the networking mode of the docker image (service):
 `-p 8083:8080` -> exposes the docker port 8080 (default for the service) and maps it to 8083 of the host 
 `-e "--server.port=8083"` -> changes the default server port to another one (8083 in this case), useful when using host networking
 
+!!! important note regarding Docker Desktop (for Windows and Mac)
+due to limitations (you can read about it [here](https://docs.docker.com/docker-for-windows/networking/#i-cannot-ping-my-containers)) you may need to put your host `host.docker.internal` or `gateway.docker.internal`, depending on what configuration of the gateway/node you are using!!!
+
 ## Semaphore tuning
 
 The proxy service (tolar gateway) uses semaphores to control the number of requests made on a HashNET node
