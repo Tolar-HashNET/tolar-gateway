@@ -134,27 +134,7 @@ public class TolarApiImpl implements TolarApi {
 
     @Override
     public GetBlockResponse getBlockByIndex(Long blockIndex) {
-        Channel channel = null;
-
-        try {
-            channel = channelUtils.getChannel();
-
-            LOGGER.info("finding block: {}", blockIndex);
-
-            GetBlockByIndexRequest getBlockByIndexRequest = GetBlockByIndexRequest
-                    .newBuilder()
-                    .setBlockIndex(blockIndex)
-                    .build();
-
-            return BlockchainServiceGrpc
-                    .newBlockingStub(channel)
-                    .getBlockByIndex(getBlockByIndexRequest);
-        } finally {
-            channelUtils.release(channel);
-        }
-
-
-        //return retryBlock(blockIndex, 0).getResponse();
+        return retryBlock(blockIndex, 0).getResponse();
     }
 
     public BlockWithChannel getBlockByIndexWithChannel(Long blockIndex) {
