@@ -153,9 +153,9 @@ public class TolarApiImpl implements TolarApi {
             }
 
             LOGGER.info("finding block: {}, tries: {}", blockIndex, tries);
+            Instant now = Instant.now();
 
             try {
-                Instant now = Instant.now();
                 GetBlockByIndexRequest getBlockByIndexRequest = GetBlockByIndexRequest
                         .newBuilder()
                         .setBlockIndex(blockIndex)
@@ -179,7 +179,8 @@ public class TolarApiImpl implements TolarApi {
                 return foundBlock;
 
             } catch (StatusRuntimeException ex) {
-                LOGGER.warn("Could not get block: {}, tries: {}", blockIndex, tries);
+                LOGGER.warn("Could not get block: {}, tries: {}, time millis: {}",
+                        blockIndex, tries, ChronoUnit.MILLIS.between(now, Instant.now()) + "");
 
                 if (Status.NOT_FOUND.getCode().value() == ex.getStatus().getCode().value()
                         && tries <= 10) {
