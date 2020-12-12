@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -54,6 +55,7 @@ public class ChannelUtils {
     public Channel generateChannel(String host) {
         return ManagedChannelBuilder
                 .forAddress(host, tolarConfig.getPortAsInt())
+                .keepAliveTimeout(1, TimeUnit.MINUTES)
                 .usePlaintext()
                 .build();
     }

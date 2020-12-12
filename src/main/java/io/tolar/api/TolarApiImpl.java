@@ -179,7 +179,7 @@ public class TolarApiImpl implements TolarApi {
                 return foundBlock;
 
             } catch (StatusRuntimeException ex) {
-                LOGGER.warn("Could not get block: {}, tries: {}, time millis: {}",
+                LOGGER.warn("Could not get block: {}, tries: {}, millis: {}",
                         blockIndex, tries, ChronoUnit.MILLIS.between(now, Instant.now()) + "");
 
                 if (Status.NOT_FOUND.getCode().value() == ex.getStatus().getCode().value()
