@@ -255,9 +255,9 @@ public class Web3JTests {
         String tolarAddress = createTolarAddress(credentials);
         assertEquals("5493b8597964a2a7f0c93c49f9e4c4a170e0c42a5eb3beda0d", tolarAddress);
 
-        ByteString bytes = ByteString.copyFrom(BigInteger.valueOf(1).toByteArray());
+        ByteString bytes = ByteString.copyFrom(BigInteger.valueOf(12).toByteArray());
         ByteString otherBytes = BalanceConverter.toByteString(BigInteger.valueOf(124));
-        BigInteger pare = new BigInteger("999999999999983932946");
+        BigInteger pare = new BigInteger("100");
 
         TransactionOuterClass.Transaction transaction = TransactionOuterClass.Transaction
                 .newBuilder()
