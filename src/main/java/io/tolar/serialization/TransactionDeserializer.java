@@ -31,7 +31,8 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
                 .setValue(BalanceConverter.toByteString(objectMapper.convertValue(node.get("amount"), BigInteger.class)))
                 .setGas(BalanceConverter.toByteString(objectMapper.convertValue(node.get("gas"), BigInteger.class)))
                 .setGasPrice(BalanceConverter.toByteString(objectMapper.convertValue(node.get("gas_price"), BigInteger.class)))
-                .setData(objectMapper.readValue(node.get("data").traverse(), ByteString.class))
+                //.setData(objectMapper.readValue(node.get("data").traverse(), ByteString.class))
+                .setData(ByteString.copyFromUtf8(objectMapper.readValue(node.get("data").traverse(), String.class)))
                 .setNonce(BalanceConverter.toByteString(objectMapper.convertValue(node.get("nonce"), BigInteger.class)))
                 .build();
     }
