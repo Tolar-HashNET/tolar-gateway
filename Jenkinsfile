@@ -100,9 +100,9 @@ pipeline {
             when { branch 'tolar-node' }
 
             steps {
-                unzip zipFile: 'thin_node_bin_1.0.0.zip', dir: 'thin_node'
-                unzip zipFile: 'thin_node_bin_1.0.0.zip', dir: 'staging_node'
-                unzip zipFile: 'thin_node_bin_1.0.0.zip', dir: 'main_node'
+                unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'thin_node'
+                unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'staging_node'
+                unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'main_node'
 
                 sh 'docker-compose build'
                 sh 'docker save tolar-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'

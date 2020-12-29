@@ -343,7 +343,7 @@ public class Web3JTests {
 
     @Test
     public void stagingContractSolidity4() {
-        String data = "0x608060405234801561001057600080fd5b506040805190810160405280600c81526020017f48656c6c6" +
+        String data = "608060405234801561001057600080fd5b506040805190810160405280600c81526020017f48656c6c6" +
                 "f20776f726c642100000000000000000000000000000000000000008152506000908051906020019061005c9291" +
                 "90610062565b50610107565b828054600181600116156101000203166002900490600052602060002090601f016" +
                 "020900481019282601f106100a357805160ff19168380011785556100d1565b828001600101855582156100d157" +
@@ -398,6 +398,8 @@ public class Web3JTests {
         String zeroAddress = "54000000000000000000000000000000000000000023199e2b";
         int gasLimit = 4700000;
 
+        assertEquals("5493b8597964a2a7f0c93c49f9e4c4a170e0c42a5eb3beda0d", tolarAddress);
+
         TransactionOuterClass.Transaction transaction = TransactionOuterClass.Transaction
                 .newBuilder()
                 .setSenderAddress(ByteString.copyFromUtf8(tolarAddress))
@@ -406,7 +408,7 @@ public class Web3JTests {
                 .setGas(BalanceConverter.toByteString(BigInteger.valueOf(gasLimit)))
                 .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
                 .setData(ByteString.copyFromUtf8(data))
-                .setNonce(BalanceConverter.toByteString(BigInteger.valueOf(27)))//check nonce if needed
+                .setNonce(BalanceConverter.toByteString(BigInteger.valueOf(28)))//check nonce if needed
                 .build();
 
         String txHash = createTxHash(transaction);
