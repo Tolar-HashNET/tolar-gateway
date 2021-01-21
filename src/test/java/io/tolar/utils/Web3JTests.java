@@ -370,7 +370,7 @@ public class Web3JTests {
         Credentials credentials = Credentials.create("78e36e1756542e69eed2fe60b5a4a788e20f519bfac38d428275e868f9d84baa");
         String tolarAddress = createTolarAddress(credentials);
         String zeroAddress = "54000000000000000000000000000000000000000023199e2b";
-        int gasLimit = 4700000;
+        int gasLimit = 4_700_000;
 
         TransactionOuterClass.Transaction transaction = TransactionOuterClass.Transaction
                 .newBuilder()
@@ -396,7 +396,7 @@ public class Web3JTests {
         Credentials credentials = Credentials.create("78e36e1756542e69eed2fe60b5a4a788e20f519bfac38d428275e868f9d84baa");
         String tolarAddress = createTolarAddress(credentials);
         String zeroAddress = "54000000000000000000000000000000000000000023199e2b";
-        int gasLimit = 4700000;
+        int gasLimit = 400_000;
 
         assertEquals("5493b8597964a2a7f0c93c49f9e4c4a170e0c42a5eb3beda0d", tolarAddress);
 
@@ -408,7 +408,35 @@ public class Web3JTests {
                 .setGas(BalanceConverter.toByteString(BigInteger.valueOf(gasLimit)))
                 .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
                 .setData(ByteString.copyFromUtf8(data))
-                .setNonce(BalanceConverter.toByteString(BigInteger.valueOf(28)))//check nonce if needed
+                .setNonce(BalanceConverter.toByteString(BigInteger.valueOf(0)))//check nonce if needed
+                .build();
+
+        String txHash = createTxHash(transaction);
+        String signature = createSignature(transaction, credentials);
+        String signerId = createSignerId(credentials);
+        assertTrue(true);
+    }
+
+    @Test
+    public void stagingContractSolidity6Tolar() {
+        String data = "608060405234801561001057600080fd5b50600436106100365760003560e01c80639698086b1461003b578063cfae3217146100f6575b600080fd5b6100f46004803603602081101561005157600080fd5b810190808035906020019064010000000081111561006e57600080fd5b82018360208201111561008057600080fd5b803590602001918460018302840111640100000000831117156100a257600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290505050610179565b005b6100fe610193565b6040518080602001828103825283818151815260200191508051906020019080838360005b8381101561013e578082015181840152602081019050610123565b50505050905090810190601f16801561016b5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b806000908051906020019061018f929190610235565b5050565b606060008054600181600116156101000203166002900480601f01602080910402602001604051908101604052809291908181526020018280546001816001161561010002031660029004801561022b5780601f106102005761010080835404028352916020019161022b565b820191906000526020600020905b81548152906001019060200180831161020e57829003601f168201915b5050505050905090565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061027657805160ff19168380011785556102a4565b828001600101855582156102a4579182015b828111156102a3578251825591602001919060010190610288565b5b5090506102b191906102b5565b5090565b5b808211156102ce5760008160009055506001016102b6565b509056fea26469706673582212201dd0b541c76e4234b37a99932323ccdaf91cd84ce6418e6486159c15d373b61d64736f6c634300060c0033";
+
+        Credentials credentials = Credentials.create("78e36e1756542e69eed2fe60b5a4a788e20f519bfac38d428275e868f9d84baa");
+        String tolarAddress = createTolarAddress(credentials);
+        String zeroAddress = "54000000000000000000000000000000000000000023199e2b";
+        int gasLimit = 400_000;
+
+        assertEquals("5493b8597964a2a7f0c93c49f9e4c4a170e0c42a5eb3beda0d", tolarAddress);
+
+        TransactionOuterClass.Transaction transaction = TransactionOuterClass.Transaction
+                .newBuilder()
+                .setSenderAddress(ByteString.copyFromUtf8(tolarAddress))
+                .setReceiverAddress(ByteString.copyFromUtf8(zeroAddress))
+                .setValue(BalanceConverter.toByteString(BigInteger.ZERO))
+                .setGas(BalanceConverter.toByteString(BigInteger.valueOf(gasLimit)))
+                .setGasPrice(BalanceConverter.toByteString(BigInteger.ONE))
+                .setData(ByteString.copyFromUtf8(data))
+                .setNonce(BalanceConverter.toByteString(BigInteger.valueOf(0)))//check nonce if needed
                 .build();
 
         String txHash = createTxHash(transaction);
