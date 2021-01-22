@@ -38,7 +38,7 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
             byte[] decodedHex = Hex.decode(noPrefixData);
             data = ByteString.copyFrom(decodedHex);
         } catch (DecoderException ex) {
-            log.warn("Cannot convert to hex! fallback to regular string", ex);
+            log.warn("Cannot convert to hex! fallback to regular string... message: {}", ex.getMessage());
             data = ByteString.copyFromUtf8(inputData);
         }
 
