@@ -5,6 +5,8 @@ Transforms JSON-RPC calls (incoming) to gRPC calls (HashNET) and return JSON-RPC
 
 More details documentation on Tolar HashNET found here: https://tolar-clients.kwiki.io/docs/tolar-hashnet
 
+Docker image is hosted here: https://hub.docker.com/repository/docker/dreamfactoryhr/tolar-gateway
+
 # Usage
 
 To build a image, use:
@@ -72,6 +74,10 @@ docker run -d -e "TOLAR_HASHNET_PORT=9300" -e "TOLAR_HASHNET_HOSTS=127.0.0.1,127
 ```
 
 # Changelog
+
+## v1.2
+
+Updated conversions to/from hex for `data` field in the Transaction objects - needed for Contract interaction
 
 ## v1.1
 
