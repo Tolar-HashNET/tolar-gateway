@@ -9,10 +9,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.protobuf.ByteString;
 import io.tolar.utils.BalanceConverter;
+import org.bouncycastle.util.encoders.Hex;
 import tolar.proto.tx.TransactionOuterClass;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 
 public class TransactionDeserializer extends JsonDeserializer<TransactionOuterClass.Transaction> {
 
@@ -24,6 +26,9 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(createDeserializationModule());
 
+        String data = objectMapper.readValue(node.get("data").traverse(), String.class);
+        byte[] decodedHex = Hex.decode(data);
+
         return TransactionOuterClass.Transaction
                 .newBuilder()
                 .setSenderAddress(objectMapper.convertValue(node.get("sender_address"), ByteString.class))
@@ -31,8 +36,7 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
                 .setValue(BalanceConverter.toByteString(objectMapper.convertValue(node.get("amount"), BigInteger.class)))
                 .setGas(BalanceConverter.toByteString(objectMapper.convertValue(node.get("gas"), BigInteger.class)))
                 .setGasPrice(BalanceConverter.toByteString(objectMapper.convertValue(node.get("gas_price"), BigInteger.class)))
-                //.setData(objectMapper.readValue(node.get("data").traverse(), ByteString.class))
-                .setData(ByteString.copyFromUtf8(objectMapper.readValue(node.get("data").traverse(), String.class)))
+                .setData(ByteString.copyFrom(decodedHex))
                 .setNonce(BalanceConverter.toByteString(objectMapper.convertValue(node.get("nonce"), BigInteger.class)))
                 .build();
     }

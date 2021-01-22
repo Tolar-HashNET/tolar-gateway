@@ -3,7 +3,9 @@ package io.tolar.serialization;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.google.protobuf.ByteString;
 import io.tolar.utils.BalanceConverter;
+import org.bouncycastle.util.encoders.Hex;
 import tolar.proto.Blockchain;
 
 import java.io.IOException;
@@ -18,6 +20,9 @@ public class GetTransactionResponseSerializer extends JsonSerializer<Blockchain.
             return;
         }
 
+        String data = Hex.toHexString(transactionResponse.getData().toByteArray());
+        String output = Hex.toHexString(transactionResponse.getOutput().toByteArray());
+
         jsonGenerator.writeStartObject();
         jsonGenerator.writeObjectField("transaction_hash", transactionResponse.getTransactionHash());
         jsonGenerator.writeObjectField("block_hash", transactionResponse.getBlockHash());
@@ -30,7 +35,7 @@ public class GetTransactionResponseSerializer extends JsonSerializer<Blockchain.
                 BalanceConverter.toBigInteger(transactionResponse.getGas()));
         jsonGenerator.writeObjectField("gas_price",
                 BalanceConverter.toBigInteger(transactionResponse.getGasPrice()));
-        jsonGenerator.writeObjectField("data", transactionResponse.getData());
+        jsonGenerator.writeObjectField("data", data);
         jsonGenerator.writeObjectField("nonce",
                 BalanceConverter.toBigInteger(transactionResponse.getNonce()));
         jsonGenerator.writeObjectField("gas_used",
@@ -38,7 +43,7 @@ public class GetTransactionResponseSerializer extends JsonSerializer<Blockchain.
         jsonGenerator.writeObjectField("gas_refunded",
                 BalanceConverter.toBigInteger(transactionResponse.getGasRefunded()));
         jsonGenerator.writeObjectField("new_address", transactionResponse.getNewAddress());
-        jsonGenerator.writeObjectField("output", transactionResponse.getOutput());
+        jsonGenerator.writeObjectField("output", output);
         jsonGenerator.writeObjectField("excepted", transactionResponse.getExcepted());
         jsonGenerator.writeObjectField("confirmation_timestamp", transactionResponse.getConfirmationTimestamp());
         jsonGenerator.writeEndObject();
