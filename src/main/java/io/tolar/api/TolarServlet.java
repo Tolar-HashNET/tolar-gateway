@@ -69,4 +69,5 @@ public class TolarServlet extends HttpServlet {
         jsonRpcServer.setHttpStatusCodeProvider(new TolarHttpStatusCodeProvider());
         jsonRpcServer.setAllowLessParams(true);
     }
+
 }

@@ -77,7 +77,8 @@ docker run -d -e "TOLAR_HASHNET_PORT=9300" -e "TOLAR_HASHNET_HOSTS=127.0.0.1,127
 
 ## v1.2
 
-Updated conversions to/from hex for `data` field in the Transaction objects - needed for Contract interaction
+1. Updated encoding *to/from hex for `data` field in the Transaction objects* - needed for Contract interaction
+2. added *tol_getBalanceString* and *tol_getLatestBalanceString* methods that return strings for web3js
 
 ## v1.1
 

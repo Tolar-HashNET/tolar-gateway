@@ -3,6 +3,7 @@ package io.tolar.api;
 import com.google.protobuf.ByteString;
 import com.googlecode.jsonrpc4j.JsonRpcMethod;
 import com.googlecode.jsonrpc4j.JsonRpcParam;
+import io.tolar.responses.GetBalanceStringResponse;
 import tolar.proto.Blockchain.*;
 import tolar.proto.tx.TransactionOuterClass;
 
@@ -58,4 +59,12 @@ public interface TolarApi {
 
     @JsonRpcMethod("tol_getTransactionProtobuf")
     String getTransactionProtobuf(@JsonRpcParam(value = "transaction") TransactionOuterClass.Transaction transaction);
+
+    @JsonRpcMethod("tol_getBalanceString")
+    GetBalanceStringResponse getBalanceString(@JsonRpcParam(value = "address") ByteString address,
+                                              @JsonRpcParam(value = "block_index") long blockIndex);
+
+    @JsonRpcMethod("tol_getLatestBalanceString")
+    GetBalanceStringResponse getLatestBalanceString(@JsonRpcParam(value = "address") ByteString address);
+
 }

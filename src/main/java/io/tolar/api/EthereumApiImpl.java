@@ -14,8 +14,7 @@ import java.math.BigInteger;
 
 @Component
 public class EthereumApiImpl implements EthereumApi {
-
-    private TolarApi tolarApi;
+    private final TolarApi tolarApi;
 
     public EthereumApiImpl(TolarApi tolarApi) {
         this.tolarApi = tolarApi;
@@ -82,4 +81,5 @@ public class EthereumApiImpl implements EthereumApi {
     public BigInteger ethGetTransactionCount(String address, String tag) {
         return BigInteger.valueOf(10);
     }
+
 }

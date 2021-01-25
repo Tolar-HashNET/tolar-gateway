@@ -25,4 +25,5 @@ public class EthBlock {
                 .collect(Collectors.toList());
         this.timestamp = Numeric.encodeQuantity(BigInteger.valueOf(tolarBlock.getConfirmationTimestamp()));
     }
+
 }
