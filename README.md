@@ -45,6 +45,9 @@ or use multiple hosts, separated with commas:
 To change the port, the environment variable **TOLAR_HASHNET_PORT**:
 ` -e "TOLAR_HASHNET_PORT=9300" `
 
+*!!! Note: if you are using Docker Desktop (for Windows and Mac)
+due to limitations (you can read about it [here](https://docs.docker.com/docker-for-windows/networking/#i-cannot-ping-my-containers)) you may need to put your host `host.docker.internal` or `gateway.docker.internal`, depending on what configuration of the gateway/node you are using!!!*
+
 ## Service Networking
 
 You can choose the networking mode of the docker image (service): 
