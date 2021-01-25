@@ -83,11 +83,11 @@ pipeline {
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
 
-                    slackMessage = "Deployed *Tolar Gateway* connected to *" + targetNetwork + " NETWORK* (" +
-                            "<${env.RUN_DISPLAY_URL}|Pipeline>" +
-                            ") \n" +
-                            "JSON-RPC available at: " +
-                            "<https://" + gatewayLink + "|" + gatewayLink + ">\n" +
+                    slackMessage = "Deployed *Tolar Gateway* connected to *" + targetNetwork + " NETWORK* \n" +
+                            "JSON-RPC available at: <https://" + gatewayLink + "|" + gatewayLink + ">\n" +
+                            "Links: <${env.RUN_DISPLAY_URL}|Pipeline>, " +
+                            "<https://tolar-clients.kwiki.io/docs/tolar-hashnet|Docs>, " +
+                            "<https://hub.docker.com/r/dreamfactoryhr/tolar-gateway|DockerHub> \n" +
                             "Pipeline time: ${buildTime}"
 
                     slackSend(channel: slackChannel, color: 'good', message: slackMessage,
