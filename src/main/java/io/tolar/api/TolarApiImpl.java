@@ -100,7 +100,8 @@ public class TolarApiImpl implements TolarApi {
                         .stream()
                         .map(ByteString::toStringUtf8)
                         .collect(Collectors.toList());
-                if(list.size() > 0){
+
+                if (! list.isEmpty()) {
                     txCache.remove(list, blockByIndex.getChannel());
                     LOGGER.info("Removed {} tx from reverse cache", list.size());
                 }
