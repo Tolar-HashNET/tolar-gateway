@@ -1,16 +1,16 @@
 {
   "client_api_endpoint": "127.0.0.1:9300",
   "master_node_client_api_endpoints": [
-    "116.203.236.134:9200",
-    "116.203.236.148:9200",
-    "116.203.236.150:9200",
-    "116.203.236.138:9200",
-    "116.203.236.151:9200",
-    "116.203.236.152:9200",
-    "116.203.236.139:9200"
+    "staging-masternode-01.dev.tolar.io:9200",
+    "staging-masternode-02.dev.tolar.io:9200",
+    "staging-masternode-03.dev.tolar.io:9200",
+    "staging-masternode-04.dev.tolar.io:9200",
+    "staging-masternode-05.dev.tolar.io:9200",
+    "staging-masternode-06.dev.tolar.io:9200",
+    "staging-masternode-07.dev.tolar.io:9200"
   ],
   "blockchain_explorer_client_api_endpoints": [
-    "116.203.236.208:9876"
+    "staging-explorer-01.dev.tolar.io:9876"
   ],
   "key_store": {
     "keys_file_path": "/home/thin_node/.tolar/keystore/staging_node/keys.info",

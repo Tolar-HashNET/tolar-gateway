@@ -87,7 +87,6 @@ public class TolarApiImpl implements TolarApi {
         long confirmedBlocksCount = getBlockCount();
         Channel channel = null;
 
-
         try {
             channel = channelUtils.getChannel();
 
