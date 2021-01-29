@@ -64,13 +64,11 @@ public class TolarApiImpl implements TolarApi {
 
         LOGGER.info("Started block cache init!");
 
-        for (long i = blockCount + 1; i <= currentBlock; i++) {
-            long blockNumber = i;
+        for (long blockNumber = blockCount + 1; blockNumber <= currentBlock; blockNumber++) {
             getBlockByIndex(blockNumber);
         }
 
-        for (long i = 0; i < 10; i++) {
-            long blockNumber = i;
+        for (long blockNumber = 0; blockNumber < 10; blockNumber++) {
             getBlockByIndex(blockNumber);
         }
 
