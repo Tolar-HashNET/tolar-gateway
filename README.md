@@ -78,6 +78,11 @@ docker run -d -e "TOLAR_HASHNET_PORT=9300" -e "TOLAR_HASHNET_HOSTS=127.0.0.1,127
 
 # Changelog
 
+## v1.3
+
+1. *Number types* - balance, value (amount), gas, gasPrice, nonce, gasUsed and gasRefunded are now all parsed and returned as Strings (compatibility with web3js and big numbers)
+2. *Hackish endpoints removal* - removed `tol_getBalanceString` and `tol_getLatestBalanceString` methods since all needed number format are now returned as Strings
+
 ## v1.2
 
 1. *Transaction objects data encoding* - Updated encoding to/from hex for `data` field in the Transaction objects - needed for Contract interaction
