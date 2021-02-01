@@ -6,7 +6,6 @@ import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.tolar.caching.BlockWithChannel;
 import io.tolar.caching.NewTxCache;
-import io.tolar.responses.GetBalanceStringResponse;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
 import org.bouncycastle.util.encoders.Base64;
@@ -430,18 +429,6 @@ public class TolarApiImpl implements TolarApi {
     @Override
     public String getTransactionProtobuf(TransactionOuterClass.Transaction transaction) {
         return Base64.toBase64String(transaction.toByteString().toByteArray());
-    }
-
-    @Override
-    public GetBalanceStringResponse getBalanceString(ByteString address, long blockIndex) {
-        GetBalanceResponse balance = getBalance(address, blockIndex);
-        return GetBalanceStringResponse.createFromGrpc(balance);
-    }
-
-    @Override
-    public GetBalanceStringResponse getLatestBalanceString(ByteString address) {
-        GetBalanceResponse latestBalance = getLatestBalance(address);
-        return GetBalanceStringResponse.createFromGrpc(latestBalance);
     }
 
 }

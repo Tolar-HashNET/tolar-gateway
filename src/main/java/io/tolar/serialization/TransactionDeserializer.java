@@ -30,26 +30,16 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(createDeserializationModule());
 
-        ByteString data;
         String inputData = objectMapper.readValue(node.get("data").traverse(), String.class);
-
-        try {
-            String noPrefixData = Numeric.cleanHexPrefix(inputData);
-            byte[] decodedHex = Hex.decode(noPrefixData);
-            data = ByteString.copyFrom(decodedHex);
-        } catch (DecoderException ex) {
-            log.warn("Cannot convert to hex! fallback to regular string... message: {}", ex.getMessage());
-            data = ByteString.copyFromUtf8(inputData);
-        }
-
+        ByteString data = tryParseDataAsHex(inputData);
 
         return TransactionOuterClass.Transaction
                 .newBuilder()
                 .setSenderAddress(objectMapper.convertValue(node.get("sender_address"), ByteString.class))
                 .setReceiverAddress(objectMapper.convertValue(node.get("receiver_address"), ByteString.class))
-                .setValue(BalanceConverter.toByteString(objectMapper.convertValue(node.get("amount"), BigInteger.class)))
-                .setGas(BalanceConverter.toByteString(objectMapper.convertValue(node.get("gas"), BigInteger.class)))
-                .setGasPrice(BalanceConverter.toByteString(objectMapper.convertValue(node.get("gas_price"), BigInteger.class)))
+                .setValue(tryParseAsNumber("amount", node, objectMapper))
+                .setGas(tryParseAsNumber("gas", node, objectMapper))
+                .setGasPrice(tryParseAsNumber("gas_price", node, objectMapper))
                 .setData(data)
                 .setNonce(BalanceConverter.toByteString(objectMapper.convertValue(node.get("nonce"), BigInteger.class)))
                 .build();
@@ -60,6 +50,28 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
         module.addSerializer(ByteString.class, new ByteStringSerializer());
         module.addDeserializer(ByteString.class, new ByteStringDeserializer());
         return module;
+    }
+
+    private ByteString tryParseDataAsHex(String inputData) {
+        try {
+            String noPrefixData = Numeric.cleanHexPrefix(inputData);
+            byte[] decodedHex = Hex.decode(noPrefixData);
+            return ByteString.copyFrom(decodedHex);
+        } catch (DecoderException ex) {
+            log.warn("Cannot convert to hex! fallback to regular string... message: {}", ex.getMessage());
+            return ByteString.copyFromUtf8(inputData);
+        }
+    }
+
+    private ByteString tryParseAsNumber(String fieldName, TreeNode node, ObjectMapper mapper) {
+        TreeNode value = node.get(fieldName);
+
+        try {
+            return BalanceConverter.toByteString(mapper.convertValue(value, BigInteger.class));
+        } catch (IllegalArgumentException ex) {
+            log.warn("Cannot parse as BigInteger! value: {}", value);
+            return mapper.convertValue(value, ByteString.class);
+        }
     }
 
 }

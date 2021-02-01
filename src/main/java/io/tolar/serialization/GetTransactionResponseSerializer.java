@@ -30,22 +30,23 @@ public class GetTransactionResponseSerializer extends JsonSerializer<Blockchain.
         jsonGenerator.writeObjectField("sender_address", transactionResponse.getSenderAddress());
         jsonGenerator.writeObjectField("receiver_address", transactionResponse.getReceiverAddress());
         jsonGenerator.writeObjectField("value",
-                BalanceConverter.toBigInteger(transactionResponse.getValue()));
+                BalanceConverter.toBigInteger(transactionResponse.getValue()).toString());
         jsonGenerator.writeObjectField("gas",
-                BalanceConverter.toBigInteger(transactionResponse.getGas()));
+                BalanceConverter.toBigInteger(transactionResponse.getGas()).toString());
         jsonGenerator.writeObjectField("gas_price",
-                BalanceConverter.toBigInteger(transactionResponse.getGasPrice()));
+                BalanceConverter.toBigInteger(transactionResponse.getGasPrice()).toString());
         jsonGenerator.writeObjectField("data", data);
         jsonGenerator.writeObjectField("nonce",
-                BalanceConverter.toBigInteger(transactionResponse.getNonce()));
+                BalanceConverter.toBigInteger(transactionResponse.getNonce()).toString());
         jsonGenerator.writeObjectField("gas_used",
-                BalanceConverter.toBigInteger(transactionResponse.getGasUsed()));
+                BalanceConverter.toBigInteger(transactionResponse.getGasUsed()).toString());
         jsonGenerator.writeObjectField("gas_refunded",
-                BalanceConverter.toBigInteger(transactionResponse.getGasRefunded()));
+                BalanceConverter.toBigInteger(transactionResponse.getGasRefunded()).toString());
         jsonGenerator.writeObjectField("new_address", transactionResponse.getNewAddress());
         jsonGenerator.writeObjectField("output", output);
         jsonGenerator.writeObjectField("excepted", transactionResponse.getExcepted());
-        jsonGenerator.writeObjectField("confirmation_timestamp", transactionResponse.getConfirmationTimestamp());
+        jsonGenerator.writeObjectField("confirmation_timestamp",
+                transactionResponse.getConfirmationTimestamp());
         jsonGenerator.writeEndObject();
     }
 
