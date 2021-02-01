@@ -38,6 +38,8 @@ pipeline {
 
                         gatewayLink = gatewayLink.replace('tolar', 'tolar-test')
                     } else if (env.BRANCH_NAME == 'staging') {
+                        error('staging env is disabled')
+
                         buildCommand = buildCommand + ' -P staging'
 
                         imageName = imageName.replace('latest', 'staging')
@@ -101,12 +103,12 @@ pipeline {
 
             steps {
                 unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'thin_node'
-                unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'staging_node'
+                //unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'staging_node'
                 unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'main_node'
 
                 sh 'docker-compose build'
                 sh 'docker save tolar-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
-                sh 'docker save staging-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
+                //sh 'docker save staging-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
                 sh 'docker save main-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
                 sh 'scp docker-compose.yaml ' + remoteAddress + ':/home/admin/tolar-gateway/docker-compose.yaml'
                 sh 'ssh -C ' + remoteAddress + ' "cd tolar-gateway; sudo docker-compose down"'
@@ -133,7 +135,7 @@ pipeline {
                 script {
                     if (env.BRANCH_NAME == 'tolar-node') {
                         sh 'docker rmi tolar-node'
-                        sh 'docker rmi staging-node'
+                        //sh 'docker rmi staging-node'
                         sh 'docker rmi main-node'
                     } else {
                         sh 'docker rmi ' + imageName

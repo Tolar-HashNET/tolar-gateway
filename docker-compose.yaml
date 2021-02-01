@@ -12,16 +12,16 @@ services:
     volumes:
     - keystore:/home/thin_node/.tolar/keystore/
 
-  staging_node:
-    image: staging-node
-    build:
-      context: staging_node
-    container_name: staging-node
-    network_mode: host
-    restart: on-failure:5
-    mem_limit: 2g
-    volumes:
-      - staging:/home/thin_node/.tolar/keystore/
+#  staging_node:
+#    image: staging-node
+#    build:
+#      context: staging_node
+#    container_name: staging-node
+#    network_mode: host
+#    restart: on-failure:5
+#    mem_limit: 2g
+#    volumes:
+#      - staging:/home/thin_node/.tolar/keystore/
 
   main_node:
     image: main-node
