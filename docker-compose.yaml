@@ -7,10 +7,10 @@ services:
       context: thin_node
     container_name: tolar-node
     network_mode: host
-    restart: on-failure:5
+    restart: on-failure
     mem_limit: 2g
     volumes:
-    - keystore:/home/thin_node/.tolar/keystore/
+    - testNet:/home/thin_node/.tolar/keystore/
 
 #  staging_node:
 #    image: staging-node
@@ -18,10 +18,10 @@ services:
 #      context: staging_node
 #    container_name: staging-node
 #    network_mode: host
-#    restart: on-failure:5
+#    restart: on-failure
 #    mem_limit: 2g
 #    volumes:
-#      - staging:/home/thin_node/.tolar/keystore/
+#      - stagingNet:/home/thin_node/.tolar/keystore/
 
   main_node:
     image: main-node
@@ -29,12 +29,12 @@ services:
       context: main_node
     container_name: main-node
     network_mode: host
-    restart: on-failure:5
+    restart: on-failure
     mem_limit: 2g
     volumes:
-      - main:/home/thin_node/.tolar/keystore/
+      - mainNet:/home/thin_node/.tolar/keystore/
 
 volumes:
-  keystore:
-  staging:
-  main:
+  testNet:
+  stagingNet:
+  mainNet:
