@@ -6,7 +6,8 @@ services:
     build:
       context: main_node
     container_name: main-node
-    network_mode: host
+    ports:
+      - 9200:9200
     restart: on-failure
     mem_limit: 2g
     volumes:
@@ -17,7 +18,8 @@ services:
     build:
       context: test_node
     container_name: test-node
-    network_mode: host
+    ports:
+      - 9201:9201
     restart: on-failure
     mem_limit: 2g
     volumes:
@@ -28,7 +30,8 @@ services:
 #    build:
 #      context: staging_node
 #    container_name: staging-node
-#    network_mode: host
+#    ports:
+#      - 9202:9202
 #    restart: on-failure
 #    mem_limit: 2g
 #    volumes:

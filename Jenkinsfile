@@ -3,6 +3,7 @@ def imageName = 'dreamfactoryhr/tolar-gateway:latest'
 def remoteAddress = 'admin@172.31.7.104'
 def containerName = 'tolar-gateway-main'
 def springProfile = 'main'
+def gatewayPort = '9081'
 
 def targetNetwork = 'MAIN'
 def gatewayLink = 'tolar.dream-factory.hr'
@@ -34,6 +35,8 @@ pipeline {
 
                         springProfile = 'test'
 
+                        gatewayPort = '9082'
+
                         targetNetwork = 'TEST'
 
                         gatewayLink = gatewayLink.replace('tolar', 'tolar-test')
@@ -47,6 +50,8 @@ pipeline {
                         containerName = containerName.replace('main', 'staging')
 
                         springProfile = 'staging'
+
+                        gatewayPort = '9083'
 
                         targetNetwork = 'STAGING'
 
@@ -79,8 +84,8 @@ pipeline {
 
                 sh 'ssh -C ' + remoteAddress + ' sudo docker run -m 2g -d ' +
                 ' -e "SPRING_PROFILES_ACTIVE=' + springProfile + '" ' +
-                ' -e JAVA_OPTS="-Xmx1400m" --network=host --name ' + containerName +
-                ' --user 1001:1001 ' + imageName
+                ' -e JAVA_OPTS="-Xmx1400m" -p ' + gatewayPort + ':' gatewayPort +
+                ' --name ' + containerName + ' --user 1001:1001 ' + imageName
 
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
