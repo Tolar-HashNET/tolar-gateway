@@ -6,7 +6,8 @@ services:
     build:
       context: thin_node
     container_name: tolar-node
-    network_mode: host
+    ports:
+      - 9100:9100
     restart: on-failure
     mem_limit: 2g
     volumes:
@@ -17,7 +18,8 @@ services:
 #    build:
 #      context: staging_node
 #    container_name: staging-node
-#    network_mode: host
+#    ports:
+#      - 9300:9300
 #    restart: on-failure
 #    mem_limit: 2g
 #    volumes:
@@ -28,7 +30,8 @@ services:
     build:
       context: main_node
     container_name: main-node
-    network_mode: host
+    ports:
+    - 9200:9200
     restart: on-failure
     mem_limit: 2g
     volumes:
