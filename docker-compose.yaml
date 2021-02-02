@@ -1,13 +1,25 @@
 version: "2.4"
 
 services:
+  main_node:
+    image: main-node
+    build:
+      context: main_node
+    container_name: main-node
+    ports:
+      - 9200:9200
+    restart: on-failure
+    mem_limit: 2g
+    volumes:
+      - mainNet:/home/thin_node/.tolar/keystore/
+
   test_node:
     image: test-node
     build:
       context: test_node
     container_name: test-node
     ports:
-      - 9100:9100
+      - 9201:9201
     restart: on-failure
     mem_limit: 2g
     volumes:
@@ -19,23 +31,11 @@ services:
 #      context: staging_node
 #    container_name: staging-node
 #    ports:
-#      - 9300:9300
+#      - 9202:9202
 #    restart: on-failure
 #    mem_limit: 2g
 #    volumes:
 #      - stagingNet:/home/thin_node/.tolar/keystore/
-
-  main_node:
-    image: main-node
-    build:
-      context: main_node
-    container_name: main-node
-    ports:
-    - 9200:9200
-    restart: on-failure
-    mem_limit: 2g
-    volumes:
-      - mainNet:/home/thin_node/.tolar/keystore/
 
 volumes:
   testNet:
