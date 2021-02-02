@@ -2,7 +2,7 @@ def buildCommand = 'mvn clean spring-boot:build-image'
 def imageName = 'dreamfactoryhr/tolar-gateway:latest'
 def remoteAddress = 'admin@172.31.7.104'
 def containerName = 'tolar-gateway-main'
-def springProfile = 'prod'
+def springProfile = 'main'
 
 def targetNetwork = 'MAIN'
 def gatewayLink = 'tolar.dream-factory.hr'
