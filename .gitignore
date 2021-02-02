@@ -15,3 +15,5 @@ buildNumber.properties
 .DS_Store
 
 staging_node/thin_node_bin
+thin_node/thin_node_bin
+main_node/thin_node_bin
