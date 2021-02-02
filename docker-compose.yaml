@@ -1,11 +1,11 @@
 version: "2.4"
 
 services:
-  thin_node:
-    image: tolar-node
+  test_node:
+    image: test-node
     build:
-      context: thin_node
-    container_name: tolar-node
+      context: test_node
+    container_name: test-node
     ports:
       - 9100:9100
     restart: on-failure
