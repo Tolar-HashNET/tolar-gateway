@@ -15,7 +15,12 @@ import java.util.List;
 @ConfigurationProperties(prefix = "tolar-hashnet")
 public class TolarConfig {
     private static final Logger LOGGER = LoggerFactory.getLogger(TolarConfig.class);
+
     private static final String DEFAULT_HOST = "127.0.0.1";
+    private static final int DEFAULT_PORT = 9200;
+    private static final int DEFAULT_SEMAPHORE_PERMITS = 100;
+    private static final int DEFAULT_SEMAPHORE_TIMEOUT = 60;
+
     private String hosts;
     private String port;
     private String semaphorePermits;
@@ -31,15 +36,15 @@ public class TolarConfig {
     }
 
     public int getPortAsInt() {
-        return getAsInt(port, "TOLAR_HASHNET_PORT", 9200);
+        return getAsInt(port, "TOLAR_HASHNET_PORT", DEFAULT_PORT);
     }
 
     public int getSemaphorePermitsAsInt() {
-        return getAsInt(semaphorePermits, "TOLAR_SEMAPHORE_PERMITS", 100);
+        return getAsInt(semaphorePermits, "TOLAR_SEMAPHORE_PERMITS", DEFAULT_SEMAPHORE_PERMITS);
     }
 
     public int getSemaphoreTimeoutAsInt() {
-        return getAsInt(semaphoreTimeout, "TOLAR_SEMAPHORE_TIMEOUT", 60);
+        return getAsInt(semaphoreTimeout, "TOLAR_SEMAPHORE_TIMEOUT", DEFAULT_SEMAPHORE_TIMEOUT);
     }
 
     private int getAsInt(String variableValue, String variableName, int defaultValue) {
