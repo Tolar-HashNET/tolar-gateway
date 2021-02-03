@@ -1,5 +1,5 @@
 {
-  "client_api_endpoint": "127.0.0.1:9202",
+  "client_api_endpoint": "127.0.0.1:9203",
   "master_node_client_api_endpoints": [
     "staging-masternode-01.dev.tolar.io:9200",
     "staging-masternode-02.dev.tolar.io:9200",
