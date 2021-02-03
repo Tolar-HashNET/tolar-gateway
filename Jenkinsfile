@@ -139,9 +139,9 @@ pipeline {
 
                 script {
                     if (env.BRANCH_NAME == 'tolar-node') {
-                        sh 'docker rmi tolar-node'
-                        //sh 'docker rmi staging-node'
                         sh 'docker rmi main-node'
+                        sh 'docker rmi test-node'
+                        //sh 'docker rmi staging-node'
                     } else {
                         sh 'docker rmi ' + imageName
                     }
