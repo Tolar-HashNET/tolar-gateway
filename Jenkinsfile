@@ -3,7 +3,7 @@ def imageName = 'dreamfactoryhr/tolar-gateway:latest'
 def remoteAddress = 'admin@172.31.3.195'
 def containerName = 'tolar-gateway-main'
 def springProfile = 'main'
-def applicationPort = '9081'
+def gatewayPort = '9081'
 
 def targetNetwork = 'MAIN'
 def gatewayLink = 'tolar.dream-factory.hr'
@@ -82,10 +82,10 @@ pipeline {
                 ' | xargs --no-run-if-empty sudo docker container stop ' +
                 ' | xargs --no-run-if-empty sudo docker container rm"'
 
-                /*sh 'ssh -C ' + remoteAddress + ' sudo docker run -m 2g -d ' +
+                sh 'ssh -C ' + remoteAddress + ' sudo docker run -m 2g -d ' +
                 ' -e "SPRING_PROFILES_ACTIVE=' + springProfile + '" ' +
-                ' -e JAVA_OPTS="-Xmx1400m" -p ' + applicationPort + ':' applicationPort +
-                ' --name ' + containerName + ' --user 1001:1001 ' + imageName*/
+                ' -e JAVA_OPTS="-Xmx1400m" -p ' + gatewayPort + ':' + gatewayPort +
+                ' --name ' + containerName + ' --user 1001:1001 ' + imageName
 
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
@@ -107,9 +107,9 @@ pipeline {
             when { branch 'tolar-node' }
 
             steps {
-                unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'thin_node'
-                //unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'staging_node'
                 unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'main_node'
+                unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'test_node'
+                //unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'staging_node'
 
                 sh 'docker-compose build'
                 sh 'docker save tolar-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
