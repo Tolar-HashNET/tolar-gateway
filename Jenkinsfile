@@ -82,10 +82,10 @@ pipeline {
                 ' | xargs --no-run-if-empty sudo docker container stop ' +
                 ' | xargs --no-run-if-empty sudo docker container rm"'
 
-                sh 'ssh -C ' + remoteAddress + ' sudo docker run -m 2g -d ' +
+                /*sh 'ssh -C ' + remoteAddress + ' sudo docker run -m 2g -d ' +
                 ' -e "SPRING_PROFILES_ACTIVE=' + springProfile + '" ' +
                 ' -e JAVA_OPTS="-Xmx1400m" -p ' + applicationPort + ':' applicationPort +
-                ' --name ' + containerName + ' --user 1001:1001 ' + imageName
+                ' --name ' + containerName + ' --user 1001:1001 ' + imageName*/
 
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
