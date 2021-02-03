@@ -7,7 +7,7 @@ services:
       context: main_node
     container_name: main-node
     ports:
-      - 9200:9200
+      - 9201:9201
     restart: on-failure
     mem_limit: 2g
     volumes:
@@ -19,7 +19,7 @@ services:
       context: test_node
     container_name: test-node
     ports:
-      - 9201:9201
+      - 9202:9202
     restart: on-failure
     mem_limit: 2g
     volumes:
@@ -31,13 +31,13 @@ services:
 #      context: staging_node
 #    container_name: staging-node
 #    ports:
-#      - 9202:9202
+#      - 9203:9203
 #    restart: on-failure
 #    mem_limit: 2g
 #    volumes:
 #      - stagingNet:/home/thin_node/.tolar/keystore/
 
 volumes:
-  testNet:
-  stagingNet:
   mainNet:
+  testNet:
+#  stagingNet:
