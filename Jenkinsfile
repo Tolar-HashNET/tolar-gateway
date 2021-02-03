@@ -112,9 +112,9 @@ pipeline {
                 //unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'staging_node'
 
                 sh 'docker-compose build'
-                sh 'docker save tolar-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
-                //sh 'docker save staging-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
                 sh 'docker save main-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
+                sh 'docker save test-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
+                //sh 'docker save staging-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
                 sh 'scp docker-compose.yaml ' + remoteAddress + ':/home/admin/tolar-gateway/docker-compose.yaml'
                 sh 'ssh -C ' + remoteAddress + ' "cd tolar-gateway; sudo docker-compose down"'
                 sh 'ssh -C ' + remoteAddress + ' "cd tolar-gateway; sudo docker-compose up -d"'
