@@ -79,7 +79,7 @@ pipeline {
 
                 sh 'ssh -C ' + remoteAddress + ' sudo docker run -m 2g -d ' +
                 ' -e "SPRING_PROFILES_ACTIVE=' + springProfile + '" ' +
-                ' -e JAVA_OPTS="-Xmx1400m" -p --network=host  --name ' + containerName +
+                ' -e JAVA_OPTS="-Xmx1400m" --network=host  --name ' + containerName +
                 ' --user 1001:1001 ' + imageName
 
                 script {
