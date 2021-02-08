@@ -38,7 +38,7 @@ pipeline {
 
                         gatewayLink = gatewayLink.replace('tolar', 'tolar-test')
                     } else if (env.BRANCH_NAME == 'staging') {
-                        error('staging env is disabled')
+                        //error('staging env is disabled')
 
                         buildCommand = buildCommand + ' -P staging'
 
@@ -104,12 +104,12 @@ pipeline {
             steps {
                 unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'main_node'
                 unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'test_node'
-                //unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'staging_node'
+                unzip zipFile: 'thin_node_bin_1.0.02.zip', dir: 'staging_node'
 
                 sh 'docker-compose build'
                 sh 'docker save main-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
                 sh 'docker save test-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
-                //sh 'docker save staging-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
+                sh 'docker save staging-node:latest | ssh -C ' + remoteAddress + ' sudo docker load'
                 sh 'scp docker-compose.yaml ' + remoteAddress + ':/home/admin/tolar-gateway/docker-compose.yaml'
                 sh 'ssh -C ' + remoteAddress + ' "cd tolar-gateway; sudo docker-compose down"'
                 sh 'ssh -C ' + remoteAddress + ' "cd tolar-gateway; sudo docker-compose up -d"'
@@ -117,7 +117,7 @@ pipeline {
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
 
-                    slackMessage = "Deployed *Tolar Nodes* connected to *MainNet* and *TestNet* (" +
+                    slackMessage = "Deployed *Tolar Nodes* connected to *MainNet*, *TestNet* and *StagingNet*(" +
                             "<${env.RUN_DISPLAY_URL}|Pipeline>" +
                             ") \n" +
                             "Pipeline time: ${buildTime}"
@@ -136,7 +136,7 @@ pipeline {
                     if (env.BRANCH_NAME == 'tolar-node') {
                         sh 'docker rmi main-node'
                         sh 'docker rmi test-node'
-                        //sh 'docker rmi staging-node'
+                        sh 'docker rmi staging-node'
                     } else {
                         sh 'docker rmi ' + imageName
                     }
