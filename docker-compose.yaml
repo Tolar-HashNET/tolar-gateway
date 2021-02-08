@@ -23,18 +23,18 @@ services:
     volumes:
     - testNet:/home/thin_node/.tolar/keystore/
 
-#  staging_node:
-#    image: staging-node
-#    build:
-#      context: staging_node
-#    container_name: staging-node
-#    network_mode: host
-#    restart: on-failure
-#    mem_limit: 2g
-#    volumes:
-#      - stagingNet:/home/thin_node/.tolar/keystore/
+  staging_node:
+    image: staging-node
+    build:
+      context: staging_node
+    container_name: staging-node
+    network_mode: host
+    restart: on-failure
+    mem_limit: 2g
+    volumes:
+      - stagingNet:/home/thin_node/.tolar/keystore/
 
 volumes:
   mainNet:
   testNet:
-#  stagingNet:
+  stagingNet:
