@@ -117,7 +117,7 @@ pipeline {
                 script {
                     def buildTime = currentBuild.durationString.replace(' and counting', '')
 
-                    slackMessage = "Deployed *Tolar Nodes* connected to *MainNet*, *TestNet* and *StagingNet*(" +
+                    slackMessage = "Deployed *Tolar Nodes* connected to *MainNet*, *TestNet* and *StagingNet* (" +
                             "<${env.RUN_DISPLAY_URL}|Pipeline>" +
                             ") \n" +
                             "Pipeline time: ${buildTime}"
