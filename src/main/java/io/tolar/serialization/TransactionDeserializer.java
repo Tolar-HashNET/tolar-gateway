@@ -69,7 +69,7 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
         try {
             return BalanceConverter.toByteString(mapper.convertValue(value, BigInteger.class));
         } catch (IllegalArgumentException ex) {
-            log.warn("Cannot parse as BigInteger! value: {}", value);
+            log.warn("Cannot parse as BigInteger! field: {}, value: {}", fieldName, value);
             return mapper.convertValue(value, ByteString.class);
         }
     }
