@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.protobuf.ByteString;
 import io.tolar.utils.BalanceConverter;
 import lombok.extern.slf4j.Slf4j;
@@ -64,13 +65,21 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
     }
 
     private ByteString tryParseAsNumber(String fieldName, TreeNode node, ObjectMapper mapper) {
+        Object toConvert;
+
         TreeNode value = node.get(fieldName);
 
+        if (value instanceof TextNode) {
+            toConvert = Numeric.cleanHexPrefix(((TextNode) value).asText());
+        } else {
+            toConvert = value;
+        }
+
         try {
-            return BalanceConverter.toByteString(mapper.convertValue(value, BigInteger.class));
+            return BalanceConverter.toByteString(mapper.convertValue(toConvert, BigInteger.class));
         } catch (IllegalArgumentException ex) {
             log.warn("Cannot parse as BigInteger! field: {}, value: {}", fieldName, value);
-            return mapper.convertValue(value, ByteString.class);
+            return mapper.convertValue(toConvert, ByteString.class);
         }
     }
 
