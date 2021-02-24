@@ -9,7 +9,7 @@ Docker image is hosted here: https://hub.docker.com/repository/docker/dreamfacto
 
 # Usage
 
-To build a image, use:
+To build an image, use:
 
 ```
 mvn clean spring-boot:build-image
