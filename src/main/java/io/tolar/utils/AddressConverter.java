@@ -1,11 +1,13 @@
 package io.tolar.utils;
 
+import lombok.experimental.UtilityClass;
 import org.web3j.crypto.Hash;
 import org.web3j.utils.Numeric;
 
+@UtilityClass
 public class AddressConverter {
 
-    public static String toTolarAddress(String ethereumAddress) {
+    public String toTolarAddress(String ethereumAddress) {
         String prefix = "T";
         String prefixHex = Numeric.toHexStringNoPrefix(prefix.getBytes());
         String addressHash = Hash.sha3(ethereumAddress);
@@ -16,7 +18,7 @@ public class AddressConverter {
                 hashOfHash.substring(hashOfHash.length() - 8);
     }
 
-    public static String toEthereumAddress(String tolarAddress) {
+    public String toEthereumAddress(String tolarAddress) {
         return tolarAddress.substring(1, 21);
     }
 }

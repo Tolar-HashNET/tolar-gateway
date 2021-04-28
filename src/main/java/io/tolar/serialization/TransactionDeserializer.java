@@ -10,12 +10,14 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.google.protobuf.ByteString;
 import io.tolar.utils.BalanceConverter;
+import io.tolar.utils.DataConverter;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.DecoderException;
 import org.bouncycastle.util.encoders.Hex;
 import org.web3j.utils.Numeric;
 import tolar.proto.tx.TransactionOuterClass;
 
+import javax.activation.DataContentHandler;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -32,7 +34,7 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
         objectMapper.registerModule(createDeserializationModule());
 
         String inputData = objectMapper.readValue(node.get("data").traverse(), String.class);
-        ByteString data = tryParseDataAsHex(inputData);
+        ByteString data = DataConverter.tryParseDataAsHex(inputData);
 
         return TransactionOuterClass.Transaction
                 .newBuilder()
@@ -51,17 +53,6 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
         module.addSerializer(ByteString.class, new ByteStringSerializer());
         module.addDeserializer(ByteString.class, new ByteStringDeserializer());
         return module;
-    }
-
-    private ByteString tryParseDataAsHex(String inputData) {
-        try {
-            String noPrefixData = Numeric.cleanHexPrefix(inputData);
-            byte[] decodedHex = Hex.decode(noPrefixData);
-            return ByteString.copyFrom(decodedHex);
-        } catch (DecoderException ex) {
-            log.warn("Cannot convert to hex! fallback to regular string... message: {}", ex.getMessage());
-            return ByteString.copyFromUtf8(inputData);
-        }
     }
 
     private ByteString tryParseAsNumber(String fieldName, TreeNode node, ObjectMapper mapper) {
