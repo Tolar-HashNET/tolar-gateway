@@ -1,0 +1,9 @@
+ ___                                         
+  |  _  |  _. ._  |_|  _.  _ |_  |\ |  _ _|_ 
+  | (_) | (_| |   | | (_| _> | | | \| (/_ |_ 
+                                             
+
+Welcome to Tolar gateway development container!
+Build tolar-gateway with: mvn clean package
+Binary will be located in target folder
+

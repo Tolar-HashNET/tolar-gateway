@@ -1,0 +1,19 @@
+version: '3.7'
+services:
+  tolar_gateway:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    image: tolar_gateway:latest
+    container_name: tolar_gateway
+    env_file:
+      - env_vars
+    volumes:
+      - ..:/home/coder/workspace:delegated
+      - ~/.ssh:/home/coder/.ssh
+      - extensions-01:/home/coder/.vscode-server/extensions:delegated
+      - extensions-02:/home/coder/.vscode-server-insiders/extensions:delegated
+
+volumes:
+  extensions-01:
+  extensions-02:
