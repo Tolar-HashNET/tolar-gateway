@@ -1,5 +1,6 @@
 package io.tolar.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,9 +14,8 @@ import java.util.List;
 @Configuration
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "tolar-hashnet")
+@Slf4j
 public class TolarConfig {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TolarConfig.class);
-
     private static final String DEFAULT_HOST = "127.0.0.1";
     private static final int DEFAULT_PORT = 9200;
     private static final int DEFAULT_SEMAPHORE_PERMITS = 100;
@@ -28,7 +28,7 @@ public class TolarConfig {
 
     public List<String> getHosts() {
         if ("${TOLAR_HASHNET_HOSTS}".equals(hosts)) {
-            LOGGER.info("TOLAR_HASHNET_HOST variable not found! Defaulting to {}", DEFAULT_HOST);
+            log.info("TOLAR_HASHNET_HOST variable not found! Defaulting to {}", DEFAULT_HOST);
             return Collections.singletonList(DEFAULT_HOST);
         }
 
@@ -49,14 +49,14 @@ public class TolarConfig {
 
     private int getAsInt(String variableValue, String variableName, int defaultValue) {
         if ( ("${" + variableName + "}").equals(variableValue)) {
-            LOGGER.info("{} variable not found! Defaulting to {}", variableName, defaultValue);
+            log.info("{} variable not found! Defaulting to {}", variableName, defaultValue);
             return defaultValue;
         }
 
         try {
             return Integer.parseInt(variableValue);
         } catch (NumberFormatException notNumber) {
-            LOGGER.error("{} is not a number! Defaulting to {}", variableName, defaultValue);
+            log.error("{} is not a number! Defaulting to {}", variableName, defaultValue);
         }
 
         return defaultValue;

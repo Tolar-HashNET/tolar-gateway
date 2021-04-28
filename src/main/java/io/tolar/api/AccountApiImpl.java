@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import io.grpc.Channel;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
+import io.tolar.utils.DataConverter;
 import org.springframework.stereotype.Component;
 import tolar.proto.Account.*;
 import tolar.proto.AccountServiceGrpc;
@@ -21,7 +22,6 @@ public class AccountApiImpl implements AccountApi {
 
     @Override
     public boolean create(String masterPassword) {
-        //todo: check if password is optional?
         CreateRequest createRequest = CreateRequest
                 .newBuilder()
                 .setMasterPassword(masterPassword)
@@ -212,7 +212,6 @@ public class AccountApiImpl implements AccountApi {
     public ByteString sendRawTransaction(ByteString senderAddress, ByteString receiverAddress, BigInteger amount,
                                          String senderAddressPassword, BigInteger gas, BigInteger gasPrice,
                                          ByteString data, BigInteger nonce) {
-        //todo: check if the data field is optional?
         SendRawTransactionRequest sendRawTransactionRequest = SendRawTransactionRequest
                 .newBuilder()
                 .setSenderAddress(senderAddress)
@@ -221,7 +220,7 @@ public class AccountApiImpl implements AccountApi {
                 .setSenderAddressPassword(senderAddressPassword)
                 .setGas(BalanceConverter.toByteString(gas))
                 .setGasPrice(BalanceConverter.toByteString(gasPrice))
-                .setData(data)
+                .setData(DataConverter.tryParseDataAsHex(data))
                 .setNonce(BalanceConverter.toByteString(nonce))
                 .build();
 
@@ -328,7 +327,7 @@ public class AccountApiImpl implements AccountApi {
                         .setSenderAddressPassword(senderAddressPassword)
                         .setGas(BalanceConverter.toByteString(gas))
                         .setGasPrice(BalanceConverter.toByteString(gasPrice))
-                        .setData(data)
+                        .setData(DataConverter.tryParseDataAsHex(data))
                         .setNonce(BalanceConverter.toByteString(nonce))
                         .build();
 
@@ -360,7 +359,7 @@ public class AccountApiImpl implements AccountApi {
                         .setSenderAddressPassword(senderAddressPassword)
                         .setGas(BalanceConverter.toByteString(gas))
                         .setGasPrice(BalanceConverter.toByteString(gasPrice))
-                        .setData(data)
+                        .setData(DataConverter.tryParseDataAsHex(data))
                         .setNonce(BalanceConverter.toByteString(nonce))
                         .build();
 
