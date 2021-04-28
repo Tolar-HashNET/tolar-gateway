@@ -8,9 +8,9 @@ import io.tolar.caching.BlockWithChannel;
 import io.tolar.caching.NewTxCache;
 import io.tolar.utils.BalanceConverter;
 import io.tolar.utils.ChannelUtils;
+import io.tolar.utils.DataConverter;
+import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import tolar.proto.Blockchain.*;
@@ -24,11 +24,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class TolarApiImpl implements TolarApi {
     private final ChannelUtils channelUtils;
     private final NewTxCache txCache;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TolarApiImpl.class);
 
     private long blockCount;
 
@@ -61,7 +60,7 @@ public class TolarApiImpl implements TolarApi {
         long currentBlock = getBlockCount();
         this.blockCount = currentBlock - 50;
 
-        LOGGER.info("Started block cache init!");
+        log.info("Started block cache init!");
 
         for (long blockNumber = blockCount + 1; blockNumber <= currentBlock; blockNumber++) {
             getBlockByIndex(blockNumber);
@@ -71,7 +70,7 @@ public class TolarApiImpl implements TolarApi {
             getBlockByIndex(blockNumber);
         }
 
-        LOGGER.info("Done with block cache init!");
+        log.info("Done with block cache init!");
     }
 
     @Scheduled(fixedDelay = 1_000)
@@ -99,7 +98,7 @@ public class TolarApiImpl implements TolarApi {
 
                 if (! list.isEmpty()) {
                     txCache.remove(list, blockByIndex.getChannel());
-                    LOGGER.info("Removed {} tx from reverse cache", list.size());
+                    log.info("Removed {} tx from reverse cache", list.size());
                 }
             }
         } finally {
@@ -150,7 +149,7 @@ public class TolarApiImpl implements TolarApi {
                 return block;
             }
 
-            LOGGER.info("finding block: {}, tries: {}", blockIndex, tries);
+            log.info("finding block: {}, tries: {}", blockIndex, tries);
             Instant now = Instant.now();
 
             try {
@@ -163,7 +162,7 @@ public class TolarApiImpl implements TolarApi {
                         .newBlockingStub(channel)
                         .getBlockByIndex(getBlockByIndexRequest);
 
-                LOGGER.info("Got block: {} in {} millis.",
+                log.info("Got block: {} in {} millis.",
                         blockIndex, ChronoUnit.MILLIS.between(now, Instant.now()) + "");
 
                 BlockWithChannel foundBlock = BlockWithChannel
@@ -173,11 +172,11 @@ public class TolarApiImpl implements TolarApi {
                         .build();
 
                 txCache.put(blockIndex, foundBlock);
-                LOGGER.info("Tx Pending size: {}", txCache.notFlushedTx());
+                log.info("Tx Pending size: {}", txCache.notFlushedTx());
                 return foundBlock;
 
             } catch (StatusRuntimeException ex) {
-                LOGGER.warn("Could not get block: {}, tries: {}, millis: {}",
+                log.warn("Could not get block: {}, tries: {}, millis: {}",
                         blockIndex, tries, ChronoUnit.MILLIS.between(now, Instant.now()) + "");
 
                 if (Status.NOT_FOUND.getCode().value() == ex.getStatus().getCode().value()
@@ -208,7 +207,7 @@ public class TolarApiImpl implements TolarApi {
             try {
                 Thread.sleep(1_000);
             } catch (InterruptedException e) {
-                LOGGER.error(e.getMessage());
+                log.error(e.getMessage());
             }
         }
 
@@ -223,7 +222,7 @@ public class TolarApiImpl implements TolarApi {
                     .newBlockingStub(channel)
                     .getTransaction(getTransactionRequest);
 
-            LOGGER.info("Tx get in: " + ChronoUnit.MILLIS.between(now, Instant.now()) + " milis.");
+            log.info("Tx get in: " + ChronoUnit.MILLIS.between(now, Instant.now()) + " milis.");
 
             return transaction;
         } finally {
@@ -301,7 +300,7 @@ public class TolarApiImpl implements TolarApi {
                     .getNonce(getNonceRequest)
                     .getNonce();
 
-            LOGGER.debug("Nonce get in: " + ChronoUnit.MILLIS.between(now, Instant.now()) + " milis.");
+            log.debug("Nonce get in: " + ChronoUnit.MILLIS.between(now, Instant.now()) + " milis.");
 
             return BalanceConverter.toBigInteger(nonce);
         } finally {
@@ -363,7 +362,7 @@ public class TolarApiImpl implements TolarApi {
                 .setValue(BalanceConverter.toByteString(amount))
                 .setGas(BalanceConverter.toByteString(gas))
                 .setGasPrice(BalanceConverter.toByteString(gasPrice))
-                .setData(data)
+                .setData(DataConverter.tryParseDataAsHex(data))
                 .setNonce(BalanceConverter.toByteString(nonce))
                 .build();
 
@@ -372,11 +371,9 @@ public class TolarApiImpl implements TolarApi {
         try {
             channel = channelUtils.getChannel(senderAddress.toStringUtf8());
 
-            TryCallTransactionResponse tryCallTransactionResponse = BlockchainServiceGrpc
+            return BlockchainServiceGrpc
                     .newBlockingStub(channel)
                     .tryCallTransaction(transaction);
-
-            return tryCallTransactionResponse;
         } finally {
             channelUtils.release(channel);
         }
@@ -393,7 +390,7 @@ public class TolarApiImpl implements TolarApi {
             try {
                 Thread.sleep(1_000);
             } catch (InterruptedException e) {
-                LOGGER.error(e.getMessage());
+                log.error(e.getMessage());
             }
         }
 

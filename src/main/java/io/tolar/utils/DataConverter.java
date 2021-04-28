@@ -11,6 +11,10 @@ import org.web3j.utils.Numeric;
 @Slf4j
 public class DataConverter {
 
+    public ByteString tryParseDataAsHex(ByteString inputData) {
+        return tryParseDataAsHex(inputData.toStringUtf8());
+    }
+
     public ByteString tryParseDataAsHex(String inputData) {
         try {
             String noPrefixData = Numeric.cleanHexPrefix(inputData);
