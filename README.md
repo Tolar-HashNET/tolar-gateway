@@ -78,6 +78,10 @@ docker run -d -e "TOLAR_HASHNET_PORT=9300" -e "TOLAR_HASHNET_HOSTS=127.0.0.1,127
 
 # Changelog
 
+## v1.5
+
+1. *Data encoding for AccountApi and tryCallTransaction* - added same encoding for data as the other transaction endpoints
+
 ## v1.4
 
 1. *Number types in Transaction* - added cleaning of hex prefix ("0x") when deserializing transaction objects
