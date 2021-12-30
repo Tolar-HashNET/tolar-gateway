@@ -52,6 +52,11 @@ public class TolarServlet extends HttpServlet {
     }
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    @Override
     protected void doOptions(HttpServletRequest request, HttpServletResponse response){
         // nothing
     }
