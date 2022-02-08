@@ -20,6 +20,10 @@ import java.io.IOException;
 
 @Service
 public class TolarServlet extends HttpServlet {
+    public static final String ACCESS_CONTROL_ALLOW_ORIGIN_HEADER = "Access-Control-Allow-Origin";
+    public static final String ACCESS_CONTROL_ALLOW_METHODS_HEADER = "Access-Control-Allow-Methods";
+    public static final String ACCESS_CONTROL_ALLOW_HEADERS_HEADER = "Access-Control-Allow-Headers";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(TolarServlet.class);
     private JsonRpcServer jsonRpcServer;
 
@@ -45,6 +49,9 @@ public class TolarServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         try {
+            response.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
+            response.setHeader(ACCESS_CONTROL_ALLOW_METHODS_HEADER, "POST");
+            response.setHeader(ACCESS_CONTROL_ALLOW_HEADERS_HEADER, "*");
             jsonRpcServer.handle(request, response);
         } catch (IOException e) {
             LOGGER.error("Failed to handle request.", e);
@@ -58,7 +65,9 @@ public class TolarServlet extends HttpServlet {
 
     @Override
     protected void doOptions(HttpServletRequest request, HttpServletResponse response){
-        // nothing
+        response.setHeader(ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
+        response.setHeader(ACCESS_CONTROL_ALLOW_METHODS_HEADER, "POST");
+        response.setHeader(ACCESS_CONTROL_ALLOW_HEADERS_HEADER, "*");
     }
 
     @Override
