@@ -29,5 +29,6 @@ jobs:
       run: |
         JSON_VER=$(cat pom.xml | xpath -q -e '/project/version/text()')
         docker tag  gcr.io/tolar-devops-311210/json-gateway:$JSON_VER gcr.io/tolar-devops-311210/json-gateway:latest
+        docker login -u _json_key -p "${{ secrets.GCP_DOCKER_REPO_SERVICE_KEY }}" https://gcr.io
         docker push gcr.io/tolar-devops-311210/json-gateway:$JSON_VER
         docker push gcr.io/tolar-devops-311210/json-gateway:latest
