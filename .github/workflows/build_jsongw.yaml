@@ -6,7 +6,7 @@ on:
     branches:
       - master
 
-env:
+#env:
   # CLANG_VERSION: 11
   # CONAN_USER_HOME: "${{ github.workspace }}/release/"
   # CONAN_USER_HOME_SHORT: "${{ github.workspace }}/release/short"
