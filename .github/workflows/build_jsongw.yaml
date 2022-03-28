@@ -28,6 +28,6 @@ jobs:
     - name: Push artifacts to repository
       run: |
         JSON_VER=$(cat pom.xml | xpath -q -e '/project/version/text()')
-        docker tag gcr.io/tolar-devops-311210/json-gateway:$JSON_VER gcr.io/tolar-devops-311210/json-gateway:latest
-        docker push cr.io/tolar-devops-311210/json-gateway:$JSON_VER
-        docker push cr.io/tolar-devops-311210/json-gateway:latest
+        docker tag  gcr.io/tolar-devops-311210/json-gateway:$JSON_VER gcr.io/tolar-devops-311210/json-gateway:latest
+        docker push gcr.io/tolar-devops-311210/json-gateway:$JSON_VER
+        docker push gcr.io/tolar-devops-311210/json-gateway:latest
