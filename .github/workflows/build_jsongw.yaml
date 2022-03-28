@@ -18,7 +18,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        sudo apt-get install libxml-xpath-perl default-jre
+        sudo apt -y update
+        sudo apt -y install libxml-xpath-perl default-jre
 
     - name: Build artifacts
       run: |
