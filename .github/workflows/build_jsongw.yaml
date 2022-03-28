@@ -1,0 +1,37 @@
+name: Merge to Master Build Jsongateway
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+env:
+  # CLANG_VERSION: 11
+  # CONAN_USER_HOME: "${{ github.workspace }}/release/"
+  # CONAN_USER_HOME_SHORT: "${{ github.workspace }}/release/short"
+  # SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+
+jobs:
+  build:
+    timeout-minutes: 120
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get install libxml-xpath-perl default-jre docker.io
+
+    - name: Build artifacts
+      run: |
+        mvn clean spring-boot:build-image
+
+    - name: Push artifacts to repository
+      run: |
+        JSON_VER=$(cat pom.xml | xpath -q -e '/project/version/text()')
+        docker tag gcr.io/tolar-devops-311210/json-gateway:$JSON_VER gcr.io/tolar-devops-311210/json-gateway:latest
+        docker push cr.io/tolar-devops-311210/json-gateway:$JSON_VER
+        docker push cr.io/tolar-devops-311210/json-gateway:latest

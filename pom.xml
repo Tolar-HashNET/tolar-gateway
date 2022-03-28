@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.tolar</groupId>
-    <artifactId>tolar-gateway</artifactId>
-    <version>1.5</version>
+    <artifactId>json-gateway</artifactId>
+    <version>1.9.0</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <docker.image.prefix>dreamfactoryhr</docker.image.prefix>
+        <docker.image.prefix>gcr.io/tolar-devops-311210</docker.image.prefix>
         <grpc.version>1.29.0</grpc.version>
         <protobuf.version>3.11.4</protobuf.version>
     </properties>
@@ -23,7 +23,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <docker.tag>latest</docker.tag>
+                <docker.tag>${project.version}</docker.tag>
             </properties>
         </profile>
 
@@ -78,7 +78,7 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>29.0-jre</version>
-            <!-- or, for Android: -->
+            <!-- or, for Android -->
         </dependency>
 
         <!-- blockchain -->
@@ -174,6 +174,16 @@
         </extensions>
 
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.2.0</version>
+            </plugin>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>versions-maven-plugin</artifactId>
+              <version>2.8.1</version>
+            </plugin>
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
