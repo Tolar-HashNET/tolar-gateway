@@ -21,6 +21,7 @@ service BlockchainService {
     rpc GetNonce(GetNonceRequest) returns (GetNonceResponse);
     rpc TryCallTransaction(tx.Transaction) returns (TryCallTransactionResponse);
     rpc GetGasEstimate(tx.Transaction) returns (GetGasEstimateResponse);
+    rpc GetPastEvents(GetPastEventsRequest) returns (GetPastEventsResponse);
 }
 
 message GetBlockCountRequest {
@@ -144,3 +145,23 @@ message GetGasEstimateResponse {
     uint64 gas_estimate = 1;
 }
 
+message GetPastEventsRequest {
+    bytes address = 1;
+    bytes topic = 2;
+}
+
+message PastEvent {
+    bytes address = 1;
+    bytes topic = 2;
+    bytes topic_arg_0 = 3;
+    bytes topic_arg_1 = 4;
+    bytes topic_arg_2 = 5;
+    bytes data = 6;
+    bytes transaction_hash = 7;
+    bytes block_hash = 8;
+    uint64 block_index = 9;
+}
+
+message GetPastEventsResponse {
+    repeated PastEvent past_events = 1;
+}

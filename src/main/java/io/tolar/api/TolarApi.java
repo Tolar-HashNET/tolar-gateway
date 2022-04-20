@@ -59,4 +59,8 @@ public interface TolarApi {
     @JsonRpcMethod("tol_getTransactionProtobuf")
     String getTransactionProtobuf(@JsonRpcParam(value = "transaction") TransactionOuterClass.Transaction transaction);
 
+    @JsonRpcMethod("tol_getPastEvents")
+    GetPastEventsResponse getPastEvents(@JsonRpcParam(value = "address") ByteString address,
+                                        @JsonRpcParam(value = "topic") ByteString topic);
+
 }
