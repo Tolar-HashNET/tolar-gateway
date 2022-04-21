@@ -408,6 +408,27 @@ public class TolarApiImpl implements TolarApi {
     }
 
     @Override
+    public GetPastEventsResponse getPastEvents(ByteString address, ByteString topic) {
+        GetPastEventsRequest getPastEventsRequest = GetPastEventsRequest
+                .newBuilder()
+                .setAddress(address)
+                .setTopic(topic)
+                .build();
+
+        Channel channel = null;
+
+        try {
+            channel = channelUtils.getChannel();
+
+            return BlockchainServiceGrpc
+                    .newBlockingStub(channel)
+                    .getPastEvents(getPastEventsRequest);
+        } finally {
+            channelUtils.release(channel);
+        }
+    }
+
+    @Override
     public long getGasEstimate(TransactionOuterClass.Transaction transaction) {
         Channel channel = null;
 
