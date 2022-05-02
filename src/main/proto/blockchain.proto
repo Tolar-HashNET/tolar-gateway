@@ -80,6 +80,8 @@ message GetTransactionResponse {
     bytes new_address = 14;
     bytes output = 15;
     bool excepted = 16;
+    uint32 exception = 17;
+    uint64 network_id = 18;
 }
 
 message GetBlockchainInfoRequest {

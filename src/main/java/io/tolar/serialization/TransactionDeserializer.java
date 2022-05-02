@@ -45,6 +45,7 @@ public class TransactionDeserializer extends JsonDeserializer<TransactionOuterCl
                 .setGasPrice(tryParseAsNumber("gas_price", node, objectMapper))
                 .setData(data)
                 .setNonce(tryParseAsNumber("nonce", node, objectMapper))
+                .setNetworkId(objectMapper.convertValue(node.get("network_id"), java.lang.Long.class))
                 .build();
     }
 

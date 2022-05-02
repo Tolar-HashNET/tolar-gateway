@@ -38,6 +38,7 @@ public class GetTransactionResponseSerializer extends JsonSerializer<Blockchain.
         jsonGenerator.writeObjectField("data", data);
         jsonGenerator.writeObjectField("nonce",
                 BalanceConverter.toBigInteger(transactionResponse.getNonce()).toString());
+        jsonGenerator.writeObjectField("network_id", transactionResponse.getNetworkId());
         jsonGenerator.writeObjectField("gas_used",
                 BalanceConverter.toBigInteger(transactionResponse.getGasUsed()).toString());
         jsonGenerator.writeObjectField("gas_refunded",
