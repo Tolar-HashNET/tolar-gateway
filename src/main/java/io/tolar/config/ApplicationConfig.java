@@ -47,6 +47,8 @@ public class ApplicationConfig implements WebMvcConfigurer {
         module.addSerializer(Blockchain.GetBlockchainInfoResponse.class, new GetBlockchainInfoResponseSerializer());
         module.addSerializer(Blockchain.GetBlockResponse.class, new GetBlockResponseSerializer());
         module.addSerializer(Blockchain.GetPastEventsResponse.class, new GetPastEventsResponseSerializer());
+        module.addSerializer(Blockchain.PastEvent.class, new PastEventSerializer());
+
         return module;
     }
 

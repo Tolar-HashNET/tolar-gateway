@@ -409,11 +409,20 @@ public class TolarApiImpl implements TolarApi {
 
     @Override
     public GetPastEventsResponse getPastEvents(ByteString address, ByteString topic) {
-        GetPastEventsRequest getPastEventsRequest = GetPastEventsRequest
+        GetPastEventsRequest getPastEventsRequest;
+        if (topic == null) {
+            getPastEventsRequest = GetPastEventsRequest
+                .newBuilder()
+                .setAddress(address)
+                .build();
+        } else {
+            getPastEventsRequest = GetPastEventsRequest
                 .newBuilder()
                 .setAddress(address)
                 .setTopic(topic)
                 .build();
+        }
+
 
         Channel channel = null;
 
