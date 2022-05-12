@@ -78,6 +78,10 @@ docker run -d -e "TOLAR_HASHNET_PORT=9300" -e "TOLAR_HASHNET_HOSTS=127.0.0.1,127
 
 # Changelog
 
+## v1.9.3
+
+1. *getPastEvents added*
+
 ## v1.6
 
 1. *tryCallTransaction data encoding* - Updated encoding to/from hex for `output` field in the TryCallTransactionResponse objects
