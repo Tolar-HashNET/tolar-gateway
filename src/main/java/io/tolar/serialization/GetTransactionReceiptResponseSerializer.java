@@ -31,8 +31,6 @@ public class GetTransactionReceiptResponseSerializer extends JsonSerializer<Bloc
                 getTransactionReceiptResponse.getExcepted());
         jsonGenerator.writeObjectField("block_number",
                 getTransactionReceiptResponse.getBlockIndex());
-        jsonGenerator.writeObjectField("hash",
-                getTransactionReceiptResponse.getTransactionHash());
         jsonGenerator.writeObjectField("logs",
                 getTransactionReceiptResponse.getLogsList());
         jsonGenerator.writeEndObject();
